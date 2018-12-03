@@ -1,0 +1,30 @@
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+             version="2.0">
+    <!-- Define persistence unit -->
+    <persistence-unit name="maumau_unit" transaction-type="RESOURCE_LOCAL">
+
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+
+        <class>model.Spiel</class>
+        <class>model.Spieler</class>
+        <class>model.Spielrunde</class>
+        <class>model.Ergebnis</class>
+
+        <shared-cache-mode>ALL</shared-cache-mode>
+
+        <properties>
+            <!-- database connection -->
+            <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://db.f4.htw-berlin.de:3306/_s0558332__maumauDB"/>
+            <property name="javax.persistence.jdbc.user" value="s0558332"/>
+            <property name="javax.persistence.jdbc.password" value="Mysql2018!"/>
+
+            <property name="hibernate.hbm2ddl.auto" value="update" />
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL55Dialect"/>
+
+        </properties>
+    </persistence-unit>
+</persistence>
