@@ -1,4 +1,4 @@
-package console;
+package komponenten.console.impl;
 
 
 import komponenten.spielregel.export.ISpielregel;
