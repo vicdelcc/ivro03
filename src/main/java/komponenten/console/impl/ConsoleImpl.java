@@ -2,17 +2,18 @@ package komponenten.console.impl;
 
 
 import komponenten.console.export.IConsole;
-import komponenten.spielregel.export.ISpielregel;
 import komponenten.spielsteuerung.export.ISpielsteuerung;
 import komponenten.spielverwaltung.export.ISpielverwaltung;
 import model.Spiel;
 import model.Spieler;
+import model.Spielkarte;
 import model.Spielrunde;
+import model.enums.Blatttyp;
+import model.enums.Blattwert;
 import model.enums.RegelKompTyp;
 import model.enums.SpielTyp;
 import model.exceptions.MauMauException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -25,20 +26,7 @@ public class ConsoleImpl implements IConsole {
     private ISpielverwaltung spielverwaltung;
 
     @Autowired
-    @Qualifier("ohneSonder")
-    private static ISpielregel spielregelohneSonder;
-
-    @Autowired
-    @Qualifier("basicSonder")
-    private static ISpielregel spielregelBasicSonder;
-
-    @Autowired
-    @Qualifier("alleSonder")
-    private static ISpielregel spielregelAlleSonder;
-
-    @Autowired
-    private static ISpielsteuerung spielsteuerung;
-
+    private ISpielsteuerung spielsteuerung;
 
     static Scanner sc = new Scanner(System.in);
 
@@ -49,8 +37,7 @@ public class ConsoleImpl implements IConsole {
 
         SpielTyp spielTyp = consoleUtil.spielTypWahl(sc);
 
-        RegelKompTyp gewaehlteSpielegel = consoleUtil.regelWahl
-                (sc, spielregelohneSonder, spielregelBasicSonder, spielregelAlleSonder);
+        RegelKompTyp gewaehlteSpielegel = consoleUtil.regelWahl(sc);
 
         Spiel spiel = spielverwaltung.starteNeuesSpiel(spielTyp, gewaehlteSpielegel);
 
@@ -58,15 +45,20 @@ public class ConsoleImpl implements IConsole {
 
         Spielrunde spielrunde = spielverwaltung.starteSpielrunde(spielerListe, spiel);
 
-        Spieler spieler = spielsteuerung.fragWerDranIst(spielrunde.getSpielerListe());
+        // TODO ADDED --> Regeltyp wird über eine neue Methode gesetzt
+        spielsteuerung.setzteSpielregelTyp(gewaehlteSpielegel);
+
+        Spieler spieler = spielsteuerung.fragWerDranIst(spielrunde.getSpielerListe(), gewaehlteSpielegel);
+
+        spielsteuerung.spieleKarte(spieler, new Spielkarte(Blattwert.Bube, Blatttyp.Herz), spielrunde);
 
         consoleUtil.printZugDetails(spielrunde, spieler);
 
         String wahl = sc.nextLine();
 
-        if(wahl.toLowerCase().equals("m")){
+        if (wahl.toLowerCase().equals("m")) {
             spielsteuerung.sollMauMauAufrufen(spieler);
-        } else if (wahl.toLowerCase().equals("z")){
+        } else if (wahl.toLowerCase().equals("z")) {
 
         } else {
 

@@ -19,9 +19,7 @@ import repositories.SpielRepository;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = AppConfig.class)
@@ -229,13 +227,13 @@ public class SpielverwaltungTest {
         assertEquals(ergebnisse.size(), spielerListe.size());
 
         // Punkten prüfen
-        for(Spieler spieler : spielrunde.getSpielerListe()) {
+        for (Spieler spieler : spielrunde.getSpielerListe()) {
             int punkte = 0;
-            for(Spielkarte spielkarte : spieler.getHand()) {
+            for (Spielkarte spielkarte : spieler.getHand()) {
                 punkte += PunkteMauMau.valueOf(spielkarte.getBlattwert().name()).getPunkte();
             }
-            for(Ergebnis ergebnis : ergebnisse) {
-                if(ergebnis.getSpieler() == spieler) {
+            for (Ergebnis ergebnis : ergebnisse) {
+                if (ergebnis.getSpieler() == spieler) {
                     assertEquals(punkte, ergebnis.getPunkte());
                 }
             }

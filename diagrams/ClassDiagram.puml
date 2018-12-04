@@ -1,0 +1,60 @@
+@startuml
+class Spiel {
+  beginn : Date
+  dauer : Double
+  starteNeuesSpiel()
+  registriereSpieler()
+  erstelleRunde()
+  beendeSpiel()
+}
+
+class Spielrunde {
+   gewinnerName : String
+   verdeckterStapel : Kartenstapel
+   aufgelegterStapel : Kartenstapel
+   beginn : Date
+   dauer : Double
+   spielerListe : Spieler
+   berechneDauer()
+   berechneErgebnis()
+   verteileInitialKarten()
+   beendeSpielrunde()
+   wechselRichtung()
+   baueNeueStapel()
+}
+
+class Kartenstapel {
+    spielkarten : Spielkarte
+    getLetzteAufgelegteKarte()
+    getNeueKarte()
+    mischeKarten()
+}
+
+class Ergebnis {
+    punkte : Integer
+    spielerName : String
+}
+
+class Spieler {
+    hand : Spielkarte
+    name : String
+    spielend : Boolean
+    waehleBlatttyp()
+    zieheSpielkarte()
+    spieleSpielkarte()
+}
+
+class Spielkarte {
+    blatttyp : Blatttyp
+    blattwert : Blattwert
+    regel : Regel
+}
+
+
+Spielkarte }-- Spieler
+Spielkarte }-- Kartenstapel
+Spieler --{ Ergebnis
+Spieler }--{ Spielrunde
+Ergebnis }-- Spielrunde
+Spiel --{ Spielrunde
+@enduml
