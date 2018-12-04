@@ -4,10 +4,7 @@ import config.AppConfig;
 import komponenten.karten.export.IKarten;
 import komponenten.spielverwaltung.export.ISpielverwaltung;
 import model.*;
-import model.enums.Blatttyp;
-import model.enums.Blattwert;
-import model.enums.RegelKompTyp;
-import model.enums.SpielTyp;
+import model.enums.*;
 import model.exceptions.MauMauException;
 import org.junit.Before;
 import org.junit.Test;
@@ -231,7 +228,18 @@ public class SpielverwaltungTest {
         // Ein Ergebnis pro Spieler
         assertEquals(ergebnisse.size(), spielerListe.size());
 
-        // TODO berechnete Punkte prüfen?
+        // Punkten prüfen
+        for(Spieler spieler : spielrunde.getSpielerListe()) {
+            int punkte = 0;
+            for(Spielkarte spielkarte : spieler.getHand()) {
+                punkte += PunkteMauMau.valueOf(spielkarte.getBlattwert().name()).getPunkte();
+            }
+            for(Ergebnis ergebnis : ergebnisse) {
+                if(ergebnis.getSpieler() == spieler) {
+                    assertEquals(punkte, ergebnis.getPunkte());
+                }
+            }
+        }
 
         // Kartenservice muss einmal aufgerufen worden sein
         Mockito.verify(kartenService, Mockito.times(1)).baueStapel(blatttypNicht, blattwertNicht);

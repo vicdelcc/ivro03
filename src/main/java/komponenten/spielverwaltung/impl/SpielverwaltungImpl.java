@@ -3,10 +3,7 @@ package komponenten.spielverwaltung.impl;
 import komponenten.karten.export.IKarten;
 import komponenten.spielverwaltung.export.ISpielverwaltung;
 import model.*;
-import model.enums.Blatttyp;
-import model.enums.Blattwert;
-import model.enums.RegelKompTyp;
-import model.enums.SpielTyp;
+import model.enums.*;
 import model.exceptions.MauMauException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,27 +40,37 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
         return spiel;
     }
 
-    //TODO ask Vic where the first player is setted
-    //TODO ask Vic why list < 3
-    //TODO Vic - erste Karte für die aufgelegte Stapel soll verteilt werden
+    //TODO ask Vic where the first player is setted --> done
+    //TODO ask Vic why list < 3 --> geändert zu 2
+    //TODO Vic - erste Karte für die aufgelegte Stapel soll verteilt werden --> done
     public Spielrunde starteSpielrunde(List<Spieler> spielerListe, Spiel spiel) throws MauMauException {
-        if(spielerListe.size() < 3 || spiel == null) {
+        if(spielerListe.size() < 2 || spiel == null) {
             throw new MauMauException("Fehler");
         }
+        // Random spieler wird als Erster gewählt
+        int ersterSpieler = (int)(Math.random()*(spielerListe.size()-1));
+        spielerListe.get(ersterSpieler).setSpielend(true);
+
+        // Spielrunde wird generiert
         Spielrunde spielrunde = new Spielrunde(spiel, spielerListe);
+        // Verdeckter Stapel wird generiert
         List<Blattwert> blattwertNicht = new ArrayList<>();
         if(spiel.getSpielTyp() == SpielTyp.MauMau) {
             blattwertNicht.add(Blattwert.Joker);
         }
         List<Blatttyp> blatttypNicht = new ArrayList<>();
         spielrunde.setVerdeckteStapel(kartenService.baueStapel(blatttypNicht, blattwertNicht));
+
+        // Aufgelegter Stapel mit initialer Spielkarte wird generiert
+        List<Spielkarte> aufgelegterStapel = new ArrayList<>();
+        aufgelegterStapel.add(spielrunde.getVerdeckteStapel().get((int)Math.random()*((spielrunde.getVerdeckteStapel().size()-1))));
+        spielrunde.setAufgelegtStapel(aufgelegterStapel);
+
         // Verteile Initialkarten 6
         for(Spieler spieler : spielrunde.getSpielerListe()) {
             spieler.setSpielrunde(spielrunde);
             for(int i = 0; i<6; i++) {
-                int low = 0;
-                int high = spielrunde.getVerdeckteStapel().size();
-                int result = (int)(Math.random()*(high-low) + low);
+                int result = (int)(Math.random()*(spielrunde.getVerdeckteStapel().size()-1));
                 spieler.getHand().add(spielrunde.getVerdeckteStapel().get(result));
                 spielrunde.getVerdeckteStapel().remove(result);
             }
@@ -82,24 +89,7 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
         // TODO transform to minutes
         spielrunde.setDauer(duration.getSeconds());
 
-        HashMap<Blattwert, Integer> punkteKarten = new HashMap<>();
         // Ergebnisse
-        if(spielrunde.getSpiel().getSpielTyp() == SpielTyp.MauMau) {
-            punkteKarten.put(Blattwert.Joker, 30);
-            punkteKarten.put(Blattwert.Ass, 11);
-            punkteKarten.put(Blattwert.Zwei, 2);
-            punkteKarten.put(Blattwert.Drei, 3);
-            punkteKarten.put(Blattwert.Vier, 4);
-            punkteKarten.put(Blattwert.Fuenf, 5);
-            punkteKarten.put(Blattwert.Sechs, 6);
-            punkteKarten.put(Blattwert.Sieben, 7);
-            punkteKarten.put(Blattwert.Acht, 8);
-            punkteKarten.put(Blattwert.Neun, 9);
-            punkteKarten.put(Blattwert.Zehn, 10);
-            punkteKarten.put(Blattwert.Bube, 20);
-            punkteKarten.put(Blattwert.Dame, 10);
-            punkteKarten.put(Blattwert.Koenig, 10);
-        }
         for(Spieler spieler : spielrunde.getSpielerListe()) {
 
             // Gewinner
@@ -109,11 +99,14 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
             // Punkte Rest
             int punkte = 0;
             for(Spielkarte spielkarte : spieler.getHand()) {
-                punkte += punkteKarten.get(spielkarte.getBlattwert());
+                switch (spielrunde.getSpiel().getSpielTyp()) {
+                    case MauMau:
+                        punkte += PunkteMauMau.valueOf(spielkarte.getBlattwert().name()).getPunkte();
+                        break;
+                }
             }
             Ergebnis ergebnis = new Ergebnis(punkte, spielrunde, spieler);
             spielrunde.getErgebnisListe().add(ergebnis);
-
         }
 
         return spielrunde.getErgebnisListe();
