@@ -51,9 +51,12 @@ public class SpielsteuerungTest {
         hand.add(new Spielkarte(Blattwert.Drei, Blatttyp.Herz));
         spieler1 = new Spieler(hand, "spieler1", true);
 
+        Spieler spieler2 = new Spieler(new ArrayList<>(0), "spieler2", false);
+
         spielrunde = new Spielrunde();
         ArrayList<Spieler> spielerliste = new ArrayList<>(0);
         spielerliste.add(spieler1);
+        spielerliste.add(spieler2);
         spielrunde.setSpielerListe(spielerliste);
         spielrunde.setRundeFarbe(Blatttyp.Pik);
 
@@ -155,10 +158,6 @@ public class SpielsteuerungTest {
      */
     @Test
     public void testfragWerDaranIstSpieler1Daran() throws MauMauException {
-
-        Spieler spieler2 = new Spieler(new ArrayList<>(0), "spieler2", false);
-
-        spielrunde.getSpielerListe().add(spieler2);
 
         assertEquals(spieler1, spielsteuerung.fragWerDranIst(spielrunde.getSpielerListe()));
     }
