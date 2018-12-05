@@ -37,18 +37,18 @@ public class ConsoleImpl implements IConsole {
 
         SpielTyp spielTyp = consoleUtil.spielTypWahl(sc);
 
-        RegelKompTyp gewaehlteSpielegel = consoleUtil.regelWahl(sc);
+        RegelKompTyp gewaehlteSpielregel = consoleUtil.regelWahl(sc);
 
-        Spiel spiel = spielverwaltung.starteNeuesSpiel(spielTyp, gewaehlteSpielegel);
+        Spiel spiel = spielverwaltung.starteNeuesSpiel(spielTyp, gewaehlteSpielregel);
 
         ArrayList<Spieler> spielerListe = consoleUtil.spielerEingabe(sc);
 
         Spielrunde spielrunde = spielverwaltung.starteSpielrunde(spielerListe, spiel);
 
         // TODO ADDED --> Regeltyp wird über eine neue Methode gesetzt
-        spielsteuerung.setzteSpielregelTyp(gewaehlteSpielegel);
+        spielsteuerung.setzteSpielregelTyp(gewaehlteSpielregel);
 
-        Spieler spieler = spielsteuerung.fragWerDranIst(spielrunde.getSpielerListe(), gewaehlteSpielegel);
+        Spieler spieler = spielsteuerung.fragWerDranIst(spielrunde.getSpielerListe(), gewaehlteSpielregel);
 
         spielsteuerung.spieleKarte(spieler, new Spielkarte(Blattwert.Bube, Blatttyp.Herz), spielrunde);
 

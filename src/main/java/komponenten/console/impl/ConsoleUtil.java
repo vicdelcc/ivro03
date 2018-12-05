@@ -21,13 +21,7 @@ public class ConsoleUtil {
         do {
             System.out.println("Bitte geben Sie den " + (spielerList.size() + 1) + "er Namen:");
             String name = sc.nextLine();
-            //TODO remove if else after clearing how is setting the first player
-            if (spielerList.isEmpty()) {
-                spielerList.add(new Spieler(new ArrayList<>(0), name, true));
-            } else {
-                spielerList.add(new Spieler(name));
-            }
-//            spielerList.add(new Spieler(name));
+            spielerList.add(new Spieler(name));
 
             System.out.println("Wollen Sie noch einen Spieler ins Spiel eintragen? (y|n)");
             String antwort = sc.nextLine();

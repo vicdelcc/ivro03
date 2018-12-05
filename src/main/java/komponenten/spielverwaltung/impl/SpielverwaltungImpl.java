@@ -40,9 +40,6 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
         return spiel;
     }
 
-    //TODO ask Vic where the first player is setted --> done
-    //TODO ask Vic why list < 3 --> geändert zu 2
-    //TODO Vic - erste Karte für die aufgelegte Stapel soll verteilt werden --> done
     public Spielrunde starteSpielrunde(List<Spieler> spielerListe, Spiel spiel) throws MauMauException {
         if(spielerListe.size() < 2 || spiel == null) {
             throw new MauMauException("Fehler");
