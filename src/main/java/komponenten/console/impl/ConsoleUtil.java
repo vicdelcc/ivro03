@@ -6,6 +6,7 @@ import model.Spielkarte;
 import model.Spielrunde;
 import model.enums.RegelKompTyp;
 import model.enums.SpielTyp;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,6 +78,12 @@ public class ConsoleUtil {
         return SpielTyp.values()[wahl];
     }
 
+    public boolean istEingabeRichtig(String eingabe){
+        return eingabe.toLowerCase().equals("m") || eingabe.toLowerCase().equals("z") ||
+                StringUtils.isNumeric(eingabe);
+
+    }
+
     private <T> void printChoices(T[] values, String msg) {
         int counter = 0;
         if (msg != null) {
@@ -89,9 +96,9 @@ public class ConsoleUtil {
     }
 
     public void printZugDetails(Spielrunde spielrunde, Spieler spieler) {
+        System.out.println("-----------------------------------");
         System.out.println("Der jetzige Spieler ist " + spieler.getName());
-        //TODO uncooment when the issue will be resolved
-//        System.out.println("Die aufgelegte Karte ist " + spielrunde.getAufgelegtStapel().get(spielrunde.getAufgelegtStapel().size()-1).toString());
+        System.out.println("Die aufgelegte Karte ist " + spielrunde.getAufgelegtStapel().get(spielrunde.getAufgelegtStapel().size()-1).toString());
         System.out.println(spielrunde.getZuZiehnKartenAnzahl() + " Karten sollen gezugen werden");
         printHand(spieler);
         System.out.println("Wenn Sie MauMau aufrufen wollen, geben Sie 'm' ein");
