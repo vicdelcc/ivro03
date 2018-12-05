@@ -55,11 +55,10 @@ public class ConsoleImpl implements IConsole {
             String wahl;
             do{
                 wahl = sc.nextLine();
-                if(!consoleUtil.istEingabeRichtig(wahl)){
+                if(!consoleUtil.istEingabeRichtig(wahl, spieler.getHand().size())){
                     System.out.println("Die Eingabe war false! Bitte geben Sie 'm','z' oder eine Zahl");
                 }
-            } while (!consoleUtil.istEingabeRichtig(wahl));
-
+            } while (!consoleUtil.istEingabeRichtig(wahl, spieler.getHand().size()));
 
             boolean sollMauAufgerufen = spielsteuerung.sollMauMauAufrufen(spieler);
 

@@ -78,9 +78,12 @@ public class ConsoleUtil {
         return SpielTyp.values()[wahl];
     }
 
-    public boolean istEingabeRichtig(String eingabe){
-        return eingabe.toLowerCase().equals("m") || eingabe.toLowerCase().equals("z") ||
-                StringUtils.isNumeric(eingabe);
+    public boolean istEingabeRichtig(String eingabe, int size){
+        if(StringUtils.isNumeric(eingabe)){
+            int intEingabe = Integer.parseInt(eingabe);
+            return intEingabe < size && intEingabe >= 0;
+        }
+        return eingabe.toLowerCase().equals("m") || eingabe.toLowerCase().equals("z");
 
     }
 
