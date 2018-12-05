@@ -24,12 +24,11 @@ public interface ISpielsteuerung {
      * Gibt den Spieler, der in der Spielrunde dran ist (Spielend true)
      *
      * @param spielerListe      - Spielerliste der Spielrunde
-     * @param gewaehlteSpielege - der vom Spieler gewünschter Spielregel-Typ
      * @return Spieler - der Spieler, der dran ist.
      * @throws MauMauException - wenn die Spielerliste weniger als 2 Spieler enthält, oder wenn mehr als
      *                         ein Spieler die Attribute 'Spielend' true hat.
      */
-    Spieler fragWerDranIst(List<Spieler> spielerListe, RegelKompTyp gewaehlteSpielege) throws MauMauException;
+    Spieler fragWerDranIst(List<Spieler> spielerListe) throws MauMauException;
 
     /**
      * Prüft, ob der Spieler, der dran ist, karten zu ziehen hat (wenn im Zug davor ein ZWEI_ZIEHEN gespielt wurde)

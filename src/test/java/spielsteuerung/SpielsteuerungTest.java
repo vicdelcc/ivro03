@@ -132,7 +132,7 @@ public class SpielsteuerungTest {
         spielerListe.add(new Spieler("Ido"));
         spielerListe.add(new Spieler("Victor"));
         spielerListe.add(new Spieler("Lucas"));
-        spielsteuerung.fragWerDranIst(spielerListe, RegelKompTyp.OHNE_SONDER_REGEL);
+        spielsteuerung.fragWerDranIst(spielerListe);
     }
 
     /**
@@ -144,7 +144,7 @@ public class SpielsteuerungTest {
     public void testfragWerDaranIstNurEinSpieler() throws MauMauException {
         List<Spieler> spielerListe = new ArrayList<Spieler>();
         spielerListe.add(new Spieler(new ArrayList<>(0), "Ido", true));
-        spielsteuerung.fragWerDranIst(spielerListe, RegelKompTyp.OHNE_SONDER_REGEL);
+        spielsteuerung.fragWerDranIst(spielerListe);
     }
 
     /**
@@ -160,7 +160,7 @@ public class SpielsteuerungTest {
 
         spielrunde.getSpielerListe().add(spieler2);
 
-        assertEquals(spieler1, spielsteuerung.fragWerDranIst(spielrunde.getSpielerListe(), RegelKompTyp.OHNE_SONDER_REGEL));
+        assertEquals(spieler1, spielsteuerung.fragWerDranIst(spielrunde.getSpielerListe()));
     }
 
     /**
