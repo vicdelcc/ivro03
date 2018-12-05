@@ -13,14 +13,6 @@ public interface ISpielsteuerung {
 
 
     /**
-     * Setzt die Impl des Spielregel-Komponenten
-     *
-     * @param regelKompTyp - der vom Benutzer gewünschte Spielregel-Typ
-     * @throws MauMauException
-     */
-    void setzteSpielregelTyp(RegelKompTyp regelKompTyp) throws MauMauException;
-
-    /**
      * Gibt den Spieler, der in der Spielrunde dran ist (Spielend true)
      *
      * @param spielerListe      - Spielerliste der Spielrunde
@@ -49,11 +41,12 @@ public interface ISpielsteuerung {
      * @param spieler    - der Spieler, der den Zug spielt
      * @param spielkarte - die gespielte Karte
      * @param spielrunde - die Spielrunde, in der der Zug gespielt wird
+     * @param gewaehlteSpielregel - die ausgewählte SpielregelKomponente
      * @return boolean - Wenn die Karte spielbar ist, wird true zurückgegeben, wenn nicht dann false
      * @throws MauMauException - Wenn Spieler oder Spielershand oder Spielkarte oder Spielrunde oder die ausgewählte
      *                         Rundenfarbe oder Aufgelegter Stapel oder Spielregelkomponente null sind, wird die Exception geworfen.
      */
-    boolean spieleKarte(Spieler spieler, Spielkarte spielkarte, Spielrunde spielrunde) throws MauMauException;
+    boolean spieleKarte(Spieler spieler, Spielkarte spielkarte, Spielrunde spielrunde, RegelKompTyp gewaehlteSpielregel) throws MauMauException;
 
     /**
      * Prüft, ob der Spieler MauMau aufrufen sollte
@@ -68,12 +61,13 @@ public interface ISpielsteuerung {
 
     /**
      * Prüft ob die übergebene Spielkarte die Wünscher-Funktion besitzt
-     *
+     * @param gewaehlteSpielregel - die ausgewählte SpielregelKomponente
      * @param spielkarte - die gespielte Karte
+     *
      * @return boolean - Wenn die Karte Wünscher ist, wird true zurückgegeben, sonst false
      * @throws MauMauException - Wenn Spielkarte oder Spielregelkomponente null sind, wird die Exception geworfen.
      */
-    boolean pruefeObWuenscher(Spielkarte spielkarte) throws MauMauException;
+    boolean pruefeObWuenscher(Spielkarte spielkarte, RegelKompTyp gewaehlteSpielregel) throws MauMauException;
 
     /**
      * Der Spieler wählt einen Blatttyp und es wird in der Spielrunde festgelegt

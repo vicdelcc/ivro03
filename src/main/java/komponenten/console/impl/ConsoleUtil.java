@@ -20,7 +20,7 @@ public class ConsoleUtil {
         sc.nextLine();
         System.out.println("Bitte geben Sie die Namen der Spieler:");
         do {
-            System.out.println("Bitte geben Sie den " + (spielerList.size() + 1) + "er Namen:");
+            System.out.println("Bitte geben Sie den " + (spielerList.size() + 1) + ". Namen:");
             String name = sc.nextLine();
             spielerList.add(new Spieler(name));
 

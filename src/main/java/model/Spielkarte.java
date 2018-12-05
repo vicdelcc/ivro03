@@ -21,6 +21,6 @@ public class Spielkarte {
 
     @Override
     public String toString() {
-        return blattwert + " " + blatttyp;
+        return blatttyp + " " + blattwert;
     }
 }

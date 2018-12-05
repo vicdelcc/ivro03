@@ -180,7 +180,7 @@ public class SpielsteuerungTest {
 
         Mockito.when(spielregelOhneSonderImpl.holeAuswirkungVonKarte(aktuelleKarte, spielrunde.getSpielerListe())).thenReturn(regelComponentUtil);
 
-        assertTrue(spielsteuerung.spieleKarte(spieler1, aktuelleKarte, spielrunde));
+        assertTrue(spielsteuerung.spieleKarte(spieler1, aktuelleKarte, spielrunde, RegelKompTyp.OHNE_SONDER_REGEL));
 
     }
 
@@ -196,7 +196,7 @@ public class SpielsteuerungTest {
 
         Mockito.when(spielregelOhneSonderImpl.istKarteLegbar(vorherigeKarte, aktuelleKarte, vorherigeKarte.getBlatttyp())).thenReturn(false);
 
-        assertFalse(spielsteuerung.spieleKarte(spieler1, aktuelleKarte, spielrunde));
+        assertFalse(spielsteuerung.spieleKarte(spieler1, aktuelleKarte, spielrunde, RegelKompTyp.OHNE_SONDER_REGEL));
     }
 
     /**
@@ -249,7 +249,7 @@ public class SpielsteuerungTest {
 
         Spielkarte spielkarte = new Spielkarte(Blattwert.Bube, Blatttyp.Karo);
 
-        boolean isWuenscher = spielsteuerung.pruefeObWuenscher(spielkarte);
+        boolean isWuenscher = spielsteuerung.pruefeObWuenscher(spielkarte, RegelKompTyp.OHNE_SONDER_REGEL);
 
         assertTrue(isWuenscher);
     }
@@ -266,9 +266,7 @@ public class SpielsteuerungTest {
 
         Spielkarte spielkarte = new Spielkarte(Blattwert.Acht, Blatttyp.Karo);
 
-        spielsteuerung.setzteSpielregelTyp(RegelKompTyp.OHNE_SONDER_REGEL);
-
-        boolean isWuenscher = spielsteuerung.pruefeObWuenscher(spielkarte);
+        boolean isWuenscher = spielsteuerung.pruefeObWuenscher(spielkarte, RegelKompTyp.OHNE_SONDER_REGEL);
 
         assertFalse(isWuenscher);
     }

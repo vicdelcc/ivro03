@@ -43,10 +43,9 @@ public class ConsoleImpl implements IConsole {
 
         Spielrunde spielrunde = spielverwaltung.starteSpielrunde(spielerListe, spiel);
 
-        // TODO ADDED --> Regeltyp wird über eine neue Methode gesetzt
-        spielsteuerung.setzteSpielregelTyp(gewaehlteSpielregel);
-
         Spieler spieler = spielsteuerung.fragWerDranIst(spielrunde.getSpielerListe());
+
+        boolean vollerHand;
 
         do{
 
@@ -69,11 +68,11 @@ public class ConsoleImpl implements IConsole {
             if (sollMauAufgerufen) {
                 if(wahl.toLowerCase().equals("m")){
                     Spielkarte spielkarte = spieler.getHand().get(0);
-                    boolean karteValid = spielsteuerung.spieleKarte(spieler, spielkarte, spielrunde);
+                    boolean karteValid = spielsteuerung.spieleKarte(spieler, spielkarte, spielrunde, gewaehlteSpielregel);
                     if(karteValid){
                         System.out.println("Spiel beendet!");
                     } else {
-                        System.out.println("Karte köönte nicht geegt werden! Eine Karte wurde gezogen");
+                        System.out.println("Karte kann nicht gelegt werden! Eine Karte wurde gezogen");
                         spielsteuerung.zieheKartenVomStapel(spieler,1,spielrunde);
                     }
                 } else {
@@ -93,20 +92,21 @@ public class ConsoleImpl implements IConsole {
                 //TODO Prüf ob ZweiZiehen
                 //TODO if karte Wünscher
                 Spielkarte spielkarte = spieler.getHand().get(Integer.parseInt(wahl));
-                boolean karteValid = spielsteuerung.spieleKarte(spieler, spielkarte, spielrunde);
+                boolean karteValid = spielsteuerung.spieleKarte(spieler, spielkarte, spielrunde, gewaehlteSpielregel);
 
                 if(!karteValid || Integer.parseInt(wahl) > spieler.getHand().size()){
                     do{
-                        System.out.println("Die Karte Könnte nicht aufgelegt werden! Spielen Sie eine andere Karte");
+                        System.out.println("Die Karte kann nicht aufgelegt werden! Spielen Sie eine andere Karte");
                         wahl = sc.nextLine();
                         spielkarte = spieler.getHand().get(Integer.parseInt(wahl));
-                        karteValid = spielsteuerung.spieleKarte(spieler, spielkarte, spielrunde);
+                        karteValid = spielsteuerung.spieleKarte(spieler, spielkarte, spielrunde, gewaehlteSpielregel);
                     } while (!karteValid);
                 }
             }
 
+            vollerHand = !spieler.getHand().isEmpty();
             spieler = spielsteuerung.fragWerDranIst(spielrunde.getSpielerListe());
-        } while(!spieler.getHand().isEmpty());
+        } while(vollerHand);
 
 
 //        spielsteuerung.spieleKarte(spieler, new Spielkarte(Blattwert.Bube, Blatttyp.Herz), spielrunde);
