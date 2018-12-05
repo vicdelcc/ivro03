@@ -8,7 +8,9 @@ import model.exceptions.MauMauException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Komponent, der je nach Spieltyp, den Kartenstapel baut
@@ -33,6 +35,9 @@ public class KartenImpl implements IKarten {
                 }
             }
         }
+
+        //TODO vic ich habe es hinzugefügt
+        Collections.shuffle(stapel, new Random(System.nanoTime()));
         return stapel;
     }
 
