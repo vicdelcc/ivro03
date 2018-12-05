@@ -48,6 +48,8 @@ public class SpielregelOhneSonderImpl implements ISpielregel {
                 } else {
                     spielerListe.get(indexSpielend + 1).setSpielend(true);
                 }
+                //TODO implement this fix in the other SpielregelKomponente
+                spielerListe.get(indexSpielend).setSpielend(false);
                 break;
             }
         }
