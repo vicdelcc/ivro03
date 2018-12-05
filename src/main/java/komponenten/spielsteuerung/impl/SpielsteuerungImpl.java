@@ -57,7 +57,7 @@ public class SpielsteuerungImpl implements ISpielsteuerung {
         }
     }
 
-    public Spieler fragWerDranIst(List<Spieler> spielerListe, RegelKompTyp gewaehlteSpielegel) throws MauMauException {
+    public Spieler fragWerDranIst(List<Spieler> spielerListe) throws MauMauException {
         if (spielerListe.size() < 2) {
             throw new MauMauException("Spielerliste muss mehr als einen Spieler enthalten");
         }
@@ -165,7 +165,21 @@ public class SpielsteuerungImpl implements ISpielsteuerung {
         List<Spielkarte> neueKarten = getNeueKartenVomVerdecktenStapelUndRemove(anzahlKarten, spielrunde);
         spieler.getHand().addAll(neueKarten);
 
+        setSpielendToNextPlayer(spielrunde.getSpielerListe());
+
         return spieler;
+    }
+
+    private void setSpielendToNextPlayer(List<Spieler> spielerListe) throws MauMauException {
+        Spieler spieler = fragWerDranIst(spielerListe);
+        int indexSpielend = spielerListe.indexOf(spieler);
+
+        if (indexSpielend == spielerListe.size() - 1) {
+            spielerListe.get(0).setSpielend(true);
+        } else {
+            spielerListe.get(indexSpielend + 1).setSpielend(true);
+        }
+        spielerListe.get(indexSpielend).setSpielend(false);
     }
 
     private void setztKarteVomHandAufDemAufgelegteStapel(Spieler spieler, Spielkarte spielkarte, Spielrunde spielrunde) {
