@@ -56,15 +56,19 @@ public class SpielregelBasicSonderImpl extends SpielregelOhneSonderImpl {
         if (aktuelleSpielkarte == null || spielerListe == null) {
             throw new MauMauException("Fehler");
         }
-        RegelComponentUtil util = super.holeAuswirkungVonKarte(aktuelleSpielkarte, spielerListe);
+
+
+        RegelComponentUtil util = null;
         switch (aktuelleSpielkarte.getBlattwert()) {
             case Sieben:
+                util = super.holeAuswirkungVonKarte(aktuelleSpielkarte, spielerListe);
                 util.setAnzahlKartenZuZiehen(2);
                 break;
             case Ass:
+                int indexSpielend = 0;
                 for (Spieler spieler : spielerListe) {
                     if (spieler.isSpielend()) {
-                        int indexSpielend = spielerListe.indexOf(spieler);
+                        indexSpielend = spielerListe.indexOf(spieler);
                         if (indexSpielend == spielerListe.size() - 1) {
                             spielerListe.get(1).setSpielend(true);
                         } else if (indexSpielend == spielerListe.size() - 2) {
@@ -75,8 +79,11 @@ public class SpielregelBasicSonderImpl extends SpielregelOhneSonderImpl {
                         break;
                     }
                 }
-                util.setSpielerListe(spielerListe);
+                spielerListe.get(indexSpielend).setSpielend(false);
+                util = new RegelComponentUtil(spielerListe, 0);
                 break;
+            default:
+                util = super.holeAuswirkungVonKarte(aktuelleSpielkarte, spielerListe);
         }
         return util;
     }

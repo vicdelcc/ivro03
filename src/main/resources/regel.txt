@@ -1,0 +1,19 @@
+BASIC
+
+ZWEI_ZIEHEN (7)-->  ZWEI_ZIEHEN |  STOPPPER (8) |  2 Karten ziehen
+
+WUENSCHER (B) --> Farbe spielen
+
+AUSSETZEN (Ass)
+
+
+ALL
+
+(nur auf Nicht-Funktionskarten gelegt werden darf ) ALLESLEGER (10) --> alles mit farbe oder wert außer ALLESLEGER
+
+RICHTUNGSWECHSEL (9) --> ganz normal weiter
+
+
+
+
+

@@ -118,6 +118,7 @@ public class SpielsteuerungImpl implements ISpielsteuerung {
             setztKarteVomHandAufDemAufgelegteStapel(spieler, spielkarte, spielrunde);
             spielrunde.setSpielerListe(regelComponentUtil.getSpielerListe());
             spielrunde.setZuZiehnKartenAnzahl(regelComponentUtil.getAnzahlKartenZuZiehen() + spielrunde.getZuZiehnKartenAnzahl());
+            // TODO rundeFarbe setzen nötig für den normalen Fall
             spielrunde.setRundeFarbe(spielkarte.getBlatttyp());
             return true;
         } else {
