@@ -5,6 +5,7 @@ import komponenten.spielverwaltung.export.ISpielverwaltung;
 import model.*;
 import model.enums.*;
 import model.exceptions.MauMauException;
+import model.exceptions.TechnischeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import repositories.SpielRepository;
@@ -12,7 +13,6 @@ import repositories.SpielRepository;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -119,7 +119,13 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
         // TODO Soll zu Minutes angepasst werden
         spiel.setDauer(duration.getSeconds());
 
-        this.spielRepository.save(spiel);
+        Spiel spielSaved= this.spielRepository.save(spiel);
+
+        if(spielSaved == null) {
+            throw new TechnischeException("Spiel konnte nicht gespeichert werden");
+        }
+
+
         return spiel;
     }
 }

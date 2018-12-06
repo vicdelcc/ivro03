@@ -126,6 +126,7 @@ public class SpielsteuerungImpl implements ISpielsteuerung {
         }
     }
 
+
     public boolean sollMauMauAufrufen(Spieler spieler) throws MauMauException {
         if (spieler == null) {
             throw new MauMauException("Spieler ist null");

@@ -10,6 +10,7 @@ import model.Spielkarte;
 import model.Spielrunde;
 import model.enums.RegelKompTyp;
 import model.enums.SpielTyp;
+import model.exceptions.FachlicheException;
 import model.exceptions.MauMauException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,18 +29,18 @@ public class ConsoleImpl implements IConsole {
 
     static Scanner sc = new Scanner(System.in);
 
-    static ConsoleUtil consoleUtil = new ConsoleUtil();
+    static ConsoleView consoleView = new ConsoleView();
 
     @Override
     public void run() throws MauMauException {
 
-        SpielTyp spielTyp = consoleUtil.spielTypWahl(sc);
+        SpielTyp spielTyp = consoleView.spielTypWahl(sc);
 
-        RegelKompTyp gewaehlteSpielregel = consoleUtil.regelWahl(sc);
+        RegelKompTyp gewaehlteSpielregel = consoleView.regelWahl(sc);
 
         Spiel spiel = spielverwaltung.starteNeuesSpiel(spielTyp, gewaehlteSpielregel);
 
-        ArrayList<Spieler> spielerListe = consoleUtil.spielerEingabe(sc);
+        ArrayList<Spieler> spielerListe = consoleView.spielerEingabe(sc);
 
         Spielrunde spielrunde = spielverwaltung.starteSpielrunde(spielerListe, spiel);
 
@@ -49,15 +50,15 @@ public class ConsoleImpl implements IConsole {
 
         do{
 
-            consoleUtil.printZugDetails(spielrunde, spieler);
+            consoleView.printZugDetails(spielrunde, spieler);
 
             String wahl;
             do{
                 wahl = sc.nextLine();
-                if(!consoleUtil.istEingabeRichtig(wahl, spieler.getHand().size())){
+                if(!consoleView.istEingabeRichtig(wahl, spieler.getHand().size())){
                     System.out.println("Die Eingabe war false! Bitte geben Sie 'm','z' oder eine Zahl");
                 }
-            } while (!consoleUtil.istEingabeRichtig(wahl, spieler.getHand().size()));
+            } while (!consoleView.istEingabeRichtig(wahl, spieler.getHand().size()));
 
             boolean sollMauAufgerufen = spielsteuerung.sollMauMauAufrufen(spieler);
 
@@ -76,8 +77,8 @@ public class ConsoleImpl implements IConsole {
                         spielsteuerung.zieheKartenVomStapel(spieler,1,spielrunde);
                     }
                 } else {
-                    System.out.println("Sie haben MauMau nicht gerufen. Sie bekommen eine Karte");
                     spielsteuerung.zieheKartenVomStapel(spieler,1,spielrunde);
+                    throw new FachlicheException("Sie haben MauMau nicht gerufen. Sie bekommen eine Karte");
                 }
             } else if (wahl.toLowerCase().equals("z")) {
                 int anzhalZiehen = spielsteuerung.checkZuZiehendenKarten(spielrunde);

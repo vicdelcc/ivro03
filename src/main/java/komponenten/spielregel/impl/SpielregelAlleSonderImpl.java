@@ -19,7 +19,6 @@ import java.util.List;
 @Qualifier("alleSonder")
 public class SpielregelAlleSonderImpl extends SpielregelBasicSonderImpl {
 
-
     @Override
     public boolean istKarteLegbar(Spielkarte vorherigeSpielkarte, Spielkarte aktuelleSpielkarte, Blatttyp blatttyp) throws MauMauException {
         // TODO wie behandeln wir exceptions?

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class ConsoleUtil {
+public class ConsoleView {
 
     public ArrayList<Spieler> spielerEingabe(Scanner sc) {
         ArrayList<Spieler> spielerList = new ArrayList<>(0);
