@@ -4,6 +4,7 @@ package komponenten.console.impl;
 import model.Spieler;
 import model.Spielkarte;
 import model.Spielrunde;
+import model.enums.Blatttyp;
 import model.enums.RegelKompTyp;
 import model.enums.SpielTyp;
 import org.apache.commons.lang3.StringUtils;
@@ -78,6 +79,18 @@ public class ConsoleView {
         return SpielTyp.values()[wahl];
     }
 
+    public String eingabgeWaehlen(Scanner sc, Spieler spieler){
+        String wahl;
+        do{
+            wahl = sc.nextLine();
+            if(!istEingabeRichtig(wahl, spieler.getHand().size())){
+                System.out.println("Die Eingabe war false! Bitte geben Sie 'm','z' oder eine Zahl");
+            }
+        } while (!istEingabeRichtig(wahl, spieler.getHand().size()));
+
+        return wahl;
+    }
+
     public boolean istEingabeRichtig(String eingabe, int size){
         if(StringUtils.isNumeric(eingabe)){
             int intEingabe = Integer.parseInt(eingabe);
@@ -99,10 +112,19 @@ public class ConsoleView {
     }
 
     public void printZugDetails(Spielrunde spielrunde, Spieler spieler) {
+        Spielkarte letzteKarte = spielrunde.getAufgelegtStapel().get(spielrunde.getAufgelegtStapel().size() - 1);
         System.out.println("-----------------------------------");
         System.out.println("Der jetzige Spieler ist " + spieler.getName());
-        System.out.println("Die aufgelegte Karte ist " + spielrunde.getAufgelegtStapel().get(spielrunde.getAufgelegtStapel().size()-1).toString());
-        System.out.println(spielrunde.getZuZiehnKartenAnzahl() + " Karten sollen gezugen werden");
+        if(letzteKarte.getBlatttyp().equals(spielrunde.getRundeFarbe()) || spielrunde.getRundeFarbe() == null){
+            System.out.println("Die aufgelegte Karte ist " + letzteKarte.toString());
+        } else {
+            if(spielrunde.getRundeFarbe() != null){
+                System.out.println("Spielrundefarbe is " + spielrunde.getRundeFarbe());
+            }
+        }
+        if(spielrunde.getZuZiehnKartenAnzahl() != null && spielrunde.getZuZiehnKartenAnzahl() > 0){
+            System.out.println(spielrunde.getZuZiehnKartenAnzahl() + " Karten sollen gezugen werden");
+        }
         printHand(spieler);
         System.out.println("Wenn Sie MauMau aufrufen wollen, geben Sie 'm' ein");
         System.out.println("Wenn Sie Karten ziehen wollen, geben Sie 'z' ein");
@@ -121,5 +143,21 @@ public class ConsoleView {
             System.out.println("[" + counter + "] " + spielkarte.toString());
             counter++;
         }
+    }
+
+    public void printFarben(){
+        System.out.println("Bitte wählen Sie eine Farbe:");
+        int counter = 0;
+        for (Blatttyp value : Blatttyp.values()) {
+            System.out.println("[" + counter + "] " + value.toString());
+            counter++;
+        }
+
+    }
+
+    public Blatttyp farbeWawhlen(Scanner sc) {
+        int i = sc.nextInt();
+        sc.nextLine();
+        return Blatttyp.values()[i];
     }
 }
