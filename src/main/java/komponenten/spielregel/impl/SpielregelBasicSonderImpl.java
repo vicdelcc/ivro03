@@ -65,22 +65,26 @@ public class SpielregelBasicSonderImpl extends SpielregelOhneSonderImpl {
                 util.setAnzahlKartenZuZiehen(2);
                 break;
             case Ass:
-                int indexSpielend = 0;
-                for (Spieler spieler : spielerListe) {
-                    if (spieler.isSpielend()) {
-                        indexSpielend = spielerListe.indexOf(spieler);
-                        if (indexSpielend == spielerListe.size() - 1) {
-                            spielerListe.get(1).setSpielend(true);
-                        } else if (indexSpielend == spielerListe.size() - 2) {
-                            spielerListe.get(0).setSpielend(true);
-                        } else {
-                            spielerListe.get(indexSpielend + 2).setSpielend(true);
+                if(spielerListe.size() == 2){
+                    util = new RegelComponentUtil(spielerListe, 0);
+                } else {
+                    int indexSpielend = 0;
+                    for (Spieler spieler : spielerListe) {
+                        if (spieler.isSpielend()) {
+                            indexSpielend = spielerListe.indexOf(spieler);
+                            if (indexSpielend == spielerListe.size() - 1) {
+                                spielerListe.get(1).setSpielend(true);
+                            } else if (indexSpielend == spielerListe.size() - 2) {
+                                spielerListe.get(0).setSpielend(true);
+                            } else {
+                                spielerListe.get(indexSpielend + 2).setSpielend(true);
+                            }
+                            break;
                         }
-                        break;
                     }
+                    spielerListe.get(indexSpielend).setSpielend(false);
+                    util = new RegelComponentUtil(spielerListe, 0);
                 }
-                spielerListe.get(indexSpielend).setSpielend(false);
-                util = new RegelComponentUtil(spielerListe, 0);
                 break;
             default:
                 util = super.holeAuswirkungVonKarte(aktuelleSpielkarte, spielerListe);
