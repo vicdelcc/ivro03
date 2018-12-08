@@ -77,9 +77,9 @@ public class SpielsteuerungImpl implements ISpielsteuerung {
             throw new MauMauException("Spielrunde ist null");
         }
         // TODO wenn aber der 1. Zug ist, ist keine Farbe gesetzt, daher nur wenn es nicht der 1. zug ist, temporär gelöst wenn AuflegteStapel-size > 1
-        if (spielrunde.getRundeFarbe() == null && spielrunde.getAufgelegtStapel().size() > 1) {
-            throw new MauMauException("Spielrundesfarbe ist null");
-        }
+//        if (spielrunde.getRundeFarbe() == null && spielrunde.getAufgelegtStapel().size() > 1) {
+//            throw new MauMauException("Spielrundesfarbe ist null");
+//        }
         if (spielrunde.getAufgelegtStapel() == null || spielrunde.getAufgelegtStapel().isEmpty()) {
             throw new MauMauException("Aufgelegter Stapel ist null oder leer");
         }
@@ -118,8 +118,11 @@ public class SpielsteuerungImpl implements ISpielsteuerung {
             setztKarteVomHandAufDemAufgelegteStapel(spieler, spielkarte, spielrunde);
             spielrunde.setSpielerListe(regelComponentUtil.getSpielerListe());
             spielrunde.setZuZiehnKartenAnzahl(regelComponentUtil.getAnzahlKartenZuZiehen() + spielrunde.getZuZiehnKartenAnzahl());
-            // TODO rundeFarbe setzen nötig für den normalen Fall
-            spielrunde.setRundeFarbe(spielkarte.getBlatttyp());
+//            // TODO rundeFarbe setzen nötig für den normalen Fall
+//            spielrunde.setRundeFarbe(spielkarte.getBlatttyp());
+            if(spielrunde.getRundeFarbe() != null){
+                spielrunde.setRundeFarbe(null);
+            }
             return true;
         } else {
             return false;
@@ -190,6 +193,8 @@ public class SpielsteuerungImpl implements ISpielsteuerung {
         spieler.getHand().addAll(neueKarten);
 
         setSpielendToNextPlayer(spielrunde.getSpielerListe());
+
+        spielrunde.setZuZiehnKartenAnzahl(0);
 
         return spieler;
     }
