@@ -43,13 +43,15 @@ public class ConsoleImpl implements IConsole {
 
         ArrayList<Spieler> spielerListe = consoleView.spielerEingabe(sc);
 
+        //TODO noch eine Runde
+
         Spielrunde spielrunde = spielverwaltung.starteSpielrunde(spielerListe, spiel);
 
         Spieler spieler = spielsteuerung.fragWerDranIst(spielrunde.getSpielerListe());
 
         boolean vollerHand = false;
 
-        do{
+        do {
 
             consoleView.printZugDetails(spielrunde, spieler);
 
@@ -57,22 +59,20 @@ public class ConsoleImpl implements IConsole {
 
             boolean zugErfolgreich = false;
 
-            do{
+            do {
+
                 String wahl = consoleView.eingabgeWaehlen(sc, spieler);
 
                 zugErfolgreich = spieleWahl(wahl, spieler, spielrunde, sollMauAufgerufen, gewaehlteSpielregel);
 
             } while (!zugErfolgreich);
 
-
             vollerHand = !spieler.getHand().isEmpty();
 
             spieler = spielsteuerung.fragWerDranIst(spielrunde.getSpielerListe());
 
-        } while(vollerHand);
+        } while (vollerHand);
 
-
-//        spielsteuerung.spieleKarte(spieler, new Spielkarte(Blattwert.Bube, Blatttyp.Herz), spielrunde);
 
 //        spielVerwaltung.beendeSpielrunde(spielrunde);
 //
@@ -81,12 +81,11 @@ public class ConsoleImpl implements IConsole {
     }
 
 
-
     private boolean spieleWahl(String wahl,
-                            Spieler spieler,
-                            Spielrunde spielrunde,
-                            boolean sollMauMauGerufen,
-                            RegelKompTyp gewaehlteSpielregel) throws MauMauException {
+                               Spieler spieler,
+                               Spielrunde spielrunde,
+                               boolean sollMauMauGerufen,
+                               RegelKompTyp gewaehlteSpielregel) throws MauMauException {
 
         if (sollMauMauGerufen) {
             if (wahl.equalsIgnoreCase("m")) {
@@ -107,8 +106,8 @@ public class ConsoleImpl implements IConsole {
                 Spielkarte karte = getKarteVomHand(spieler, wahl);
                 boolean valid = spieleKarte(spieler, spielrunde, karte, gewaehlteSpielregel);
                 boolean istWuenscher = spielsteuerung.pruefeObWuenscher(karte, gewaehlteSpielregel);
-                if(valid){
-                    if(istWuenscher){
+                if (valid) {
+                    if (istWuenscher) {
                         spieleWuenscher(spielrunde);
                         return true;
                     } else {
@@ -135,7 +134,7 @@ public class ConsoleImpl implements IConsole {
         return spielsteuerung.spieleKarte(spieler, spielkarte, spielrunde, gewaehlteSpielregel);
     }
 
-    private Spielkarte getKarteVomHand(Spieler spieler, String wahl)  {
+    private Spielkarte getKarteVomHand(Spieler spieler, String wahl) {
         return spieler.getHand().get(Integer.parseInt(wahl));
     }
 
@@ -153,16 +152,16 @@ public class ConsoleImpl implements IConsole {
 
     private void mauMauNichtGerufen(Spieler spieler, Spielrunde spielrunde) throws MauMauException {
         consoleView.mauMauNichtgerufenMsg();
-        ziehKarte(spielrunde,spieler);
+        ziehKarte(spielrunde, spieler);
     }
 
     private void ziehKarte(Spielrunde spielrunde, Spieler spieler) throws MauMauException {
         int anzhalZiehen = spielsteuerung.checkZuZiehendenKarten(spielrunde);
-        if(anzhalZiehen==0){
+        if (anzhalZiehen == 0) {
             consoleView.karteGezogenMsg(anzhalZiehen);
-            spielsteuerung.zieheKartenVomStapel(spieler,1,spielrunde);
+            spielsteuerung.zieheKartenVomStapel(spieler, 1, spielrunde);
         } else {
-            spielsteuerung.zieheKartenVomStapel(spieler,anzhalZiehen,spielrunde);
+            spielsteuerung.zieheKartenVomStapel(spieler, anzhalZiehen, spielrunde);
         }
     }
 }
