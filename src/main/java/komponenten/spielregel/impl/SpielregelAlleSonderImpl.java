@@ -20,13 +20,13 @@ import java.util.List;
 public class SpielregelAlleSonderImpl extends SpielregelBasicSonderImpl {
 
     @Override
-    public boolean istKarteLegbar(Spielkarte vorherigeSpielkarte, Spielkarte aktuelleSpielkarte, Blatttyp blatttyp) throws MauMauException {
+    public boolean istKarteLegbar(Spielkarte vorherigeSpielkarte, Spielkarte aktuelleSpielkarte, Blatttyp blatttyp, boolean sindKartenZuZiehen) throws MauMauException {
         // TODO wie behandeln wir exceptions?
         if (vorherigeSpielkarte == null || aktuelleSpielkarte == null) {
             throw new MauMauException("Fehler");
         }
         // Prüfung von BasicSonderRegel
-        boolean istLegbar = super.istKarteLegbar(vorherigeSpielkarte, aktuelleSpielkarte, blatttyp);
+        boolean istLegbar = super.istKarteLegbar(vorherigeSpielkarte, aktuelleSpielkarte, blatttyp, sindKartenZuZiehen);
         // Stopper
         if (vorherigeSpielkarte.getBlattwert() == Blattwert.Sieben && aktuelleSpielkarte.getBlattwert() == Blattwert.Acht) {
             istLegbar = true;
@@ -39,12 +39,14 @@ public class SpielregelAlleSonderImpl extends SpielregelBasicSonderImpl {
                 vorherigeSpielkarte.getBlattwert() == Blattwert.Zehn)
                 && aktuelleSpielkarte.getBlattwert() == Blattwert.Zehn) {
             istLegbar = false;
+        } else if(aktuelleSpielkarte.getBlattwert()== Blattwert.Zehn) {
+            istLegbar = true;
         }
         return istLegbar;
     }
 
     @Override
-    public RegelComponentUtil holeAuswirkungVonKarte(Spielkarte aktuelleSpielkarte, List<Spieler> spielerListe) throws MauMauException {
+    public RegelComponentUtil holeAuswirkungVonKarte(Spielkarte aktuelleSpielkarte, List<Spieler> spielerListe, int anzahlZuZiehendenKarten) throws MauMauException {
         // TODO wie behandeln wir Exceptions?
         if (aktuelleSpielkarte == null || spielerListe == null) {
             throw new MauMauException("Fehler");
@@ -53,22 +55,29 @@ public class SpielregelAlleSonderImpl extends SpielregelBasicSonderImpl {
         switch (aktuelleSpielkarte.getBlattwert()) {
             case Neun:
                 int indexSpielend = 0;
-                for (Spieler spieler : spielerListe) {
-                    if (spieler.isSpielend()) {
-                        indexSpielend = spielerListe.indexOf(spieler);
-                        if (indexSpielend == 0) {
-                            spielerListe.get(spielerListe.size() - 1).setSpielend(true);
-                        } else {
-                            spielerListe.get(indexSpielend - 1).setSpielend(true);
+                if(spielerListe.size() != 2) {
+                    for (Spieler spieler : spielerListe) {
+                        if (spieler.isSpielend()) {
+                            indexSpielend = spielerListe.indexOf(spieler);
+                            if (indexSpielend == 0) {
+                                spielerListe.get(spielerListe.size() - 1).setSpielend(true);
+                            } else {
+                                spielerListe.get(indexSpielend - 1).setSpielend(true);
+                            }
+                            break;
                         }
-                        break;
+                    }
+                    if (spielerListe.size() != 2) {
+                        spielerListe.get(indexSpielend).setSpielend(false);
                     }
                 }
-                spielerListe.get(indexSpielend).setSpielend(false);
                 util = new RegelComponentUtil(spielerListe, 0);
                 break;
+            case Acht:
+                util = super.holeAuswirkungVonKarte(aktuelleSpielkarte, spielerListe, 0);
+                break;
             default:
-                util = super.holeAuswirkungVonKarte(aktuelleSpielkarte, spielerListe);
+                util = super.holeAuswirkungVonKarte(aktuelleSpielkarte, spielerListe, anzahlZuZiehendenKarten);
         }
 
 

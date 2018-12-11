@@ -100,7 +100,7 @@ public class SpielregelBasicSonderTest extends SpielregelTestBase{
         public void testHoleAuswirkungenZweiZiehen() throws MauMauException {
             List<Spieler> spielerListe = getDefaultSpielerListe();
             Spielkarte spielkarte = new Spielkarte(Blattwert.Sieben, Blatttyp.Herz);
-            RegelComponentUtil util = spielRegelService.holeAuswirkungVonKarte(spielkarte, spielerListe);
+            RegelComponentUtil util = spielRegelService.holeAuswirkungVonKarte(spielkarte, spielerListe, 2);
             assertNotNull(util);
             assertEquals(2, util.getAnzahlKartenZuZiehen());
             assertTrue(util.getSpielerListe().get(1).isSpielend());
@@ -115,7 +115,7 @@ public class SpielregelBasicSonderTest extends SpielregelTestBase{
         public void testHoleAuswirkungenAussetzen() throws MauMauException {
             List<Spieler> spielerListe = getDefaultSpielerListe();
             Spielkarte spielkarte = new Spielkarte(Blattwert.Ass, Blatttyp.Herz);
-            RegelComponentUtil util = spielRegelService.holeAuswirkungVonKarte(spielkarte, spielerListe);
+            RegelComponentUtil util = spielRegelService.holeAuswirkungVonKarte(spielkarte, spielerListe, 0);
             assertNotNull(util);
             assertEquals(0, util.getAnzahlKartenZuZiehen());
             assertTrue(util.getSpielerListe().get(2).isSpielend());
@@ -130,7 +130,7 @@ public class SpielregelBasicSonderTest extends SpielregelTestBase{
         public void testHoleAuswirkungenWuenscher() throws MauMauException {
             List<Spieler> spielerListe = getDefaultSpielerListe();
             Spielkarte spielkarte = new Spielkarte(Blattwert.Bube, Blatttyp.Herz);
-            RegelComponentUtil util = spielRegelService.holeAuswirkungVonKarte(spielkarte, spielerListe);
+            RegelComponentUtil util = spielRegelService.holeAuswirkungVonKarte(spielkarte, spielerListe, 0);
             assertNotNull(util);
             assertEquals(0, util.getAnzahlKartenZuZiehen());
             assertTrue(util.getSpielerListe().get(1).isSpielend());

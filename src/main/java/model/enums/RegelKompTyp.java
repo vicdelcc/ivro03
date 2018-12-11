@@ -6,5 +6,5 @@ public enum RegelKompTyp {
 
     MIT_BASIC_SONDER_REGEL,
 
-    ALL_SONDER_REGEL;
+    ALLE_SONDER_REGEL;
 }

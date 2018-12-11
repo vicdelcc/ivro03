@@ -100,7 +100,7 @@ public class SpielregelOhneSonderTest extends SpielregelTestBase {
         public void testHoleAuswirkungen() throws MauMauException {
             List<Spieler> spielerListe = getDefaultSpielerListe();
             Spielkarte spielkarte = new Spielkarte(Blattwert.Sechs, Blatttyp.Herz);
-            RegelComponentUtil util = spielRegelService.holeAuswirkungVonKarte(spielkarte, spielerListe);
+            RegelComponentUtil util = spielRegelService.holeAuswirkungVonKarte(spielkarte, spielerListe, 0);
             assertNotNull(util);
             assertEquals(0, util.getAnzahlKartenZuZiehen());
             assertTrue(util.getSpielerListe().get(1).isSpielend());

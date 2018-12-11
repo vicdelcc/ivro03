@@ -100,7 +100,7 @@ public class SpielregelAlleSonderTest extends SpielregelTestBase {
         public void testHoleAuswirkungenRichtungswechsel() throws MauMauException {
             List<Spieler> spielerListe = getDefaultSpielerListe();
             Spielkarte spielkarte = new Spielkarte(Blattwert.Neun, Blatttyp.Herz);
-            RegelComponentUtil util = spielRegelService.holeAuswirkungVonKarte(spielkarte, spielerListe);
+            RegelComponentUtil util = spielRegelService.holeAuswirkungVonKarte(spielkarte, spielerListe, 0);
             assertNotNull(util);
             assertEquals(0, util.getAnzahlKartenZuZiehen());
             assertTrue(util.getSpielerListe().get(spielerListe.size()-1).isSpielend());
@@ -115,7 +115,7 @@ public class SpielregelAlleSonderTest extends SpielregelTestBase {
         public void testHoleAuswirkungenStopper() throws MauMauException {
             List<Spieler> spielerListe = getDefaultSpielerListe();
             Spielkarte spielkarte = new Spielkarte(Blattwert.Acht, Blatttyp.Herz);
-            RegelComponentUtil util = spielRegelService.holeAuswirkungVonKarte(spielkarte, spielerListe);
+            RegelComponentUtil util = spielRegelService.holeAuswirkungVonKarte(spielkarte, spielerListe, 2);
             assertNotNull(util);
             assertEquals(0, util.getAnzahlKartenZuZiehen());
             assertTrue(util.getSpielerListe().get(1).isSpielend());
@@ -130,7 +130,7 @@ public class SpielregelAlleSonderTest extends SpielregelTestBase {
         public void testHoleAuswirkungenAllesleger() throws MauMauException {
             List<Spieler> spielerListe = getDefaultSpielerListe();
             Spielkarte spielkarte = new Spielkarte(Blattwert.Zehn, Blatttyp.Herz);
-            RegelComponentUtil util = spielRegelService.holeAuswirkungVonKarte(spielkarte, spielerListe);
+            RegelComponentUtil util = spielRegelService.holeAuswirkungVonKarte(spielkarte, spielerListe, 0);
             assertNotNull(util);
             assertEquals(0, util.getAnzahlKartenZuZiehen());
             assertTrue(util.getSpielerListe().get(1).isSpielend());

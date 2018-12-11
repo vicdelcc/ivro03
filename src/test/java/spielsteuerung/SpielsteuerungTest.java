@@ -176,9 +176,9 @@ public class SpielsteuerungTest {
 
         spielrunde.setRundeFarbe(letzteAufgelegteKarte.getBlatttyp());
 
-        Mockito.when(spielregelOhneSonderImpl.istKarteLegbar(letzteAufgelegteKarte, aktuelleKarte, letzteAufgelegteKarte.getBlatttyp())).thenReturn(true);
+        Mockito.when(spielregelOhneSonderImpl.istKarteLegbar(letzteAufgelegteKarte, aktuelleKarte, letzteAufgelegteKarte.getBlatttyp(), false)).thenReturn(true);
 
-        Mockito.when(spielregelOhneSonderImpl.holeAuswirkungVonKarte(aktuelleKarte, spielrunde.getSpielerListe())).thenReturn(regelComponentUtil);
+        Mockito.when(spielregelOhneSonderImpl.holeAuswirkungVonKarte(aktuelleKarte, spielrunde.getSpielerListe(), 0)).thenReturn(regelComponentUtil);
 
         assertTrue(spielsteuerung.spieleKarte(spieler1, aktuelleKarte, spielrunde, RegelKompTyp.OHNE_SONDER_REGEL));
 
@@ -194,7 +194,7 @@ public class SpielsteuerungTest {
 
         Spielkarte aktuelleKarte = new Spielkarte(Blattwert.Sieben, Blatttyp.Karo);
 
-        Mockito.when(spielregelOhneSonderImpl.istKarteLegbar(vorherigeKarte, aktuelleKarte, vorherigeKarte.getBlatttyp())).thenReturn(false);
+        Mockito.when(spielregelOhneSonderImpl.istKarteLegbar(vorherigeKarte, aktuelleKarte, vorherigeKarte.getBlatttyp(), false)).thenReturn(false);
 
         assertFalse(spielsteuerung.spieleKarte(spieler1, aktuelleKarte, spielrunde, RegelKompTyp.OHNE_SONDER_REGEL));
     }

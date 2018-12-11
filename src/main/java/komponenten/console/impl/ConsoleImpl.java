@@ -99,16 +99,15 @@ public class ConsoleImpl implements IConsole {
                 }
             }
 
-            //Benutzer hat Karten zu ziehen aber z nicht gewählt
-            if(!wahl.toLowerCase().equals("z") && sollKartenZiehen){
-                int anzhalZiehen = spielsteuerung.checkZuZiehendenKarten(spielrunde);
-                System.out.println("### Sie sollen Karten vom Stapel ziehen, bitte wählen Sie 'z' oder eine Zahl ###");
-                wahl = consoleView.eingabgeWaehlen(sc, spieler);
-                if(wahl.equalsIgnoreCase("z")){
-                    System.out.println("### " +anzhalZiehen+" Karten wurden gezogen ###");
-                    spielsteuerung.zieheKartenVomStapel(spieler,anzhalZiehen,spielrunde);
-                }
-            }
+
+
+//                int anzhalZiehen = spielsteuerung.checkZuZiehendenKarten(spielrunde);
+//                wahl = consoleView.eingabgeWaehlen(sc, spieler);
+//                if(wahl.equalsIgnoreCase("z")){
+//                    System.out.println("### " +anzhalZiehen+" Karten wurden gezogen ###");
+//                    spielsteuerung.zieheKartenVomStapel(spieler,anzhalZiehen,spielrunde);
+//                }
+
 
             //Benutzer spielt eine Karte - int kann nicht out of bounds sein
             if(StringUtils.isNumeric(wahl) && !sollMauAufgerufen) {

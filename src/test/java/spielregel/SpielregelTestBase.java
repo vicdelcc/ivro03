@@ -105,7 +105,7 @@ public abstract class SpielregelTestBase {
      * @throws MauMauException
      */
     public static boolean istKarteLegbar(ISpielregel service, Spielkarte davor, Spielkarte danach, Blatttyp gewuenschterBlatttyp) throws MauMauException {
-        return service.istKarteLegbar(davor, danach, gewuenschterBlatttyp);
+        return service.istKarteLegbar(davor, danach, gewuenschterBlatttyp, false);
     }
 
 
@@ -115,7 +115,7 @@ public abstract class SpielregelTestBase {
      * @throws MauMauException
      */
     public static void holeAuswirkungenFailed(ISpielregel service) throws MauMauException {
-        service.holeAuswirkungVonKarte(null, null);
+        service.holeAuswirkungVonKarte(null, null, 0);
     }
 
     /**
@@ -129,7 +129,7 @@ public abstract class SpielregelTestBase {
         spielerFirst.setSpielend(true);
         spielerListe.add(spielerFirst);
         spielerListe.add(new Spieler("Victor"));
-        spielerListe.add(new Spieler("Lucas"));
+//        spielerListe.add(new Spieler("Lucas"));
         return spielerListe;
     }
 }

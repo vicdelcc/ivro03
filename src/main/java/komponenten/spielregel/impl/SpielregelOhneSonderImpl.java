@@ -20,7 +20,7 @@ import java.util.List;
 public class SpielregelOhneSonderImpl implements ISpielregel {
 
 
-    public boolean istKarteLegbar(Spielkarte vorherigeSpielkarte, Spielkarte aktuelleSpielkarte, Blatttyp blatttyp) throws MauMauException {
+    public boolean istKarteLegbar(Spielkarte vorherigeSpielkarte, Spielkarte aktuelleSpielkarte, Blatttyp blatttyp, boolean sindKartenZuZiehen) throws MauMauException {
         // TODO wie behandeln wir exceptions?
         if (vorherigeSpielkarte == null || aktuelleSpielkarte == null) {
             throw new MauMauException("Fehler");
@@ -35,7 +35,7 @@ public class SpielregelOhneSonderImpl implements ISpielregel {
     }
 
 
-    public RegelComponentUtil holeAuswirkungVonKarte(Spielkarte aktuelleSpielkarte, List<Spieler> spielerListe) throws MauMauException {
+    public RegelComponentUtil holeAuswirkungVonKarte(Spielkarte aktuelleSpielkarte, List<Spieler> spielerListe, int anzahlZuZiehendenKarten) throws MauMauException {
         // TODO wie behandeln wir Exceptions?
         if (aktuelleSpielkarte == null || spielerListe == null) {
             throw new MauMauException("Fehler");
