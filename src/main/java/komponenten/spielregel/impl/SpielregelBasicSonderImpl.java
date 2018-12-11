@@ -35,6 +35,10 @@ public class SpielregelBasicSonderImpl extends SpielregelOhneSonderImpl {
                 istLegbar = true;
             }
         } else {
+            // Bube darf man auf jede Farbe spielen (also wenn keine Bube der sieben davor gespielt wurde)
+            if(aktuelleSpielkarte.getBlattwert() == Blattwert.Bube) {
+                istLegbar = true;
+            }
             // Sonderprüfung wegen Zwei_ziehen
             switch (vorherigeSpielkarte.getBlattwert()) {
                 case Sieben:
@@ -65,9 +69,9 @@ public class SpielregelBasicSonderImpl extends SpielregelOhneSonderImpl {
                 util.setAnzahlKartenZuZiehen(2);
                 break;
             case Ass:
-                if(spielerListe.size() == 2){
-                    util = new RegelComponentUtil(spielerListe, 0);
-                } else {
+//                if(spielerListe.size() == 2){
+//                    util = new RegelComponentUtil(spielerListe, 0);
+//                } else {
                     int indexSpielend = 0;
                     for (Spieler spieler : spielerListe) {
                         if (spieler.isSpielend()) {
@@ -82,9 +86,11 @@ public class SpielregelBasicSonderImpl extends SpielregelOhneSonderImpl {
                             break;
                         }
                     }
-                    spielerListe.get(indexSpielend).setSpielend(false);
+                    if(spielerListe.size() != 2) {
+                        spielerListe.get(indexSpielend).setSpielend(false);
+                    }
                     util = new RegelComponentUtil(spielerListe, 0);
-                }
+//                }
                 break;
             default:
                 util = super.holeAuswirkungVonKarte(aktuelleSpielkarte, spielerListe);

@@ -21,13 +21,13 @@ public class ConsoleView {
         sc.nextLine();
         System.out.println("Bitte geben Sie die Namen der Spieler:");
         do {
-            System.out.println("Bitte geben Sie den " + (spielerList.size() + 1) + ". Namen:");
+            System.out.print((spielerList.size() + 1) + ". Spieler: ");
             String name = sc.nextLine();
             spielerList.add(new Spieler(name));
 
-            System.out.println("Wollen Sie noch einen Spieler ins Spiel eintragen? (y|n)");
+            System.out.println("Wollen Sie noch einen Spieler ins Spiel eintragen? (j|n)");
             String antwort = sc.nextLine();
-            if (!antwort.equals("y")) {
+            if (!antwort.equals("j")) {
                 if (spielerList.size() > 1) {
                     nochSpieler = false;
                 } else {
@@ -84,7 +84,7 @@ public class ConsoleView {
         do{
             wahl = sc.nextLine();
             if(!istEingabeRichtig(wahl, spieler.getHand().size())){
-                System.out.println("Die Eingabe war false! Bitte geben Sie 'm','z' oder eine Zahl");
+                System.out.println("Die Eingabe war falsch! Bitte geben Sie 'm','z' oder eine Zahl");
             }
         } while (!istEingabeRichtig(wahl, spieler.getHand().size()));
 
@@ -106,7 +106,7 @@ public class ConsoleView {
             System.out.println(msg);
         }
         for (T typ : values) {
-            System.out.println("Wählen Sie " + counter + " für " + typ.toString());
+            System.out.println("["+ counter + "] " + typ.toString());
             counter++;
         }
     }
@@ -114,30 +114,33 @@ public class ConsoleView {
     public void printZugDetails(Spielrunde spielrunde, Spieler spieler) {
         Spielkarte letzteKarte = spielrunde.getAufgelegtStapel().get(spielrunde.getAufgelegtStapel().size() - 1);
         System.out.println("-----------------------------------");
-        System.out.println("Der jetzige Spieler ist " + spieler.getName());
+        System.out.println("    Spieler daran:  " + spieler.getName());
         if(letzteKarte.getBlatttyp().equals(spielrunde.getRundeFarbe()) || spielrunde.getRundeFarbe() == null){
-            System.out.println("Die aufgelegte Karte ist " + letzteKarte.toString());
+            System.out.println(" Aufgelegte Karte:  " + letzteKarte.toString());
+            System.out.println("-----------------------------------");
         } else {
             if(spielrunde.getRundeFarbe() != null){
                 System.out.println("Spielrundefarbe is " + spielrunde.getRundeFarbe());
             }
         }
         if(spielrunde.getZuZiehnKartenAnzahl() != null && spielrunde.getZuZiehnKartenAnzahl() > 0){
-            System.out.println(spielrunde.getZuZiehnKartenAnzahl() + " Karten sollen gezugen werden");
+            System.out.println(spielrunde.getZuZiehnKartenAnzahl() + " Karten sollen gezogen werden");
         }
         printHand(spieler);
-        System.out.println("Wenn Sie MauMau aufrufen wollen, geben Sie 'm' ein");
-        System.out.println("Wenn Sie Karten ziehen wollen, geben Sie 'z' ein");
+        System.out.println("\nALTERNATIVEN:");
+        System.out.println("[m] Maumau aufrufen");
+        System.out.println("[z] Karten ziehen");
+        System.out.print("\nAuswahl: ");
     }
 
     private Spielkarte wahleKarte(Scanner sc, List<Spielkarte> hand) {
-        System.out.println("Mit welcher Karte wollen Sie spielen? (Waehlen Sie ein Index)");
+        System.out.println("Mit welcher Karte wollen Sie spielen? (Wählen Sie ein Index)");
         int i = sc.nextInt();
         return hand.get(i);
     }
 
     private void printHand(Spieler spieler) {
-        System.out.println(spieler.getName() + "shand enthaelt die folgenden karten:");
+        System.out.println(spieler.getName() + " hat folgenden karten in der Hand:");
         int counter = 0;
         for (Spielkarte spielkarte : spieler.getHand()) {
             System.out.println("[" + counter + "] " + spielkarte.toString());

@@ -91,10 +91,10 @@ public class ConsoleImpl implements IConsole {
             if(wahl.toLowerCase().equals("z")){
                 int anzhalZiehen = spielsteuerung.checkZuZiehendenKarten(spielrunde);
                 if(anzhalZiehen==0){
-                    System.out.println("Eine Karte wurde gezogen");
+                    System.out.println("### Eine Karte wurde gezogen ###");
                     spielsteuerung.zieheKartenVomStapel(spieler,1,spielrunde);
                 } else {
-                    System.out.println(anzhalZiehen+" Karten wurden gezogen");
+                    System.out.println("### " + anzhalZiehen+" Karten wurden gezogen ###");
                     spielsteuerung.zieheKartenVomStapel(spieler,anzhalZiehen,spielrunde);
                 }
             }
@@ -102,10 +102,10 @@ public class ConsoleImpl implements IConsole {
             //Benutzer hat Karten zu ziehen aber z nicht gewählt
             if(!wahl.toLowerCase().equals("z") && sollKartenZiehen){
                 int anzhalZiehen = spielsteuerung.checkZuZiehendenKarten(spielrunde);
-                System.out.println("Sie sollen Karten vom Stapel ziehen, bitte waehlen Sie 'z' oder eine Zahl");
+                System.out.println("### Sie sollen Karten vom Stapel ziehen, bitte wählen Sie 'z' oder eine Zahl ###");
                 wahl = consoleView.eingabgeWaehlen(sc, spieler);
                 if(wahl.equalsIgnoreCase("z")){
-                    System.out.println(anzhalZiehen+" Karten wurden gezogen");
+                    System.out.println("### " +anzhalZiehen+" Karten wurden gezogen ###");
                     spielsteuerung.zieheKartenVomStapel(spieler,anzhalZiehen,spielrunde);
                 }
             }
@@ -118,7 +118,7 @@ public class ConsoleImpl implements IConsole {
 
                 if (!karteValid) {
                     do {
-                        System.out.println("Die Karte kann nicht aufgelegt werden! Spielen Sie eine andere Karte");
+                        System.out.println("### Die Karte kann nicht aufgelegt werden! Spielen Sie eine andere Karte ###");
                         wahl = consoleView.eingabgeWaehlen(sc, spieler);
                         spielkarte = spieler.getHand().get(Integer.parseInt(wahl));
                         karteValid = spielsteuerung.spieleKarte(spieler, spielkarte, spielrunde, gewaehlteSpielregel);
