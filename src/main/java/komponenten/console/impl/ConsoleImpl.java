@@ -66,23 +66,23 @@ public class ConsoleImpl implements IConsole {
                 Spielkarte spielkarte = spieler.getHand().get(0);
                 boolean karteValid = spielsteuerung.spieleKarte(spieler, spielkarte, spielrunde, gewaehlteSpielregel);
                 if(karteValid){
-                    System.out.println("Spiel beendet!");
+                    System.out.println("### Spiel beendet! ###");
                 } else {
-                    System.out.println("Karte kann nicht gelegt werden! Eine Karte wurde gezogen");
+                    System.out.println("### Karte kann nicht gelegt werden! Eine Karte wurde gezogen ###");
                     spielsteuerung.zieheKartenVomStapel(spieler,1,spielrunde);
                 }
             }
 
             //Benutzer hat 1 Karte aber hat MauMau nicht gerufen
             if(!wahl.toLowerCase().equals("m") && sollMauAufgerufen){
-                System.out.println("Sie haben MauMau nicht gerufen. Sie bekommen eine Karte");
+                System.out.println("### Sie haben MauMau nicht gerufen. Sie bekommen eine Karte ###");
                 spielsteuerung.zieheKartenVomStapel(spieler,1,spielrunde);
             }
 
             //Benutzer hat mehr als 1 Karte und MauMau gerufen
             if(wahl.toLowerCase().equals("m") && !sollMauAufgerufen){
                 do{
-                    System.out.println("Sie haben mehr als eine Karte im Hand, Bitte wählen Sie 'z' oder eine Zahl");
+                    System.out.println("### Sie haben mehr als eine Karte im Hand, Bitte wählen Sie 'z' oder eine Zahl ###");
                     wahl = consoleView.eingabgeWaehlen(sc, spieler);
                 } while (wahl.equalsIgnoreCase("m"));
             }
@@ -119,6 +119,7 @@ public class ConsoleImpl implements IConsole {
                 if (!karteValid) {
                     do {
                         System.out.println("### Die Karte kann nicht aufgelegt werden! Spielen Sie eine andere Karte ###");
+                        consoleView.printZugDetails(spielrunde, spieler);
                         wahl = consoleView.eingabgeWaehlen(sc, spieler);
                         spielkarte = spieler.getHand().get(Integer.parseInt(wahl));
                         karteValid = spielsteuerung.spieleKarte(spieler, spielkarte, spielrunde, gewaehlteSpielregel);

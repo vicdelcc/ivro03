@@ -31,7 +31,7 @@ public class ConsoleView {
                 if (spielerList.size() > 1) {
                     nochSpieler = false;
                 } else {
-                    System.out.println("Ein Spiel muss mindestens 2 Spieler haben");
+                    System.out.println("### Ein Spiel muss mindestens 2 Spieler haben ###");
                 }
             }
         } while (nochSpieler);
@@ -48,7 +48,7 @@ public class ConsoleView {
         do {
             wahl = sc.nextInt();
             if (wahl > RegelKompTyp.values().length || wahl < 0) {
-                System.out.println("Bitte geben Sie einen der zulässigen Werte");
+                System.out.println(">>> Bitte geben Sie einen der zulässigen Werte <<<");
                 richtigeEingabe = false;
             } else {
                 richtigeEingabe = true;
@@ -69,7 +69,7 @@ public class ConsoleView {
         do {
             wahl = sc.nextInt();
             if (wahl > SpielTyp.values().length || wahl < 0) {
-                System.out.println("Bitte geben Sie einen der zulässigen Werte");
+                System.out.println(">>> Bitte geben Sie einen der zulässigen Werte <<<");
                 richtigeEingabe = false;
             } else {
                 richtigeEingabe = true;
@@ -84,7 +84,7 @@ public class ConsoleView {
         do{
             wahl = sc.nextLine();
             if(!istEingabeRichtig(wahl, spieler.getHand().size())){
-                System.out.println("Die Eingabe war falsch! Bitte geben Sie 'm','z' oder eine Zahl");
+                System.out.println(">>> Die Eingabe war falsch! Bitte geben Sie 'm','z' oder eine Zahl <<<");
             }
         } while (!istEingabeRichtig(wahl, spieler.getHand().size()));
 
@@ -120,11 +120,12 @@ public class ConsoleView {
             System.out.println("-----------------------------------");
         } else {
             if(spielrunde.getRundeFarbe() != null){
-                System.out.println("Spielrundefarbe is " + spielrunde.getRundeFarbe());
+                System.out.println("  Spielrundefarbe:  " + spielrunde.getRundeFarbe());
+                System.out.println("-----------------------------------");
             }
         }
         if(spielrunde.getZuZiehnKartenAnzahl() != null && spielrunde.getZuZiehnKartenAnzahl() > 0){
-            System.out.println(spielrunde.getZuZiehnKartenAnzahl() + " Karten sollen gezogen werden");
+            System.out.println("### " +spielrunde.getZuZiehnKartenAnzahl() + " Karten sollen gezogen werden ###");
         }
         printHand(spieler);
         System.out.println("\nALTERNATIVEN:");
