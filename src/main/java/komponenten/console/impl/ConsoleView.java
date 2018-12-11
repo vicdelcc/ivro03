@@ -164,4 +164,33 @@ public class ConsoleView {
         sc.nextLine();
         return Blatttyp.values()[i];
     }
+
+    public void mauMauNichtgerufenMsg(){
+        System.out.println("### Sie haben MauMau nicht gerufen. ###");
+    }
+
+    public void mauMauRufenMsg(){
+        System.out.println("### Mau Mau! ###");
+    }
+
+    public void spielBeendetMsg(){
+        System.out.println("### Spiel beendet! ###");
+    }
+
+    public void nichtLegbareKarteMsg(){
+        System.out.println("### Karte kann nicht gelegt werden! ###");
+    }
+
+    public void mauMauNichtAufrufenMsg(){
+        System.out.println("### Sie sollen 'z' oder ein Karteindex eingeben ###");
+    }
+
+    public void karteGezogenMsg(int anzhalZiehen) {
+        if(anzhalZiehen == 0){
+            System.out.println("### Eine Karte wurde gezogen ###");
+        } else {
+            System.out.println("### " + anzhalZiehen+" Karten wurden gezogen ###");
+
+        }
+    }
 }

@@ -11,7 +11,6 @@ import model.Spielrunde;
 import model.enums.Blatttyp;
 import model.enums.RegelKompTyp;
 import model.enums.SpielTyp;
-import model.exceptions.FachlicheException;
 import model.exceptions.MauMauException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,83 +53,17 @@ public class ConsoleImpl implements IConsole {
 
             consoleView.printZugDetails(spielrunde, spieler);
 
-            String wahl = consoleView.eingabgeWaehlen(sc, spieler);
-
             boolean sollMauAufgerufen = spielsteuerung.sollMauMauAufrufen(spieler);
 
-            boolean sollKartenZiehen = spielsteuerung.checkZuZiehendenKarten(spielrunde) > 0;
+            boolean zugErfolgreich = false;
 
-            //Benutzer hat 1 Karte und MauMau gerufen
-            if(wahl.toLowerCase().equals("m") && sollMauAufgerufen){
-                System.out.println("Mau Mau!");
-                Spielkarte spielkarte = spieler.getHand().get(0);
-                boolean karteValid = spielsteuerung.spieleKarte(spieler, spielkarte, spielrunde, gewaehlteSpielregel);
-                if(karteValid){
-                    System.out.println("### Spiel beendet! ###");
-                } else {
-                    System.out.println("### Karte kann nicht gelegt werden! Eine Karte wurde gezogen ###");
-                    spielsteuerung.zieheKartenVomStapel(spieler,1,spielrunde);
-                }
-            }
+            do{
+                String wahl = consoleView.eingabgeWaehlen(sc, spieler);
 
-            //Benutzer hat 1 Karte aber hat MauMau nicht gerufen
-            if(!wahl.toLowerCase().equals("m") && sollMauAufgerufen){
-                System.out.println("### Sie haben MauMau nicht gerufen. Sie bekommen eine Karte ###");
-                spielsteuerung.zieheKartenVomStapel(spieler,1,spielrunde);
-            }
+                zugErfolgreich = spieleWahl(wahl, spieler, spielrunde, sollMauAufgerufen, gewaehlteSpielregel);
 
-            //Benutzer hat mehr als 1 Karte und MauMau gerufen
-            if(wahl.toLowerCase().equals("m") && !sollMauAufgerufen){
-                do{
-                    System.out.println("### Sie haben mehr als eine Karte im Hand, Bitte wählen Sie 'z' oder eine Zahl ###");
-                    wahl = consoleView.eingabgeWaehlen(sc, spieler);
-                } while (wahl.equalsIgnoreCase("m"));
-            }
+            } while (!zugErfolgreich);
 
-            //Benutzer hat gewählt eine Karte zu ziehen
-            if(wahl.toLowerCase().equals("z")){
-                int anzhalZiehen = spielsteuerung.checkZuZiehendenKarten(spielrunde);
-                if(anzhalZiehen==0){
-                    System.out.println("### Eine Karte wurde gezogen ###");
-                    spielsteuerung.zieheKartenVomStapel(spieler,1,spielrunde);
-                } else {
-                    System.out.println("### " + anzhalZiehen+" Karten wurden gezogen ###");
-                    spielsteuerung.zieheKartenVomStapel(spieler,anzhalZiehen,spielrunde);
-                }
-            }
-
-
-
-//                int anzhalZiehen = spielsteuerung.checkZuZiehendenKarten(spielrunde);
-//                wahl = consoleView.eingabgeWaehlen(sc, spieler);
-//                if(wahl.equalsIgnoreCase("z")){
-//                    System.out.println("### " +anzhalZiehen+" Karten wurden gezogen ###");
-//                    spielsteuerung.zieheKartenVomStapel(spieler,anzhalZiehen,spielrunde);
-//                }
-
-
-            //Benutzer spielt eine Karte - int kann nicht out of bounds sein
-            if(StringUtils.isNumeric(wahl) && !sollMauAufgerufen) {
-                Spielkarte spielkarte = spieler.getHand().get(Integer.parseInt(wahl));
-                boolean istWuenscher = spielsteuerung.pruefeObWuenscher(spielkarte, gewaehlteSpielregel);
-                boolean karteValid = spielsteuerung.spieleKarte(spieler, spielkarte, spielrunde, gewaehlteSpielregel);
-
-                if (!karteValid) {
-                    do {
-                        System.out.println("### Die Karte kann nicht aufgelegt werden! Spielen Sie eine andere Karte ###");
-                        consoleView.printZugDetails(spielrunde, spieler);
-                        wahl = consoleView.eingabgeWaehlen(sc, spieler);
-                        spielkarte = spieler.getHand().get(Integer.parseInt(wahl));
-                        karteValid = spielsteuerung.spieleKarte(spieler, spielkarte, spielrunde, gewaehlteSpielregel);
-                    } while (!karteValid);
-                }
-
-                if (istWuenscher) {
-                    consoleView.printFarben();
-                    Blatttyp blatttyp = consoleView.farbeWawhlen(sc);
-                    spielsteuerung.bestimmeBlatttyp(blatttyp, spielrunde);
-                }
-            }
 
             vollerHand = !spieler.getHand().isEmpty();
 
@@ -141,14 +74,95 @@ public class ConsoleImpl implements IConsole {
 
 //        spielsteuerung.spieleKarte(spieler, new Spielkarte(Blattwert.Bube, Blatttyp.Herz), spielrunde);
 
-
-
-
-
-
 //        spielVerwaltung.beendeSpielrunde(spielrunde);
 //
 //        spielVerwaltung.beendeSpiel(spiel);
 
+    }
+
+
+
+    private boolean spieleWahl(String wahl,
+                            Spieler spieler,
+                            Spielrunde spielrunde,
+                            boolean sollMauMauGerufen,
+                            RegelKompTyp gewaehlteSpielregel) throws MauMauException {
+
+        if (sollMauMauGerufen) {
+            if (wahl.equalsIgnoreCase("m")) {
+                mauMauRufen(gewaehlteSpielregel, spielrunde, spieler);
+                return true;
+            } else {
+                mauMauNichtGerufen(spieler, spielrunde);
+                return true;
+            }
+        } else {
+            if (wahl.equalsIgnoreCase("z")) {
+                ziehKarte(spielrunde, spieler);
+                return true;
+            } else if (wahl.equalsIgnoreCase("m")) {
+                consoleView.mauMauNichtAufrufenMsg();
+                return false;
+            } else {
+                Spielkarte karte = getKarteVomHand(spieler, wahl);
+                boolean valid = spieleKarte(spieler, spielrunde, karte, gewaehlteSpielregel);
+                boolean istWuenscher = spielsteuerung.pruefeObWuenscher(karte, gewaehlteSpielregel);
+                if(valid){
+                    if(istWuenscher){
+                        spieleWuenscher(spielrunde);
+                        return true;
+                    } else {
+                        return true;
+                    }
+                } else {
+                    consoleView.nichtLegbareKarteMsg();
+                    return false;
+                }
+            }
+        }
+    }
+
+    private void spieleWuenscher(Spielrunde spielrunde) throws MauMauException {
+        consoleView.printFarben();
+        Blatttyp blatttyp = consoleView.farbeWawhlen(sc);
+        spielsteuerung.bestimmeBlatttyp(blatttyp, spielrunde);
+    }
+
+    private boolean spieleKarte(Spieler spieler,
+                                Spielrunde spielrunde,
+                                Spielkarte spielkarte,
+                                RegelKompTyp gewaehlteSpielregel) throws MauMauException {
+        return spielsteuerung.spieleKarte(spieler, spielkarte, spielrunde, gewaehlteSpielregel);
+    }
+
+    private Spielkarte getKarteVomHand(Spieler spieler, String wahl)  {
+        return spieler.getHand().get(Integer.parseInt(wahl));
+    }
+
+    private void mauMauRufen(RegelKompTyp gewaehlteSpielregel, Spielrunde spielrunde, Spieler spieler) throws MauMauException {
+        consoleView.mauMauRufenMsg();
+        Spielkarte spielkarte = spieler.getHand().get(0);
+        boolean karteValid = spielsteuerung.spieleKarte(spieler, spielkarte, spielrunde, gewaehlteSpielregel);
+        if (karteValid) {
+            consoleView.spielBeendetMsg();
+        } else {
+            consoleView.nichtLegbareKarteMsg();
+            ziehKarte(spielrunde, spieler);
+        }
+    }
+
+    private void mauMauNichtGerufen(Spieler spieler, Spielrunde spielrunde) throws MauMauException {
+        consoleView.mauMauNichtgerufenMsg();
+        ziehKarte(spielrunde,spieler);
+    }
+
+    private void ziehKarte(Spielrunde spielrunde, Spieler spieler) throws MauMauException {
+        int anzhalZiehen = spielsteuerung.checkZuZiehendenKarten(spielrunde);
+        if(anzhalZiehen==0){
+            consoleView.karteGezogenMsg(anzhalZiehen);
+            spielsteuerung.zieheKartenVomStapel(spieler,1,spielrunde);
+        } else {
+            spielsteuerung.zieheKartenVomStapel(spieler,anzhalZiehen,spielrunde);
+        }
     }
 }
