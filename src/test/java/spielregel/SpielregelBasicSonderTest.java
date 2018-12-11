@@ -41,13 +41,15 @@ public class SpielregelBasicSonderTest extends SpielregelTestBase{
         private Spielkarte afterSpielkarte;
         private boolean istAuflegbar;
         private Blatttyp blatttyp;
+        private boolean sindKartenZuZiehen;
 
-        public ParmeterizedPart(Spielkarte beforeSpielkarte, Spielkarte afterSpielkarte, boolean istAuflegbar, Blatttyp blatttyp) {
+        public ParmeterizedPart(Spielkarte beforeSpielkarte, Spielkarte afterSpielkarte, boolean istAuflegbar, Blatttyp blatttyp, boolean sindKartenZuZiehen) {
             super();
             this.beforeSpielkarte = beforeSpielkarte;
             this.afterSpielkarte = afterSpielkarte;
             this.istAuflegbar = istAuflegbar;
             this.blatttyp = blatttyp;
+            this.sindKartenZuZiehen = sindKartenZuZiehen;
         }
 
         /**
@@ -57,7 +59,7 @@ public class SpielregelBasicSonderTest extends SpielregelTestBase{
          */
         @Test
         public void testIstKarteAuflegbarSuccess() throws MauMauException {
-            boolean legbar = istKarteLegbar(spielRegelService, beforeSpielkarte, afterSpielkarte, blatttyp);
+            boolean legbar = istKarteLegbar(spielRegelService, beforeSpielkarte, afterSpielkarte, blatttyp, sindKartenZuZiehen);
             assertEquals(istAuflegbar, legbar);
         }
     }
@@ -83,7 +85,7 @@ public class SpielregelBasicSonderTest extends SpielregelTestBase{
 
         @Test(expected = MauMauException.class)
         public void testIstKarteAuflegbarFailed() throws MauMauException {
-            istKarteLegbar(spielRegelService, null, null, null);
+            istKarteLegbar(spielRegelService, null, null, null, false);
         }
 
         @Test(expected = MauMauException.class)
@@ -100,7 +102,7 @@ public class SpielregelBasicSonderTest extends SpielregelTestBase{
         public void testHoleAuswirkungenZweiZiehen() throws MauMauException {
             List<Spieler> spielerListe = getDefaultSpielerListe();
             Spielkarte spielkarte = new Spielkarte(Blattwert.Sieben, Blatttyp.Herz);
-            RegelComponentUtil util = spielRegelService.holeAuswirkungVonKarte(spielkarte, spielerListe, 2);
+            RegelComponentUtil util = spielRegelService.holeAuswirkungVonKarte(spielkarte, spielerListe, 0);
             assertNotNull(util);
             assertEquals(2, util.getAnzahlKartenZuZiehen());
             assertTrue(util.getSpielerListe().get(1).isSpielend());

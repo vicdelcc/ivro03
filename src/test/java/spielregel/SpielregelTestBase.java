@@ -25,10 +25,10 @@ public abstract class SpielregelTestBase {
      * @return Collection<Object                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               [                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ]> - die Kombinationen in einem Collection-Object
      */
     public static Collection<Object[]> getDataOhneSonder() {
-        Object[][] data = {{new Spielkarte(Blattwert.Acht, Blatttyp.Herz), new Spielkarte(Blattwert.Bube, Blatttyp.Herz), true, null},
-                {new Spielkarte(Blattwert.Acht, Blatttyp.Herz), new Spielkarte(Blattwert.Acht, Blatttyp.Pik), true, null},
-                {new Spielkarte(Blattwert.Acht, Blatttyp.Herz), new Spielkarte(Blattwert.Sieben, Blatttyp.Karo), false, null},
-                {new Spielkarte(Blattwert.Zehn, Blatttyp.Kreuz), new Spielkarte(Blattwert.Dame, Blatttyp.Herz), false, null}};
+        Object[][] data = {{new Spielkarte(Blattwert.Acht, Blatttyp.Herz), new Spielkarte(Blattwert.Bube, Blatttyp.Herz), true, null, false},
+                {new Spielkarte(Blattwert.Acht, Blatttyp.Herz), new Spielkarte(Blattwert.Acht, Blatttyp.Pik), true, null, false},
+                {new Spielkarte(Blattwert.Acht, Blatttyp.Herz), new Spielkarte(Blattwert.Sieben, Blatttyp.Karo), false, null, false},
+                {new Spielkarte(Blattwert.Zehn, Blatttyp.Kreuz), new Spielkarte(Blattwert.Dame, Blatttyp.Herz), false, null, false}};
         return Arrays.asList(data);
     }
 
@@ -41,17 +41,15 @@ public abstract class SpielregelTestBase {
         Collection<Object[]> dataList = getDataOhneSonder();
         Object[][] data = {
                 // Kombination ALLES_ZIEHEN --> true
-                {new Spielkarte(Blattwert.Sieben, Blatttyp.Herz), new Spielkarte(Blattwert.Sieben, Blatttyp.Herz), true, null},
+                {new Spielkarte(Blattwert.Sieben, Blatttyp.Herz), new Spielkarte(Blattwert.Sieben, Blatttyp.Herz), true, null, true},
                 // Kombination ZWEI_ZIEHEN --> false
-                {new Spielkarte(Blattwert.Sieben, Blatttyp.Herz), new Spielkarte(Blattwert.Sechs, Blatttyp.Herz), false, null},
+                {new Spielkarte(Blattwert.Sieben, Blatttyp.Herz), new Spielkarte(Blattwert.Sechs, Blatttyp.Herz), false, null, true},
                 // Kombination ZWEI_ZIEHEN --> true
-                {new Spielkarte(Blattwert.Sieben, Blatttyp.Herz), new Spielkarte(Blattwert.Sieben, Blatttyp.Herz), true, null},
-                // Kombination AUSSETZEN --> immer false
-                {new Spielkarte(Blattwert.Ass, Blatttyp.Herz), new Spielkarte(Blattwert.Zehn, Blatttyp.Herz), false, null},
+                {new Spielkarte(Blattwert.Sieben, Blatttyp.Herz), new Spielkarte(Blattwert.Sieben, Blatttyp.Herz), true, null, true},
                 // Kombination WUENSCHER --> true
-                {new Spielkarte(Blattwert.Bube, Blatttyp.Kreuz), new Spielkarte(Blattwert.Dame, Blatttyp.Herz), true, Blatttyp.Herz},
+                {new Spielkarte(Blattwert.Bube, Blatttyp.Kreuz), new Spielkarte(Blattwert.Dame, Blatttyp.Herz), true, Blatttyp.Herz, false},
                 // Kombination WUENSCHER --> false
-                {new Spielkarte(Blattwert.Bube, Blatttyp.Kreuz), new Spielkarte(Blattwert.Dame, Blatttyp.Herz), false, Blatttyp.Karo}};
+                {new Spielkarte(Blattwert.Bube, Blatttyp.Kreuz), new Spielkarte(Blattwert.Dame, Blatttyp.Herz), false, Blatttyp.Karo, false}};
         Collection<Object[]> newList = Arrays.asList(data);
         Stream<Object[]> combinedStream = Stream.of(dataList, newList).flatMap(Collection::stream);
         return combinedStream.collect(Collectors.toList());
@@ -67,15 +65,15 @@ public abstract class SpielregelTestBase {
         Collection<Object[]> dataList = getDataBasicSonder();
         Object[][] data = {
                 // Kombination RICHTUNGSWECHSEL (geht immer nach den normalen Regel)
-                {new Spielkarte(Blattwert.Dame, Blatttyp.Kreuz), new Spielkarte(Blattwert.Neun, Blatttyp.Kreuz), true, null},
+                {new Spielkarte(Blattwert.Dame, Blatttyp.Kreuz), new Spielkarte(Blattwert.Neun, Blatttyp.Kreuz), true, null, false},
                 // Kombination STOPPER --> true (auf ALLES_ZIEHEN)
-                {new Spielkarte(Blattwert.Sieben, Blatttyp.Kreuz), new Spielkarte(Blattwert.Acht, Blatttyp.Kreuz), true, null},
+                {new Spielkarte(Blattwert.Sieben, Blatttyp.Kreuz), new Spielkarte(Blattwert.Acht, Blatttyp.Kreuz), true, null, true},
                 // Kombination STOPPER --> true (auf ALLES_ZIEHEN)
-                {new Spielkarte(Blattwert.Sieben, Blatttyp.Kreuz), new Spielkarte(Blattwert.Acht, Blatttyp.Herz), true, null},
+                {new Spielkarte(Blattwert.Sieben, Blatttyp.Kreuz), new Spielkarte(Blattwert.Acht, Blatttyp.Herz), true, null, true},
                 // Kombination ALLESLEGER --> true
-                {new Spielkarte(Blattwert.Sechs, Blatttyp.Kreuz), new Spielkarte(Blattwert.Sechs, Blatttyp.Herz), true, null},
+                {new Spielkarte(Blattwert.Sechs, Blatttyp.Kreuz), new Spielkarte(Blattwert.Sechs, Blatttyp.Herz), true, null, false},
                 // Kombination ALLESLEGER --> false
-                {new Spielkarte(Blattwert.Sieben, Blatttyp.Kreuz), new Spielkarte(Blattwert.Zehn, Blatttyp.Kreuz), false, null}};
+                {new Spielkarte(Blattwert.Sieben, Blatttyp.Kreuz), new Spielkarte(Blattwert.Zehn, Blatttyp.Kreuz), false, null, true}};
         Collection<Object[]> newList = Arrays.asList(data);
         Stream<Object[]> combinedStream = Stream.of(dataList, newList).flatMap(Collection::stream);
         return combinedStream.collect(Collectors.toList());
@@ -104,8 +102,8 @@ public abstract class SpielregelTestBase {
      * @return boolean - ob die Spielkarte legbar ist oder nicht
      * @throws MauMauException
      */
-    public static boolean istKarteLegbar(ISpielregel service, Spielkarte davor, Spielkarte danach, Blatttyp gewuenschterBlatttyp) throws MauMauException {
-        return service.istKarteLegbar(davor, danach, gewuenschterBlatttyp, false);
+    public static boolean istKarteLegbar(ISpielregel service, Spielkarte davor, Spielkarte danach, Blatttyp gewuenschterBlatttyp, boolean sindKartenZuZiehen) throws MauMauException {
+        return service.istKarteLegbar(davor, danach, gewuenschterBlatttyp, sindKartenZuZiehen);
     }
 
 
@@ -129,7 +127,7 @@ public abstract class SpielregelTestBase {
         spielerFirst.setSpielend(true);
         spielerListe.add(spielerFirst);
         spielerListe.add(new Spieler("Victor"));
-//        spielerListe.add(new Spieler("Lucas"));
+        spielerListe.add(new Spieler("Lucas"));
         return spielerListe;
     }
 }

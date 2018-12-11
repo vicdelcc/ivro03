@@ -40,13 +40,15 @@ public class SpielregelAlleSonderTest extends SpielregelTestBase {
         private Spielkarte afterSpielkarte;
         private boolean istAuflegbar;
         private Blatttyp blatttyp;
+        private boolean sindKartenZuZiehen;
 
-        public ParmeterizedPart(Spielkarte beforeSpielkarte, Spielkarte afterSpielkarte, boolean istAuflegbar, Blatttyp blatttyp) {
+        public ParmeterizedPart(Spielkarte beforeSpielkarte, Spielkarte afterSpielkarte, boolean istAuflegbar, Blatttyp blatttyp, boolean sindKartenZuZiehen) {
             super();
             this.beforeSpielkarte = beforeSpielkarte;
             this.afterSpielkarte = afterSpielkarte;
             this.istAuflegbar = istAuflegbar;
             this.blatttyp = blatttyp;
+            this.sindKartenZuZiehen = sindKartenZuZiehen;
         }
 
         /**
@@ -56,7 +58,7 @@ public class SpielregelAlleSonderTest extends SpielregelTestBase {
          */
         @Test
         public void testIstKarteAuflegbarSuccess() throws MauMauException {
-            boolean legbar = istKarteLegbar(spielRegelService, beforeSpielkarte, afterSpielkarte, blatttyp);
+            boolean legbar = istKarteLegbar(spielRegelService, beforeSpielkarte, afterSpielkarte, blatttyp, sindKartenZuZiehen);
             assertEquals(istAuflegbar,legbar);
         }
     }
@@ -82,7 +84,7 @@ public class SpielregelAlleSonderTest extends SpielregelTestBase {
 
         @Test(expected = MauMauException.class)
         public void testIstKarteAuflegbarFailed() throws MauMauException {
-            istKarteLegbar(spielRegelService, null, null, null);
+            istKarteLegbar(spielRegelService, null, null, null, false);
         }
 
         @Test(expected = MauMauException.class)

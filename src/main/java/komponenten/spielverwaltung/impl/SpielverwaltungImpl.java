@@ -60,8 +60,10 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
 
         // Aufgelegter Stapel mit initialer Spielkarte wird generiert
         List<Spielkarte> aufgelegterStapel = new ArrayList<>();
-        aufgelegterStapel.add(spielrunde.getVerdeckteStapel().get((int)Math.random()*((spielrunde.getVerdeckteStapel().size()-1))));
+        int indexInitialKarte = (int)Math.random()*((spielrunde.getVerdeckteStapel().size()-1));
+        aufgelegterStapel.add(spielrunde.getVerdeckteStapel().get(indexInitialKarte));
         spielrunde.setAufgelegtStapel(aufgelegterStapel);
+        spielrunde.getVerdeckteStapel().remove(indexInitialKarte);
 
         // Verteile Initialkarten 6
         for(Spieler spieler : spielrunde.getSpielerListe()) {

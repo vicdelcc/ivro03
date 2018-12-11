@@ -277,7 +277,7 @@ public class SpielverwaltungTest {
         Spiel spiel = spielVerwaltungService.starteNeuesSpiel(spielTyp, regelKompTyp);
 
         // Spiel beenden
-        Mockito.when(spielRepository.save(spiel)).thenReturn(null);
+        Mockito.when(spielRepository.save(spiel)).thenReturn(spiel);
         spielVerwaltungService.beendeSpiel(spiel);
 
         // Dauer des Spiels soll berechnet worden sein
