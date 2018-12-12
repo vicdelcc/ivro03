@@ -134,12 +134,6 @@ public class ConsoleView {
         System.out.print("\nAuswahl: ");
     }
 
-    private Spielkarte wahleKarte(Scanner sc, List<Spielkarte> hand) {
-        System.out.println("Mit welcher Karte wollen Sie spielen? (Wählen Sie ein Index)");
-        int i = sc.nextInt();
-        return hand.get(i);
-    }
-
     private void printHand(Spieler spieler) {
         System.out.println(spieler.getName() + " hat folgenden karten in der Hand:");
         int counter = 0;
@@ -192,5 +186,22 @@ public class ConsoleView {
             System.out.println("### " + anzhalZiehen+" Karten wurden gezogen ###");
 
         }
+    }
+
+    public boolean nochEineRunde(Scanner sc) {
+        System.out.println(">>> Wollen Sie noch eine Runde spielen? (j|n) <<<");
+        String wahl;
+        do{
+            wahl = sc.nextLine();
+            if(!istEingabeRichtigJoderN(wahl)){
+                System.out.println(">>> Die Eingabe war falsch! Bitte geben Sie 'm','z' oder eine Zahl <<<");
+            }
+        } while (!istEingabeRichtigJoderN(wahl));
+        return wahl.toLowerCase().equals("j");
+    }
+
+    private boolean istEingabeRichtigJoderN(String wahl) {
+        return wahl.toLowerCase().equals("j") || wahl.toLowerCase().equals("n");
+
     }
 }

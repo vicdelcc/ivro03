@@ -43,40 +43,45 @@ public class ConsoleImpl implements IConsole {
 
         ArrayList<Spieler> spielerListe = consoleView.spielerEingabe(sc);
 
-        //TODO noch eine Runde
-
-        Spielrunde spielrunde = spielverwaltung.starteSpielrunde(spielerListe, spiel);
-
-        Spieler spieler = spielsteuerung.fragWerDranIst(spielrunde.getSpielerListe());
-
-        boolean vollerHand = false;
+        boolean nochEineRunde;
 
         do {
 
-            consoleView.printZugDetails(spielrunde, spieler);
+            Spielrunde spielrunde = spielverwaltung.starteSpielrunde(spielerListe, spiel);
 
-            boolean sollMauAufgerufen = spielsteuerung.sollMauMauAufrufen(spieler);
+            Spieler spieler = spielsteuerung.fragWerDranIst(spielrunde.getSpielerListe());
 
-            boolean zugErfolgreich = false;
+            boolean vollerHand;
 
             do {
 
-                String wahl = consoleView.eingabgeWaehlen(sc, spieler);
+                consoleView.printZugDetails(spielrunde, spieler);
 
-                zugErfolgreich = spieleWahl(wahl, spieler, spielrunde, sollMauAufgerufen, gewaehlteSpielregel);
+                boolean sollMauAufgerufen = spielsteuerung.sollMauMauAufrufen(spieler);
 
-            } while (!zugErfolgreich);
+                boolean zugErfolgreich = false;
 
-            vollerHand = !spieler.getHand().isEmpty();
+                do {
 
-            spieler = spielsteuerung.fragWerDranIst(spielrunde.getSpielerListe());
+                    String wahl = consoleView.eingabgeWaehlen(sc, spieler);
 
-        } while (vollerHand);
+                    zugErfolgreich = spieleWahl(wahl, spieler, spielrunde, sollMauAufgerufen, gewaehlteSpielregel);
 
+                } while (!zugErfolgreich);
 
-//        spielVerwaltung.beendeSpielrunde(spielrunde);
-//
-//        spielVerwaltung.beendeSpiel(spiel);
+                vollerHand = !spieler.getHand().isEmpty();
+
+                spieler = spielsteuerung.fragWerDranIst(spielrunde.getSpielerListe());
+
+            } while (vollerHand);
+
+            spielverwaltung.beendeSpielrunde(spielrunde);
+
+            nochEineRunde = consoleView.nochEineRunde(sc);
+
+        } while (nochEineRunde);
+
+        spielverwaltung.beendeSpiel(spiel);
 
     }
 
