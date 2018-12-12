@@ -128,8 +128,8 @@ public class SpielverwaltungTest {
         // Die Spielrunde sollte einen Kartenstapel haben
         assertNotNull(spielrunde.getVerdeckteStapel());
 
-        // Stapel sollte 52 karten haben
-        assertEquals(34, spielrunde.getVerdeckteStapel().size());
+        // verdeckte Stapel sollte 33 karten haben (52-3*6-1)
+        assertEquals(33, spielrunde.getVerdeckteStapel().size());
 
         // Kartenservice muss einmal aufgerufen worden sein
         Mockito.verify(kartenService, Mockito.times(1)).baueStapel(blatttypNicht, blattwertNicht);
