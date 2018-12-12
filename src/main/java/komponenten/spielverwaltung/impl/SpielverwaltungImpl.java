@@ -31,7 +31,7 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
 
     public Spiel starteNeuesSpiel(SpielTyp spielTyp, RegelKompTyp regelKompTyp) throws MauMauException {
         if(spielTyp == null || regelKompTyp == null) {
-            throw new MauMauException("Fehler");
+            throw new TechnischeException("Spieltyp oder Regelkomponententyp ist nicht initialisiert");
         }
         Spiel spiel = new Spiel(spielTyp, regelKompTyp);
         // Falls mehrere Nutzer auf verschiedenen Rechner ein Spiel spielen würde, müsste das Spiel bei der
@@ -42,7 +42,11 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
 
     public Spielrunde starteSpielrunde(List<Spieler> spielerListe, Spiel spiel) throws MauMauException {
         if(spielerListe.size() < 2 || spiel == null) {
-            throw new MauMauException("Fehler");
+            throw new TechnischeException("Fehler bei der Initialisierung einer Spielrunde");
+        }
+        // Für ab 2. Spielrunde muss man aller SPieler auf nicht spielend setzen
+        for(Spieler spieler : spielerListe) {
+            spieler.setSpielend(false);
         }
         // Random spieler wird als Erster gewählt
         int ersterSpieler = (int)(Math.random()*(spielerListe.size()-1));
@@ -79,14 +83,13 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
         return spielrunde;
     }
 
-    public List<Ergebnis> beendeSpielrunde(Spielrunde spielrunde) throws MauMauException {
+    public Spielrunde beendeSpielrunde(Spielrunde spielrunde) throws MauMauException {
         if(spielrunde == null) {
-            throw new MauMauException("Fehler");
+            throw new TechnischeException("Spielrunde ist nicht initialisiert");
         }
         // Dauer
         Duration duration = Duration.between(spielrunde.getStart().toInstant(), Instant.now());
-        // TODO transform to minutes
-        spielrunde.setDauer(duration.getSeconds());
+        spielrunde.setDauer(duration.toMinutes());
 
         // Ergebnisse
         for(Spieler spieler : spielrunde.getSpielerListe()) {
@@ -108,26 +111,22 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
             spielrunde.getErgebnisListe().add(ergebnis);
         }
 
-        return spielrunde.getErgebnisListe();
+        return spielrunde;
     }
 
     public Spiel beendeSpiel(Spiel spiel) throws MauMauException {
         if(spiel == null) {
-            throw new MauMauException("Fehler");
+            throw new TechnischeException("Spiel ist nicht initialisiert");
         }
-//        spiel = this.spielRepository.findById(spiel.getId()) .orElse(null);
         // Dauer
         Duration duration = Duration.between(spiel.getBeginn().toInstant(), Instant.now());
-        // TODO Soll zu Minutes angepasst werden
-        spiel.setDauer(duration.getSeconds());
+        spiel.setDauer(duration.toMinutes());
 
         Spiel spielSaved= this.spielRepository.save(spiel);
 
         if(spielSaved == null) {
             throw new TechnischeException("Spiel konnte nicht gespeichert werden");
         }
-
-
         return spiel;
     }
 }

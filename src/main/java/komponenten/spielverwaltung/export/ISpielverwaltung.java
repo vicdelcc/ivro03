@@ -37,7 +37,7 @@ public interface ISpielverwaltung {
      * @return
      * @throws MauMauException
      */
-    List<Ergebnis> beendeSpielrunde(Spielrunde spielrunde) throws MauMauException;
+    Spielrunde beendeSpielrunde(Spielrunde spielrunde) throws MauMauException;
 
     /**
      * Beendet ein Spiel und berechnet die Dauer des Spiels

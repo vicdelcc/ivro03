@@ -3,13 +3,18 @@ package container;
 import config.AppConfig;
 import komponenten.console.impl.ConsoleImpl;
 import model.exceptions.MauMauException;
+import model.exceptions.TechnischeException;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 public class ContainerStarter {
 
     public static void main(String[] args) throws MauMauException {
-
-        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+        AnnotationConfigApplicationContext context;
+        try {
+           context = new AnnotationConfigApplicationContext(AppConfig.class);
+        } catch (Exception e) {
+            throw new TechnischeException("Container konnte nicht hochgefahren werden");
+        }
 
         ConsoleImpl consoleImpl = context.getBean(ConsoleImpl.class);
 

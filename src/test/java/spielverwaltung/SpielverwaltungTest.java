@@ -215,16 +215,16 @@ public class SpielverwaltungTest {
         Spielrunde spielrunde = spielVerwaltungService.starteSpielrunde(spielerListe, spiel);
 
         // Spielrunde beenden
-        List<Ergebnis> ergebnisse = spielVerwaltungService.beendeSpielrunde(spielrunde);
+        spielrunde = spielVerwaltungService.beendeSpielrunde(spielrunde);
 
         // Dauer der Spielrunde soll berechnet worden sein
         assertNotNull(spielrunde.getDauer());
 
         // Ergebnisliste sollte nicht leer sein
-        assertNotNull(ergebnisse);
+        assertNotNull(spielrunde.getErgebnisListe());
 
         // Ein Ergebnis pro Spieler
-        assertEquals(ergebnisse.size(), spielerListe.size());
+        assertEquals(spielrunde.getErgebnisListe().size(), spielerListe.size());
 
         // Punkten prüfen
         for (Spieler spieler : spielrunde.getSpielerListe()) {
@@ -232,7 +232,7 @@ public class SpielverwaltungTest {
             for (Spielkarte spielkarte : spieler.getHand()) {
                 punkte += PunkteMauMau.valueOf(spielkarte.getBlattwert().name()).getPunkte();
             }
-            for (Ergebnis ergebnis : ergebnisse) {
+            for (Ergebnis ergebnis : spielrunde.getErgebnisListe()) {
                 if (ergebnis.getSpieler() == spieler) {
                     assertEquals(punkte, ergebnis.getPunkte());
                 }

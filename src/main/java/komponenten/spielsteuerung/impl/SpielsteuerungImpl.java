@@ -10,6 +10,7 @@ import model.enums.Blatttyp;
 import model.enums.Blattwert;
 import model.enums.RegelKompTyp;
 import model.exceptions.MauMauException;
+import model.exceptions.TechnischeException;
 import model.hilfsklassen.RegelComponentUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,13 +44,13 @@ public class SpielsteuerungImpl implements ISpielsteuerung {
 
     public Spieler fragWerDranIst(List<Spieler> spielerListe) throws MauMauException {
         if (spielerListe.size() < 2) {
-            throw new MauMauException("Spielerliste muss mehr als einen Spieler enthalten");
+            throw new TechnischeException("Spielerliste muss mehr als einen Spieler enthalten");
         }
         List<Spieler> spielerMitSpielend = spielerListe.stream()
                 .filter(Spieler::isSpielend).collect(Collectors.toList());
 
         if (spielerMitSpielend.size() != 1) {
-            throw new MauMauException("Keine oder mehrere Spieler mit spielend true gesetzt");
+            throw new TechnischeException("Keine oder mehrere Spieler mit spielend true gesetzt");
         }
         return spielerMitSpielend.get(0);
     }

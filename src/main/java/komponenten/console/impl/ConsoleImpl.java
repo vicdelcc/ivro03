@@ -12,7 +12,6 @@ import model.enums.Blatttyp;
 import model.enums.RegelKompTyp;
 import model.enums.SpielTyp;
 import model.exceptions.MauMauException;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,8 +41,6 @@ public class ConsoleImpl implements IConsole {
         Spiel spiel = spielverwaltung.starteNeuesSpiel(spielTyp, gewaehlteSpielregel);
 
         ArrayList<Spieler> spielerListe = consoleView.spielerEingabe(sc);
-
-        boolean nochEineRunde;
 
         do {
 
@@ -75,11 +72,12 @@ public class ConsoleImpl implements IConsole {
 
             } while (vollerHand);
 
-            spielverwaltung.beendeSpielrunde(spielrunde);
 
-            nochEineRunde = consoleView.nochEineRunde(sc);
+            spielrunde = spielverwaltung.beendeSpielrunde(spielrunde);
 
-        } while (nochEineRunde);
+            consoleView.zeigeErgebnisse(spielrunde);
+
+        } while (consoleView.nochEineRunde(sc));
 
         spielverwaltung.beendeSpiel(spiel);
 

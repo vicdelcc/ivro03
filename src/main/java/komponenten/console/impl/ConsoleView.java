@@ -1,6 +1,7 @@
 package komponenten.console.impl;
 
 
+import model.Ergebnis;
 import model.Spieler;
 import model.Spielkarte;
 import model.Spielrunde;
@@ -10,6 +11,7 @@ import model.enums.SpielTyp;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
@@ -187,6 +189,17 @@ public class ConsoleView {
 
         }
     }
+
+    public void zeigeErgebnisse(Spielrunde spielrunde) {
+        System.out.println("### Spielrunde wurde beendet. Gewinner: " + spielrunde.getGewinnerName());
+        Collections.sort(spielrunde.getErgebnisListe(), (Ergebnis e1, Ergebnis e2) -> e1.getPunkte()-e2.getPunkte());
+        int platz = 1;
+        for(Ergebnis ergebnis : spielrunde.getErgebnisListe()) {
+            System.out.println(platz +". Platz: " + ergebnis.getSpieler().getName() + " mit " + ergebnis.getPunkte() + " Punkte.");
+            platz++;
+        }
+    }
+
 
     public boolean nochEineRunde(Scanner sc) {
         System.out.println(">>> Wollen Sie noch eine Runde spielen? (j|n) <<<");
