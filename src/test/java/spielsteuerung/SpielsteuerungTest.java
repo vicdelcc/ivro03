@@ -90,7 +90,13 @@ public class SpielsteuerungTest {
         //Spieler hat nur noch eine Karte im Hand
         assertEquals(1, spieler1.getHand().size());
 
-     //   assertTrue(spielsteuerung.sollMauMauAufrufen(spieler1));
+        assertTrue(!spielrunde.getAufgelegtStapel().isEmpty());
+
+        Spielkarte letzteAufgelegteKarte = spielrunde.getAufgelegtStapel().get(spielrunde.getAufgelegtStapel().size() - 1);
+
+        Mockito.when(spielregelOhneSonderImpl.istKarteLegbar(letzteAufgelegteKarte, spieler1.getHand().get(0), letzteAufgelegteKarte.getBlatttyp(), false)).thenReturn(true);
+
+        assertTrue(spielsteuerung.sollMauMauAufrufen(spielrunde,spieler1, RegelKompTyp.OHNE_SONDER_REGEL));
     }
 
     /**
@@ -107,7 +113,7 @@ public class SpielsteuerungTest {
         //Checkt ob der Hand mehr als eine Karte hat
         assertTrue(spieler1.getHand().size() > 1);
 
-       // assertFalse(spielsteuerung.sollMauMauAufrufen(spieler1));
+        assertFalse(spielsteuerung.sollMauMauAufrufen(spielrunde,spieler1, RegelKompTyp.OHNE_SONDER_REGEL));
     }
 
     /**
