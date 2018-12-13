@@ -1,6 +1,7 @@
 package spielsteuerung;
 
 import config.AppConfig;
+import komponenten.spielregel.export.ISpielregel;
 import komponenten.spielregel.impl.SpielregelOhneSonderImpl;
 import komponenten.spielsteuerung.export.ISpielsteuerung;
 import model.Spieler;
@@ -41,6 +42,14 @@ public class SpielsteuerungTest {
     @MockBean
     @Qualifier("ohneSonder")
     private SpielregelOhneSonderImpl spielregelOhneSonderImpl;
+
+    @MockBean
+    @Qualifier("basicSonder")
+    private ISpielregel spielregelBasicSonder;
+
+    @MockBean
+    @Qualifier("alleSonder")
+    private ISpielregel spielregelAlleSonder;
 
     private static RegelComponentUtil regelComponentUtil;
 
@@ -131,6 +140,16 @@ public class SpielsteuerungTest {
     }
 
     /**
+     * Wenn ein Spielrunde == null übergeben wird, soll MauMauException zurückgegeben
+     *
+     * @throws MauMauException
+     */
+    @Test(expected = MauMauException.class)
+    public void testCheckZuziehendenKartenSpielRundeNull() throws MauMauException {
+        spielsteuerung.checkZuZiehendenKarten(null);
+    }
+
+    /**
      * Wenn keiner oder nur ein Spieler in einer Spielrunde angemeldet ist, soll die Methode Exception werfen
      *
      * @throws MauMauException
@@ -176,6 +195,27 @@ public class SpielsteuerungTest {
     @Test
     public void testSpieleKarteErlaubteKarte() throws MauMauException {
 
+        Spielkarte aktuelleKarte = prepareSpieleKarte();
+
+        assertTrue(spielsteuerung.spieleKarte(spieler1, aktuelleKarte, spielrunde, RegelKompTyp.OHNE_SONDER_REGEL));
+
+    }
+
+    /**
+     * test ob die gespielte Karte anlegbar ist.
+     *
+     * @throws MauMauException
+     */
+    @Test (expected = MauMauException.class)
+    public void testSpieleKarteErlaubteKarteSpielerNULL() throws MauMauException {
+
+        Spielkarte aktuelleKarte = prepareSpieleKarte();
+
+        assertTrue(spielsteuerung.spieleKarte(null, aktuelleKarte, spielrunde, RegelKompTyp.OHNE_SONDER_REGEL));
+
+    }
+
+    private Spielkarte prepareSpieleKarte() throws MauMauException {
         Spielkarte aktuelleKarte = new Spielkarte(Blattwert.Fuenf, Blatttyp.Karo);
 
         Spielkarte letzteAufgelegteKarte = spielrunde.getAufgelegtStapel().get(spielrunde.getAufgelegtStapel().size() - 1);
@@ -185,9 +225,7 @@ public class SpielsteuerungTest {
         Mockito.when(spielregelOhneSonderImpl.istKarteLegbar(letzteAufgelegteKarte, aktuelleKarte, letzteAufgelegteKarte.getBlatttyp(), false)).thenReturn(true);
 
         Mockito.when(spielregelOhneSonderImpl.holeAuswirkungVonKarte(aktuelleKarte, spielrunde.getSpielerListe(), 0)).thenReturn(regelComponentUtil);
-
-        assertTrue(spielsteuerung.spieleKarte(spieler1, aktuelleKarte, spielrunde, RegelKompTyp.OHNE_SONDER_REGEL));
-
+        return aktuelleKarte;
     }
 
     /**
@@ -244,18 +282,57 @@ public class SpielsteuerungTest {
     }
 
     /**
+     * test das Ziehen-Prozess vom verdeckten Stapel in den Hand
+     *
+     * @throws MauMauException
+     */
+    @Test
+    public void testZieheKartenVomStapelReloadVerdecktenStapel() throws MauMauException {
+
+        spielrunde.setVerdeckteStapel(new ArrayList<>(0));
+
+        int anzahlZuZiehendeKarten = 2;
+
+        int anzahlKartenImHand = spieler1.getHand().size();
+
+        assertEquals(anzahlKartenImHand + anzahlZuZiehendeKarten,
+                spielsteuerung.zieheKartenVomStapel(spieler1, anzahlZuZiehendeKarten, spielrunde).getHand().size());
+
+        assertEquals(1, spielrunde.getAufgelegtStapel().size());
+
+        assertEquals(0, spielrunde.getVerdeckteStapel().size());
+    }
+
+    /**
      * test ob eine Karte ein Wuenscher ist
      *
      * @throws MauMauException
      */
     @Test
-    public void testPruefeObWuenscher() throws MauMauException {
+    public void testPruefeObWuenscherMIT_BASIC_SONDER_REGEL() throws MauMauException {
 
-        Mockito.when(spielregelOhneSonderImpl.pruefeObWuenscher(Mockito.any(Spielkarte.class))).thenReturn(true);
+        Mockito.when(spielregelBasicSonder.pruefeObWuenscher(Mockito.any(Spielkarte.class))).thenReturn(true);
 
         Spielkarte spielkarte = new Spielkarte(Blattwert.Bube, Blatttyp.Karo);
 
-        boolean isWuenscher = spielsteuerung.pruefeObWuenscher(spielkarte, RegelKompTyp.OHNE_SONDER_REGEL);
+        boolean isWuenscher = spielsteuerung.pruefeObWuenscher(spielkarte, RegelKompTyp.MIT_BASIC_SONDER_REGEL);
+
+        assertTrue(isWuenscher);
+    }
+
+    /**
+     * test ob eine Karte ein Wuenscher ist
+     *
+     * @throws MauMauException
+     */
+    @Test
+    public void testPruefeObWuenscherALL_SONDER_REGEL() throws MauMauException {
+
+        Mockito.when(spielregelAlleSonder.pruefeObWuenscher(Mockito.any(Spielkarte.class))).thenReturn(true);
+
+        Spielkarte spielkarte = new Spielkarte(Blattwert.Bube, Blatttyp.Karo);
+
+        boolean isWuenscher = spielsteuerung.pruefeObWuenscher(spielkarte, RegelKompTyp.ALLE_SONDER_REGEL);
 
         assertTrue(isWuenscher);
     }
@@ -276,4 +353,46 @@ public class SpielsteuerungTest {
 
         assertFalse(isWuenscher);
     }
+
+    /**
+     * test ob eine Karte ein Wuenscher ist
+     *
+     * @throws MauMauException
+     */
+    @Test(expected = MauMauException.class)
+    public void testPruefeObWuenscherMitRegelKompTypNULL() throws MauMauException {
+
+        Spielkarte spielkarte = new Spielkarte(Blattwert.Acht, Blatttyp.Karo);
+
+        spielsteuerung.pruefeObWuenscher(spielkarte, null);
+    }
+
+    /**
+     * test der Fall, in dem der Spieler keine legbare Karten hat und der verdeckte Stapel leer ist.
+     *
+     * @throws MauMauException
+     */
+    @Test
+    public void testCheckeObSpielerAusgesetztWird() throws MauMauException {
+
+        spielrunde.setVerdeckteStapel(new ArrayList<>(0));
+
+        assertTrue(!spielrunde.getAufgelegtStapel().isEmpty());
+
+        Spielkarte spielkarte = spielrunde.getAufgelegtStapel().get(0);
+        ArrayList<Spielkarte> neuAufgelegter = new ArrayList<>(1);
+        neuAufgelegter.add(spielkarte);
+
+        spielrunde.setAufgelegtStapel(neuAufgelegter);
+
+        assertEquals(0, spielrunde.getVerdeckteStapel().size());
+
+        assertEquals(1, spielrunde.getAufgelegtStapel().size());
+
+        assertTrue(spielsteuerung.checkeObSpielerAusgesetztWird(spielrunde, spieler1, RegelKompTyp.OHNE_SONDER_REGEL));
+
+    }
+
+
+
 }
