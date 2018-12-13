@@ -14,6 +14,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Komponent, der ein Spiel verwaltet bzw. einzelne Spielrunde erstellt
@@ -33,9 +34,6 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
             throw new TechnischeException("Spieltyp oder Regelkomponententyp ist nicht initialisiert");
         }
         Spiel spiel = new Spiel(spielTyp, regelKompTyp);
-        // Falls mehrere Nutzer auf verschiedenen Rechner ein Spiel spielen würde, müsste das Spiel bei der
-        // Erstellung persistiert werden, damit der 2. Spieler das 1. erstellte Spiel nutzt
-//        this.spielRepository.save(spiel);
         return spiel;
     }
 
@@ -48,7 +46,7 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
             spieler.setSpielend(false);
         }
         // Random spieler wird als Erster gewählt
-        int ersterSpieler = (int)(Math.random()*(spielerListe.size()-1));
+        int ersterSpieler = new Random().nextInt(spielerListe.size());
         spielerListe.get(ersterSpieler).setSpielend(true);
 
         // Spielrunde wird generiert
@@ -63,7 +61,7 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
 
         // Aufgelegter Stapel mit initialer Spielkarte wird generiert
         List<Spielkarte> aufgelegterStapel = new ArrayList<>();
-        int indexInitialKarte = (int)Math.random()*((spielrunde.getVerdeckteStapel().size()-1));
+        int indexInitialKarte = new Random().nextInt(spielrunde.getVerdeckteStapel().size());
         aufgelegterStapel.add(spielrunde.getVerdeckteStapel().get(indexInitialKarte));
         spielrunde.setAufgelegtStapel(aufgelegterStapel);
         spielrunde.getVerdeckteStapel().remove(indexInitialKarte);

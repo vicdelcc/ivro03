@@ -75,13 +75,26 @@ public class SpielverwaltungTest {
     }
 
     /**
-     * Test für den gescheiterten Start eines Spiels
+     * Test für den gescheiterten Start eines Spiels wegen Null-Spieltyp
      *
      * @throws MauMauException
      */
     @Test(expected = MauMauException.class)
-    public void testStarteSpielFailed() throws MauMauException {
+    public void testStarteSpielFailedSpielTypNull() throws MauMauException {
         SpielTyp spielTyp = null;
+        RegelKompTyp regelKompTyp = RegelKompTyp.OHNE_SONDER_REGEL;
+
+        spielVerwaltungService.starteNeuesSpiel(spielTyp, regelKompTyp);
+    }
+
+    /**
+     * Test für den gescheiterten Start eines Spiels wegen Null-RegelKompTyp
+     *
+     * @throws MauMauException
+     */
+    @Test(expected = MauMauException.class)
+    public void testStarteSpielFailedRegelKompTypNull() throws MauMauException {
+        SpielTyp spielTyp = SpielTyp.MauMau;
         RegelKompTyp regelKompTyp = null;
 
         spielVerwaltungService.starteNeuesSpiel(spielTyp, regelKompTyp);
@@ -214,6 +227,9 @@ public class SpielverwaltungTest {
         Mockito.when(kartenService.baueStapel(blatttypNicht, blattwertNicht)).thenReturn(stapel);
         Spielrunde spielrunde = spielVerwaltungService.starteSpielrunde(spielerListe, spiel);
 
+        // Die hand des 1. Spielers wird geleert, damit ein Gewinner gibt
+         spielrunde.getSpielerListe().get(0).getHand().clear();
+
         // Spielrunde beenden
         spielrunde = spielVerwaltungService.beendeSpielrunde(spielrunde);
 
@@ -254,14 +270,8 @@ public class SpielverwaltungTest {
 
         // Spielrunde wird nicht erstellt
 
-        // Spieler erstellen
-        List<Spieler> spielerListe = new ArrayList<Spieler>();
-        spielerListe.add(new Spieler("Martin"));
-        spielerListe.add(new Spieler("Pedro"));
-        spielerListe.add(new Spieler("Antonio"));
-
         // Versuchen eine Spielrunde zu erstellen
-        spielVerwaltungService.starteSpielrunde(spielerListe, null);
+        spielVerwaltungService.beendeSpielrunde(null);
     }
 
     /**
@@ -285,15 +295,31 @@ public class SpielverwaltungTest {
     }
 
     /**
-     * Test für das gescheiterte Beenden eines Spiels
+     * Test für das gescheiterte Beenden eines Spiels weil das übergebene Spiel null ist
      */
     @Test(expected = MauMauException.class)
-    public void testBeendeSpielFailed() throws MauMauException {
+    public void testBeendeSpielFailedSpielNull() throws MauMauException {
 
         // Spiel leer
         Spiel spiel = null;
 
         // Spiel beenden
+        spielVerwaltungService.beendeSpiel(spiel);
+
+    }
+
+    /**
+     * Test für das gescheiterte Beenden eines Spiels weil das Spiel nicht erfolgreich gespeichert wird
+     */
+    @Test(expected = MauMauException.class)
+    public void testBeendeSpielFailedNichtGespeichert() throws MauMauException {
+        // Spiel anlegen
+        SpielTyp spielTyp = SpielTyp.MauMau;
+        RegelKompTyp regelKompTyp = RegelKompTyp.OHNE_SONDER_REGEL;
+        Spiel spiel = spielVerwaltungService.starteNeuesSpiel(spielTyp, regelKompTyp);
+
+        // Spiel beenden
+        Mockito.when(spielRepository.save(spiel)).thenReturn(null);
         spielVerwaltungService.beendeSpiel(spiel);
 
     }

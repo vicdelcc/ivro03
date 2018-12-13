@@ -21,22 +21,20 @@ public class KartenImpl implements IKarten {
     @Override
     public List<Spielkarte> baueStapel(List<Blatttyp> blatttypen, List<Blattwert> blattwerten) throws MauMauException {
 
-        if(blatttypen==null || blattwerten == null) {
+        if (blatttypen == null || blattwerten == null) {
             throw new MauMauException("Fehler");
         }
 
         List<Spielkarte> stapel = new ArrayList<>();
-        for(Blatttyp blatttyp : Blatttyp.values()) {
-            if(!blatttypen.contains(blatttyp)) {
-                for(Blattwert blattwert : Blattwert.values()) {
-                    if(!blattwerten.contains(blattwert)) {
+        for (Blatttyp blatttyp : Blatttyp.values()) {
+            if (!blatttypen.contains(blatttyp)) {
+                for (Blattwert blattwert : Blattwert.values()) {
+                    if (!blattwerten.contains(blattwert)) {
                         stapel.add(new Spielkarte(blattwert, blatttyp));
                     }
                 }
             }
         }
-
-        //TODO vic ich habe es hinzugefügt
         Collections.shuffle(stapel, new Random(System.nanoTime()));
         return stapel;
     }

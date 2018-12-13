@@ -108,12 +108,21 @@ public abstract class SpielregelTestBase {
 
 
     /**
-     * Super-Methode für den gescheiterten "holeAuswirkungen" für alle verschiedenen Spielregel-Impls
+     * Super-Methode für den gescheiterten "holeAuswirkungen" für alle verschiedenen Spielregel-Impls wegen Spielkarte-Null
      *
      * @throws MauMauException
      */
-    public static void holeAuswirkungenFailed(ISpielregel service) throws MauMauException {
-        service.holeAuswirkungVonKarte(null, null, 0);
+    public static void holeAuswirkungenFailedKarteNull(ISpielregel service) throws MauMauException {
+        service.holeAuswirkungVonKarte(null, new ArrayList<>(), 0);
+    }
+
+    /**
+     * Super-Methode für den gescheiterten "holeAuswirkungen" für alle verschiedenen Spielregel-Impls wegen Spielerliste-Null
+     *
+     * @throws MauMauException
+     */
+    public static void holeAuswirkungenFailedSpielerNull(ISpielregel service) throws MauMauException {
+        service.holeAuswirkungVonKarte(new Spielkarte(Blattwert.Bube, Blatttyp.Herz), null, 0);
     }
 
     /**
@@ -123,11 +132,10 @@ public abstract class SpielregelTestBase {
      */
     public static List<Spieler> getDefaultSpielerListe() {
         List<Spieler> spielerListe = new ArrayList<>();
-        Spieler spielerFirst = new Spieler("Ido");
-        spielerFirst.setSpielend(true);
-        spielerListe.add(spielerFirst);
+        spielerListe.add(new Spieler("Ido"));
         spielerListe.add(new Spieler("Victor"));
         spielerListe.add(new Spieler("Lucas"));
         return spielerListe;
     }
+
 }
