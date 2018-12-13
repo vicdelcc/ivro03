@@ -51,11 +51,6 @@ public class SpielregelAlleSonderTest extends SpielregelTestBase {
             this.sindKartenZuZiehen = sindKartenZuZiehen;
         }
 
-        /**
-         * Testet ob die obigen Kombinationen das erwartete Ergebnis liefern
-         *
-         * @throws MauMauException
-         */
         @Test
         public void testIstKarteAuflegbarSuccess() throws MauMauException {
             boolean legbar = istKarteLegbar(spielRegelService, beforeSpielkarte, afterSpielkarte, blatttyp, sindKartenZuZiehen);
@@ -65,47 +60,119 @@ public class SpielregelAlleSonderTest extends SpielregelTestBase {
 
     public static class NotParameteriedPart {
 
+        /**
+         * Test für den gescheiterten istKarteLegbar-Aufruf wegen vorherigeKarte-Null
+         * @throws MauMauException
+         */
+        @Test(expected = MauMauException.class)
+        public void testIstKarteLegbarFailedVorherNull() throws MauMauException {
+            istKarteLegbar(spielRegelService, null, new Spielkarte(Blattwert.Bube, Blatttyp.Herz), null,false );
+        }
+
+        /**
+         * Test für den gescheiterten istKarteLegbar-Aufruf wegen aktuelleKarte-Null
+         * @throws MauMauException
+         */
+        @Test(expected = MauMauException.class)
+        public void testIstKarteLegbarFailedDanachNull() throws MauMauException {
+            istKarteLegbar(spielRegelService, new Spielkarte(Blattwert.Bube, Blatttyp.Herz), null, null,false );
+        }
+
+        /**
+         * Test für den positiven PruefeWuenscher
+         * @throws MauMauException
+         */
         @Test
         public void testPruefeObWuenscherTrue() throws MauMauException {
             boolean istWuenscher = istKarteWuenscher(spielRegelService, new Spielkarte(Blattwert.Bube, Blatttyp.Herz));
             assertTrue(istWuenscher);
         }
 
+        /**
+         * Test für den negativen PruefeWuenscher
+         * @throws MauMauException
+         */
         @Test
         public void testPruefeObWuenscherFalse() throws MauMauException {
             boolean istWuenscher = istKarteWuenscher(spielRegelService, new Spielkarte(Blattwert.Sechs, Blatttyp.Herz));
             assertFalse(istWuenscher);
         }
 
+        /**
+         * Test für den gescheiterten pruefeObWuenscher-Aufruf wegen Karte-Null
+         * @throws MauMauException
+         */
         @Test(expected = MauMauException.class)
         public void testPruefeObWuenscherFailed() throws MauMauException {
             istKarteWuenscher(spielRegelService, null);
         }
 
+        /**
+         * Test für den gescheiterten holeAuswirkungen-Aufruf wegen Karte-Null
+         * @throws MauMauException
+         */
         @Test(expected = MauMauException.class)
-        public void testIstKarteAuflegbarFailed() throws MauMauException {
-            istKarteLegbar(spielRegelService, null, null, null, false);
+        public void testHoleAuswirkungFailedKarteNull() throws MauMauException {
+            holeAuswirkungenFailedKarteNull(spielRegelService);
         }
 
+        /**
+         * Test für den gescheiterten holeAuswirkungen-Aufruf wegen Spieler-Null
+         * @throws MauMauException
+         */
         @Test(expected = MauMauException.class)
-        public void testHoleAuswirkungFailed() throws MauMauException {
-            holeAuswirkungenFailed(spielRegelService);
+        public void testHoleAuswirkungFailedSpielerNull() throws MauMauException {
+            holeAuswirkungenFailedSpielerNull(spielRegelService);
         }
 
 
         /**
-         * Test für den Fall von ein 9 bzw. Richtungswechsel-Regel
+         * Test für den Fall von ein 9 bzw. Richtungswechsel-Regel, wenn der 1. Spieler auf spielend gesetzt ist
          *
          * @throws MauMauException
          */
         @Test
-        public void testHoleAuswirkungenRichtungswechsel() throws MauMauException {
+        public void testHoleAuswirkungenRichtungswechselErsterSpielerTrue() throws MauMauException {
             List<Spieler> spielerListe = getDefaultSpielerListe();
+            spielerListe.get(0).setSpielend(true);
             Spielkarte spielkarte = new Spielkarte(Blattwert.Neun, Blatttyp.Herz);
             RegelComponentUtil util = spielRegelService.holeAuswirkungVonKarte(spielkarte, spielerListe, 0);
             assertNotNull(util);
             assertEquals(0, util.getAnzahlKartenZuZiehen());
             assertTrue(util.getSpielerListe().get(spielerListe.size()-1).isSpielend());
+        }
+
+        /**
+         * Test für den Fall von ein 9 bzw. Richtungswechsel-Regel, wenn nicht der 1. Spieler auf spielend gesetzt ist
+         *
+         * @throws MauMauException
+         */
+        @Test
+        public void testHoleAuswirkungenRichtungswechselNichtErsterSpielerTrue() throws MauMauException {
+            List<Spieler> spielerListe = getDefaultSpielerListe();
+            spielerListe.get(1).setSpielend(true);
+            Spielkarte spielkarte = new Spielkarte(Blattwert.Neun, Blatttyp.Herz);
+            RegelComponentUtil util = spielRegelService.holeAuswirkungVonKarte(spielkarte, spielerListe, 0);
+            assertNotNull(util);
+            assertEquals(0, util.getAnzahlKartenZuZiehen());
+            assertTrue(util.getSpielerListe().get(0).isSpielend());
+        }
+
+        /**
+         * Test für den Fall von ein 9 bzw. Richtungswechsel-Regel, wenn es nur 2 Spieler gibt
+         *
+         * @throws MauMauException
+         */
+        @Test
+        public void testHoleAuswirkungenRichtungswechselNurZweiSpielerTrue() throws MauMauException {
+            List<Spieler> spielerListe = getDefaultSpielerListe();
+            spielerListe.remove(spielerListe.size()-1);
+            spielerListe.get(0).setSpielend(true);
+            Spielkarte spielkarte = new Spielkarte(Blattwert.Neun, Blatttyp.Herz);
+            RegelComponentUtil util = spielRegelService.holeAuswirkungVonKarte(spielkarte, spielerListe, 0);
+            assertNotNull(util);
+            assertEquals(0, util.getAnzahlKartenZuZiehen());
+            assertTrue(util.getSpielerListe().get(0).isSpielend());
         }
 
         /**
@@ -116,6 +183,7 @@ public class SpielregelAlleSonderTest extends SpielregelTestBase {
         @Test
         public void testHoleAuswirkungenStopper() throws MauMauException {
             List<Spieler> spielerListe = getDefaultSpielerListe();
+            spielerListe.get(0).setSpielend(true);
             Spielkarte spielkarte = new Spielkarte(Blattwert.Acht, Blatttyp.Herz);
             RegelComponentUtil util = spielRegelService.holeAuswirkungVonKarte(spielkarte, spielerListe, 2);
             assertNotNull(util);
@@ -131,6 +199,7 @@ public class SpielregelAlleSonderTest extends SpielregelTestBase {
         @Test
         public void testHoleAuswirkungenAllesleger() throws MauMauException {
             List<Spieler> spielerListe = getDefaultSpielerListe();
+            spielerListe.get(0).setSpielend(true);
             Spielkarte spielkarte = new Spielkarte(Blattwert.Zehn, Blatttyp.Herz);
             RegelComponentUtil util = spielRegelService.holeAuswirkungVonKarte(spielkarte, spielerListe, 0);
             assertNotNull(util);

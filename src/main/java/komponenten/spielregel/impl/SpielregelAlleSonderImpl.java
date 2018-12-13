@@ -5,6 +5,7 @@ import model.Spielkarte;
 import model.enums.Blatttyp;
 import model.enums.Blattwert;
 import model.exceptions.MauMauException;
+import model.exceptions.TechnischeException;
 import model.hilfsklassen.RegelComponentUtil;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -21,9 +22,10 @@ public class SpielregelAlleSonderImpl extends SpielregelBasicSonderImpl {
 
     @Override
     public boolean istKarteLegbar(Spielkarte vorherigeSpielkarte, Spielkarte aktuelleSpielkarte, Blatttyp blatttyp, boolean sindKartenZuZiehen) throws MauMauException {
-        // TODO wie behandeln wir exceptions?
-        if (vorherigeSpielkarte == null || aktuelleSpielkarte == null) {
-            throw new MauMauException("Fehler");
+        if (vorherigeSpielkarte == null) {
+            throw new TechnischeException("Vorherige Spielkarte ist nicht initialisiert");
+        } else if (aktuelleSpielkarte == null) {
+            throw new TechnischeException("Aktuelle Spielkarte ist nicht initialisiert");
         }
         // Prüfung von BasicSonderRegel
         boolean istLegbar = super.istKarteLegbar(vorherigeSpielkarte, aktuelleSpielkarte, blatttyp, sindKartenZuZiehen);
@@ -39,7 +41,7 @@ public class SpielregelAlleSonderImpl extends SpielregelBasicSonderImpl {
                 vorherigeSpielkarte.getBlattwert() == Blattwert.Zehn)
                 && aktuelleSpielkarte.getBlattwert() == Blattwert.Zehn) {
             istLegbar = false;
-        } else if(aktuelleSpielkarte.getBlattwert()== Blattwert.Zehn) {
+        } else if (aktuelleSpielkarte.getBlattwert() == Blattwert.Zehn) {
             istLegbar = true;
         }
         return istLegbar;
@@ -47,15 +49,16 @@ public class SpielregelAlleSonderImpl extends SpielregelBasicSonderImpl {
 
     @Override
     public RegelComponentUtil holeAuswirkungVonKarte(Spielkarte aktuelleSpielkarte, List<Spieler> spielerListe, int anzahlZuZiehendenKarten) throws MauMauException {
-        // TODO wie behandeln wir Exceptions?
-        if (aktuelleSpielkarte == null || spielerListe == null) {
-            throw new MauMauException("Fehler");
+        if (aktuelleSpielkarte == null) {
+            throw new TechnischeException("Aktuelle Spielkarte ist nicht initialisiert");
+        } else if (spielerListe == null) {
+            throw new TechnischeException("Spielerliste ist nicht initialisiert");
         }
         RegelComponentUtil util = null;
         switch (aktuelleSpielkarte.getBlattwert()) {
             case Neun:
                 int indexSpielend = 0;
-                if(spielerListe.size() != 2) {
+                if (spielerListe.size() != 2) {
                     for (Spieler spieler : spielerListe) {
                         if (spieler.isSpielend()) {
                             indexSpielend = spielerListe.indexOf(spieler);
@@ -79,8 +82,6 @@ public class SpielregelAlleSonderImpl extends SpielregelBasicSonderImpl {
             default:
                 util = super.holeAuswirkungVonKarte(aktuelleSpielkarte, spielerListe, anzahlZuZiehendenKarten);
         }
-
-
         return util;
     }
 }
