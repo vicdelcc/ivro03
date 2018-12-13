@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SpielRepository extends JpaRepository<Spiel, Long> {
+
+
 }

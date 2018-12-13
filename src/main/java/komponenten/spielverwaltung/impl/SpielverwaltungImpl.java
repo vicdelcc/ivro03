@@ -21,7 +21,6 @@ import java.util.List;
 @Service
 public class SpielverwaltungImpl implements ISpielverwaltung {
 
-
     @Autowired
     private IKarten kartenService;
 
@@ -80,6 +79,10 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
 
         }
         spiel.getSpielrunden().add(spielrunde);
+
+
+        // ZuZiehendenKarte default auf 0
+        spielrunde.setZuZiehnKartenAnzahl(0);
         return spielrunde;
     }
 

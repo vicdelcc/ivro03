@@ -65,7 +65,7 @@ public class SpielsteuerungImpl implements ISpielsteuerung {
         return spielrunde.getZuZiehnKartenAnzahl();
     }
 
-    public boolean spieleKarte(Spieler spieler, Spielkarte spielkarte, Spielrunde spielrunde,RegelKompTyp gewaehlteSpielregel) throws MauMauException {
+    public boolean spieleKarte(Spieler spieler, Spielkarte spielkarte, Spielrunde spielrunde, RegelKompTyp gewaehlteSpielregel) throws MauMauException {
         if (spieler == null) {
             throw new MauMauException("Spieler ist null");
         }
@@ -95,19 +95,19 @@ public class SpielsteuerungImpl implements ISpielsteuerung {
 
         switch (gewaehlteSpielregel) {
             case OHNE_SONDER_REGEL:
-                istKarteLegbar = spielregelohneSonder.istKarteLegbar(getLetzteAufgelegteKarte(spielrunde.getAufgelegtStapel()), spielkarte, spielrunde.getRundeFarbe(), spielrunde.getZuZiehnKartenAnzahl() !=0);
+                istKarteLegbar = spielregelohneSonder.istKarteLegbar(getLetzteAufgelegteKarte(spielrunde.getAufgelegtStapel()), spielkarte, spielrunde.getRundeFarbe(), spielrunde.getZuZiehnKartenAnzahl() != 0);
                 if (istKarteLegbar) {
                     regelComponentUtil = spielregelohneSonder.holeAuswirkungVonKarte(spielkarte, spielrunde.getSpielerListe(), spielrunde.getZuZiehnKartenAnzahl());
                 }
                 break;
             case MIT_BASIC_SONDER_REGEL:
-                istKarteLegbar = spielregelBasicSonder.istKarteLegbar(getLetzteAufgelegteKarte(spielrunde.getAufgelegtStapel()), spielkarte, spielrunde.getRundeFarbe(), spielrunde.getZuZiehnKartenAnzahl() !=0);
+                istKarteLegbar = spielregelBasicSonder.istKarteLegbar(getLetzteAufgelegteKarte(spielrunde.getAufgelegtStapel()), spielkarte, spielrunde.getRundeFarbe(), spielrunde.getZuZiehnKartenAnzahl() != 0);
                 if (istKarteLegbar) {
                     regelComponentUtil = spielregelBasicSonder.holeAuswirkungVonKarte(spielkarte, spielrunde.getSpielerListe(), spielrunde.getZuZiehnKartenAnzahl());
                 }
                 break;
             case ALLE_SONDER_REGEL:
-                istKarteLegbar = spielregelAlleSonder.istKarteLegbar(getLetzteAufgelegteKarte(spielrunde.getAufgelegtStapel()), spielkarte, spielrunde.getRundeFarbe(), spielrunde.getZuZiehnKartenAnzahl() !=0);
+                istKarteLegbar = spielregelAlleSonder.istKarteLegbar(getLetzteAufgelegteKarte(spielrunde.getAufgelegtStapel()), spielkarte, spielrunde.getRundeFarbe(), spielrunde.getZuZiehnKartenAnzahl() != 0);
                 if (istKarteLegbar) {
                     regelComponentUtil = spielregelAlleSonder.holeAuswirkungVonKarte(spielkarte, spielrunde.getSpielerListe(), spielrunde.getZuZiehnKartenAnzahl());
                 }
@@ -117,7 +117,7 @@ public class SpielsteuerungImpl implements ISpielsteuerung {
         }
 
         if (istKarteLegbar) {
-            if(spielkarte.getBlattwert() == Blattwert.Acht) {
+            if (spielkarte.getBlattwert() == Blattwert.Acht) {
                 spielrunde.setZuZiehnKartenAnzahl(0);
             }
             setztKarteVomHandAufDemAufgelegteStapel(spieler, spielkarte, spielrunde);
@@ -125,7 +125,7 @@ public class SpielsteuerungImpl implements ISpielsteuerung {
             spielrunde.setZuZiehnKartenAnzahl(regelComponentUtil.getAnzahlKartenZuZiehen());
 //            // TODO rundeFarbe setzen nötig für den normalen Fall
 //            spielrunde.setRundeFarbe(spielkarte.getBlatttyp());
-            if(spielrunde.getRundeFarbe() != null){
+            if (spielrunde.getRundeFarbe() != null) {
                 spielrunde.setRundeFarbe(null);
             }
             return true;
@@ -135,7 +135,7 @@ public class SpielsteuerungImpl implements ISpielsteuerung {
     }
 
 
-    public boolean sollMauMauAufrufen(Spieler spieler) throws MauMauException {
+    public boolean sollMauMauAufrufen(Spielrunde spielrunde,Spieler spieler, RegelKompTyp regelKompTyp) throws MauMauException {
         if (spieler == null) {
             throw new MauMauException("Spieler ist null");
         }
@@ -145,7 +145,25 @@ public class SpielsteuerungImpl implements ISpielsteuerung {
         if (spieler.getHand().isEmpty()) {
             throw new MauMauException("Spielershand ist leer, Spiel sollte schon beendet werden");
         }
-        return spieler.getHand().size() == 1;
+        boolean sollMauMau = false;
+        if(spieler.getHand().size() == 1) {
+            boolean kartenSpielbar;
+            switch (regelKompTyp) {
+                case OHNE_SONDER_REGEL:
+                    kartenSpielbar = spielregelohneSonder.istKarteLegbar(getLetzteAufgelegteKarte(spielrunde.getAufgelegtStapel()), spieler.getHand().get(0), spielrunde.getRundeFarbe(), spielrunde.getZuZiehnKartenAnzahl() != 0);
+                    break;
+                case MIT_BASIC_SONDER_REGEL:
+                    kartenSpielbar = spielregelBasicSonder.istKarteLegbar(getLetzteAufgelegteKarte(spielrunde.getAufgelegtStapel()), spieler.getHand().get(0), spielrunde.getRundeFarbe(), spielrunde.getZuZiehnKartenAnzahl() != 0);
+                    break;
+                case ALLE_SONDER_REGEL:
+                    kartenSpielbar = spielregelAlleSonder.istKarteLegbar(getLetzteAufgelegteKarte(spielrunde.getAufgelegtStapel()), spieler.getHand().get(0), spielrunde.getRundeFarbe(), spielrunde.getZuZiehnKartenAnzahl() != 0);
+                    break;
+                default:
+                    throw new MauMauException("unbekannte SpielRegelKomponente wurde übergeben");
+            }
+            sollMauMau = kartenSpielbar;
+        }
+        return sollMauMau;
     }
 
     public boolean pruefeObWuenscher(Spielkarte spielkarte, RegelKompTyp gewaehlteSpielregel) throws MauMauException {
@@ -202,6 +220,35 @@ public class SpielsteuerungImpl implements ISpielsteuerung {
         spielrunde.setZuZiehnKartenAnzahl(0);
 
         return spieler;
+    }
+
+    @Override
+    public boolean checkeObSpielerAusgesetztWird(Spielrunde spielrunde, Spieler spieler, RegelKompTyp gewaehlteSpielregel) throws MauMauException {
+        boolean kartenSpielbar = false;
+        for (Spielkarte spielkarte : spieler.getHand()) {
+            switch (gewaehlteSpielregel) {
+                case OHNE_SONDER_REGEL:
+                    kartenSpielbar = spielregelohneSonder.istKarteLegbar(getLetzteAufgelegteKarte(spielrunde.getAufgelegtStapel()), spielkarte, spielrunde.getRundeFarbe(), spielrunde.getZuZiehnKartenAnzahl() != 0);
+                    break;
+                case MIT_BASIC_SONDER_REGEL:
+                    kartenSpielbar = spielregelBasicSonder.istKarteLegbar(getLetzteAufgelegteKarte(spielrunde.getAufgelegtStapel()), spielkarte, spielrunde.getRundeFarbe(), spielrunde.getZuZiehnKartenAnzahl() != 0);
+                    break;
+                case ALLE_SONDER_REGEL:
+                    kartenSpielbar = spielregelAlleSonder.istKarteLegbar(getLetzteAufgelegteKarte(spielrunde.getAufgelegtStapel()), spielkarte, spielrunde.getRundeFarbe(), spielrunde.getZuZiehnKartenAnzahl() != 0);
+                    break;
+                default:
+                    throw new MauMauException("unbekannte SpielRegelKomponente wurde übergeben");
+            }
+            if (kartenSpielbar) {
+                break;
+            }
+        }
+        if(spielrunde.getVerdeckteStapel().size() == 0 && spielrunde.getAufgelegtStapel().size() <2 && !kartenSpielbar) {
+            this.setSpielendToNextPlayer(spielrunde.getSpielerListe());
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private void setSpielendToNextPlayer(List<Spieler> spielerListe) throws MauMauException {

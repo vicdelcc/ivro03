@@ -54,16 +54,18 @@ public class ConsoleImpl implements IConsole {
 
                 consoleView.printZugDetails(spielrunde, spieler);
 
-                boolean sollMauAufgerufen = spielsteuerung.sollMauMauAufrufen(spieler);
+                boolean sollMauAufgerufen = spielsteuerung.sollMauMauAufrufen(spielrunde, spieler, gewaehlteSpielregel);
 
                 boolean zugErfolgreich = false;
 
                 do {
-
-                    String wahl = consoleView.eingabgeWaehlen(sc, spieler);
-
-                    zugErfolgreich = spieleWahl(wahl, spieler, spielrunde, sollMauAufgerufen, gewaehlteSpielregel);
-
+                    if (!spielsteuerung.checkeObSpielerAusgesetztWird(spielrunde, spieler, gewaehlteSpielregel)) {
+                        String wahl = consoleView.eingabgeWaehlen(sc, spieler);
+                        zugErfolgreich = spieleWahl(wahl, spieler, spielrunde, sollMauAufgerufen, gewaehlteSpielregel);
+                    } else {
+                        consoleView.printMessage("### Sie können weder Karten spielen noch ziehen. Sie werden ausgesetzt ###");
+                        zugErfolgreich = false;
+                    }
                 } while (!zugErfolgreich);
 
                 vollerHand = !spieler.getHand().isEmpty();

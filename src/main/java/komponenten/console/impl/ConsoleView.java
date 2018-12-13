@@ -161,6 +161,9 @@ public class ConsoleView {
         return Blatttyp.values()[i];
     }
 
+    public void printMessage(String message) {
+        System.out.println(message);
+    }
     public void mauMauNichtgerufenMsg(){
         System.out.println("### Sie haben MauMau nicht gerufen. ###");
     }
@@ -178,7 +181,7 @@ public class ConsoleView {
     }
 
     public void mauMauNichtAufrufenMsg(){
-        System.out.println("### Sie sollen 'z' oder ein Karteindex eingeben ###");
+        System.out.println("### Sie müssen MauMau nicht aufrufen ###");
     }
 
     public void karteGezogenMsg(int anzhalZiehen) {

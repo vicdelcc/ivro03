@@ -16,6 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 public class Spiel extends BaseEntity {
 
+
     @Column
     @Enumerated(EnumType.STRING)
     private SpielTyp spielTyp;
