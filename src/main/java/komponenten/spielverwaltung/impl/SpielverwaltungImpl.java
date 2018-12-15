@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Komponent, der ein Spiel verwaltet bzw. einzelne Spielrunde erstellt
+ * Komponent, der ein Spiel bzw. Spielrunden verwaltet
  */
 @Service
 public class SpielverwaltungImpl implements ISpielverwaltung {
@@ -30,16 +30,20 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
 
 
     public Spiel starteNeuesSpiel(SpielTyp spielTyp, RegelKompTyp regelKompTyp) throws MauMauException {
-        if(spielTyp == null || regelKompTyp == null) {
-            throw new TechnischeException("Spieltyp oder Regelkomponententyp ist nicht initialisiert");
+        if(spielTyp == null) {
+            throw new TechnischeException("Spieltyp ist nicht initialisiert");
+        } else if(regelKompTyp == null) {
+            throw new TechnischeException("Regelkomponententyp ist nicht initialisiert");
         }
         Spiel spiel = new Spiel(spielTyp, regelKompTyp);
         return spiel;
     }
 
     public Spielrunde starteSpielrunde(List<Spieler> spielerListe, Spiel spiel) throws MauMauException {
-        if(spielerListe.size() < 2 || spiel == null) {
-            throw new TechnischeException("Fehler bei der Initialisierung einer Spielrunde");
+        if(spielerListe.size() < 2) {
+            throw new TechnischeException("Es müssen mindestens 2 Spieler registriert sein");
+        } else if (spiel == null) {
+            throw new TechnischeException("Übergebene Spiel war null");
         }
         // Für ab 2. Spielrunde muss man aller SPieler auf nicht spielend setzen
         for(Spieler spieler : spielerListe) {
@@ -77,8 +81,6 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
 
         }
         spiel.getSpielrunden().add(spielrunde);
-
-
         // ZuZiehendenKarte default auf 0
         spielrunde.setZuZiehnKartenAnzahl(0);
         return spielrunde;
@@ -115,6 +117,7 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
         return spielrunde;
     }
 
+    @SuppressWarnings("squid:S2583")
     public Spiel beendeSpiel(Spiel spiel) throws MauMauException {
         if(spiel == null) {
             throw new TechnischeException("Spiel ist nicht initialisiert");

@@ -10,11 +10,12 @@ import java.util.List;
 public interface IKarten {
 
     /**
-     * Gib zurück einen Kartenstapel zum ausgewählten Spieltyp
-     * @param blatttypen - die Liste von Blatttypen, die nicht verwendet werden sollen.
-     * @param blattwerten - die Liste von Blattwerten, die nicht verwendet werden sollen.
+     * Gib zurück einen Kartenstapel, der nicht die übergebenen Blatttypen bzw. -werten enthält
+     *
+     * @param blatttypenNicht  - die Liste von Blatttypen, die nicht verwendet werden sollen.
+     * @param blattwertenNicht - die Liste von Blattwerten, die nicht verwendet werden sollen.
      * @return List<Spielkarte> - der gebaute Stapel
-     * @throws MauMauException
+     * @throws MauMauException - Falls einer von den übergebenen Parameter null ist
      */
-    List<Spielkarte> baueStapel(List<Blatttyp> blatttypen, List<Blattwert> blattwerten) throws MauMauException;
+    List<Spielkarte> baueStapel(List<Blatttyp> blatttypenNicht, List<Blattwert> blattwertenNicht) throws MauMauException;
 }
