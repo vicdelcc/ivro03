@@ -22,7 +22,7 @@ public abstract class SpielregelTestBase {
     /**
      * Spielkarte-Kombinationen für die Spielregel-Impl ohne Sonderregel
      *
-     * @return Collection<Object                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               [                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ]> - die Kombinationen in einem Collection-Object
+     * @return Collection<Object [ ]> - die Object-Collection mit den Kombinationen                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               [                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ]> - die Kombinationen in einem Collection-Object
      */
     public static Collection<Object[]> getDataOhneSonder() {
         Object[][] data = {{new Spielkarte(Blattwert.Acht, Blatttyp.Herz), new Spielkarte(Blattwert.Bube, Blatttyp.Herz), true, null, false},
@@ -35,7 +35,7 @@ public abstract class SpielregelTestBase {
     /**
      * Spielkarte-Kombinationen für die Spielregel-Impl mit Basic-Sonderregel (Zwei_ziehen(7), Aussetzen(Ass) und Wünscher(Bube))
      *
-     * @return Collection<Object                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               [                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ]> - die Kombinationen in einem Collection-Object
+     * @return Collection<Object [ ]> - die Object-Collection mit den Kombinationen                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  [                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ]> - die Kombinationen in einem Collection-Object
      */
     public static Collection<Object[]> getDataBasicSonder() {
         Collection<Object[]> dataList = getDataOhneSonder();
@@ -59,7 +59,7 @@ public abstract class SpielregelTestBase {
      * Spielkarte-Kombinationen für die Spielregel-Impl mit Basic-Sonderregel (Zwei_ziehen(7), Aussetzen(Ass), Wünscher(Bube),
      * Richtungswechsel(9), Stopper(8) und Allesleger(10))
      *
-     * @return Collection<Object                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               [                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ]> - die Kombinationen in einem Collection-Object
+     * @return Collection<Object [ ]> - die Object-Collection mit den Kombinationen                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  [                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ]> - die Kombinationen in einem Collection-Object
      */
     public static Collection<Object[]> getDataAlleSonder() {
         Collection<Object[]> dataList = getDataBasicSonder();
@@ -79,19 +79,6 @@ public abstract class SpielregelTestBase {
         return combinedStream.collect(Collectors.toList());
     }
 
-
-    /**
-     * Super-Methode für den erfolgreichen und gescheiterten "prüfeObWünscher" für alle verschiedenen SpielRegel-Impls
-     *
-     * @param service    - die entsprechende SpielRegel-Impl
-     * @param spielkarte - die zu spielende Spielkarte
-     * @return boolean - ob die Spielkarte ein Wünscher ist oder nicht
-     * @throws MauMauException
-     */
-    public static boolean istKarteWuenscher(ISpielregel service, Spielkarte spielkarte) throws MauMauException {
-        return service.pruefeObWuenscher(spielkarte);
-    }
-
     /**
      * Super-Methode für den erfolgreichen und gescheiterten "istKarteLegbar" für alle verschiedene Spielregel-Impls
      *
@@ -100,17 +87,29 @@ public abstract class SpielregelTestBase {
      * @param danach               - die Spielkarte, die im aktuellen Zug gespielt werden soll
      * @param gewuenschterBlatttyp - falls vorhanden, der gewünschte Blatttyp
      * @return boolean - ob die Spielkarte legbar ist oder nicht
-     * @throws MauMauException
+     * @throws MauMauException - Falls einer von den übergabenen Parameter null ist
      */
     public static boolean istKarteLegbar(ISpielregel service, Spielkarte davor, Spielkarte danach, Blatttyp gewuenschterBlatttyp, boolean sindKartenZuZiehen) throws MauMauException {
         return service.istKarteLegbar(davor, danach, gewuenschterBlatttyp, sindKartenZuZiehen);
+    }
+
+    /**
+     * Super-Methode für den positiven und negativen "prüfeObWünscher" sowie den gescheiterten Aufruf für alle verschiedenen SpielRegel-Impls
+     *
+     * @param service    - die entsprechende SpielRegel-Impl
+     * @param spielkarte - die zu spielende Spielkarte
+     * @return boolean - ob die Spielkarte ein Wünscher ist oder nicht
+     * @throws MauMauException - Falls einer von den übergabenen Parameter null ist
+     */
+    public static boolean istKarteWuenscher(ISpielregel service, Spielkarte spielkarte) throws MauMauException {
+        return service.pruefeObWuenscher(spielkarte);
     }
 
 
     /**
      * Super-Methode für den gescheiterten "holeAuswirkungen" für alle verschiedenen Spielregel-Impls wegen Spielkarte-Null
      *
-     * @throws MauMauException
+     * @throws MauMauException - Falls einer von den übergabenen Parameter null ist
      */
     public static void holeAuswirkungenFailedKarteNull(ISpielregel service) throws MauMauException {
         service.holeAuswirkungVonKarte(null, new ArrayList<>(), 0);
@@ -119,16 +118,16 @@ public abstract class SpielregelTestBase {
     /**
      * Super-Methode für den gescheiterten "holeAuswirkungen" für alle verschiedenen Spielregel-Impls wegen Spielerliste-Null
      *
-     * @throws MauMauException
+     * @throws MauMauException - Falls einer von den übergabenen Parameter null ist
      */
     public static void holeAuswirkungenFailedSpielerNull(ISpielregel service) throws MauMauException {
         service.holeAuswirkungVonKarte(new Spielkarte(Blattwert.Bube, Blatttyp.Herz), null, 0);
     }
 
     /**
-     * Generiert eine default-Spielerliste für alle Spielregel-Impls-Tests
+     * Hilfsmethode, die eine default-Spielerliste für alle Spielregel-Impls-Tests generiert
      *
-     * @return List<Spieler> - die generierte Lsite
+     * @return List<Spieler> - die generierte Liste
      */
     public static List<Spieler> getDefaultSpielerListe() {
         List<Spieler> spielerListe = new ArrayList<>();

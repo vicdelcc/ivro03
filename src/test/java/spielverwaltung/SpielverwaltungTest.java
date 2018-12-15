@@ -24,6 +24,7 @@ import static org.junit.Assert.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = AppConfig.class)
 public class SpielverwaltungTest {
+
     @Autowired
     private ISpielverwaltung spielVerwaltungService;
 
@@ -51,7 +52,7 @@ public class SpielverwaltungTest {
     /**
      * Test für den erfolgreichen Start eines Spiels
      *
-     * @throws MauMauException
+     * @throws MauMauException - Falls das Spiel nicht gebaut werden konnte
      */
     @Test
     public void testStarteSpielSuccess() throws MauMauException {
@@ -77,7 +78,7 @@ public class SpielverwaltungTest {
     /**
      * Test für den gescheiterten Start eines Spiels wegen Null-Spieltyp
      *
-     * @throws MauMauException
+     * @throws MauMauException - Falls das Spiel nicht gebaut werden konnte
      */
     @Test(expected = MauMauException.class)
     public void testStarteSpielFailedSpielTypNull() throws MauMauException {
@@ -90,7 +91,7 @@ public class SpielverwaltungTest {
     /**
      * Test für den gescheiterten Start eines Spiels wegen Null-RegelKompTyp
      *
-     * @throws MauMauException
+     * @throws MauMauException - Falls das Spiel nicht gebaut werden konnte
      */
     @Test(expected = MauMauException.class)
     public void testStarteSpielFailedRegelKompTypNull() throws MauMauException {
@@ -103,7 +104,7 @@ public class SpielverwaltungTest {
     /**
      * Test für die erfolgreiche Erstellung einer Spielrunde
      *
-     * @throws MauMauException
+     * @throws MauMauException - Falls die Spielrunde nicht gebaut werden konnte
      */
     @Test
     public void testStarteSpielRundeSuccess() throws MauMauException {
@@ -152,7 +153,7 @@ public class SpielverwaltungTest {
     /**
      * Test für die gescheiterte Erstellung einer Spielrunde wegen eines unbekannten Spiels
      *
-     * @throws MauMauException
+     * @throws MauMauException - Falls die Spielrunde nicht gebaut werden konnte
      */
     @Test(expected = MauMauException.class)
     public void testStarteSpielRundeSpielerUnbekanntFailed() throws MauMauException {
@@ -177,7 +178,7 @@ public class SpielverwaltungTest {
     /**
      * Test für die gescheiterte Erstellung einer Spielrunde wegen unbekannten Spieler
      *
-     * @throws MauMauException
+     * @throws MauMauException - Falls die Spielrunde nicht gebaut werden konnte
      */
     @Test(expected = MauMauException.class)
     public void testStarteSpielRundeSpielUnbekanntFailed() throws MauMauException {
@@ -202,7 +203,7 @@ public class SpielverwaltungTest {
     /**
      * Test für das erfolgreiche Beenden einer Spielrunde
      *
-     * @throws MauMauException
+     * @throws MauMauException - Falls die Spielrunde nicht beendet werden konnte
      */
     @Test
     public void testBeendeSpielrundeSuccess() throws MauMauException {
@@ -261,9 +262,9 @@ public class SpielverwaltungTest {
     }
 
     /**
-     * Test für das gescheiterte Beenden einer Spielrunde
+     * Test für das gescheiterte Beenden einer Spielrunde, weil diese Null ist
      *
-     * @throws MauMauException
+     * @throws MauMauException - Falls die Spielrunde nicht beendet werden konnte
      */
     @Test(expected = MauMauException.class)
     public void testBeendeSpielrundeFailed() throws MauMauException {
@@ -277,7 +278,7 @@ public class SpielverwaltungTest {
     /**
      * Test für das ergolgreiche Beenden eines Spiels
      *
-     * @throws MauMauException
+     * @throws MauMauException - Falls die Spielrunde nicht beendet werden konnte
      */
     @Test
     public void testBeendeSpielSuccess() throws MauMauException {
@@ -296,6 +297,8 @@ public class SpielverwaltungTest {
 
     /**
      * Test für das gescheiterte Beenden eines Spiels weil das übergebene Spiel null ist
+     *
+     * @throws MauMauException - Falls die Spielrunde nicht beendet werden konnte
      */
     @Test(expected = MauMauException.class)
     public void testBeendeSpielFailedSpielNull() throws MauMauException {
@@ -310,6 +313,8 @@ public class SpielverwaltungTest {
 
     /**
      * Test für das gescheiterte Beenden eines Spiels weil das Spiel nicht erfolgreich gespeichert wird
+     *
+     *  @throws MauMauException - Falls das Spiel nicht beendet werden konnte
      */
     @Test(expected = MauMauException.class)
     public void testBeendeSpielFailedNichtGespeichert() throws MauMauException {

@@ -27,9 +27,9 @@ public class KartenTest {
     private IKarten kartenService;
 
     /**
-     * Test für den erfolgreichen Bau des Kartenstapels
+     * Test für den erfolgreichen Bau des Kartenstapels mit allen Blatttypen
      *
-     * @throws MauMauException
+     * @throws MauMauException - Falls der Stapel nicht gebaut werden konnte
      */
     @Test
     public void testBaueStapelSuccessMitAllenTypen() throws MauMauException {
@@ -62,9 +62,9 @@ public class KartenTest {
 
 
     /**
-     * Test für den erfolgreichen Bau des Kartenstapels
+     * Test für den erfolgreichen Bau des Kartenstapels mitnur 3 Blatttypen
      *
-     * @throws MauMauException
+     * @throws MauMauException - Falls der Stapel nicht gebaut werden konnte
      */
     @Test
     public void testBaueStapelSuccessMitDreiTypen() throws MauMauException {
@@ -100,7 +100,7 @@ public class KartenTest {
     /**
      * Test für den gescheiterten Bau des Kartenstapels wegen Null-Blatttyp-Liste
      *
-     * @throws MauMauException
+     * @throws MauMauException - Falls der Stapel nicht gebaut werden konnte
      */
     @Test(expected = MauMauException.class)
     public void testBaueStapelFailedBlatttypNull() throws MauMauException {
@@ -118,7 +118,7 @@ public class KartenTest {
     /**
      * Test für den gescheiterten Bau des Kartenstapels wegen Null-Blattwert-Liste
      *
-     * @throws MauMauException
+     * @throws MauMauException - Falls der Baustapel nicht gebaut werden konnte
      */
     @Test(expected = MauMauException.class)
     public void testBaueStapelFailedBlattwertNull() throws MauMauException {
