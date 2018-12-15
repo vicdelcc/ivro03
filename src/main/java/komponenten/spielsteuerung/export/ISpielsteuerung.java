@@ -50,7 +50,7 @@ public interface ISpielsteuerung {
 
     /**
      * Prüft, ob der Spieler MauMau aufrufen sollte
-     * @param spielrunde
+     * @param spielrunde          - die Spielrunde, in der der Zug gespielt wird
      * @param spieler             - Spieler, der dran ist
      * @param gewaehlteSpielregel - der von Benutzer gewünschte Spielregel-Typ
      * @return - boolean - True, wenn der Spieler MauMau aufrufen sollte, sonst false.
@@ -63,8 +63,8 @@ public interface ISpielsteuerung {
     /**
      * Prüft ob die übergebene Spielkarte die Wünscher-Funktion besitzt
      *
-     * @param gewaehlteSpielregel - die ausgewählte SpielregelKomponente
      * @param spielkarte          - die gespielte Karte
+     * @param gewaehlteSpielregel - die ausgewählte SpielregelKomponente
      * @return boolean - Wenn die Karte Wünscher ist, wird true zurückgegeben, sonst false
      * @throws MauMauException - Wenn Spielkarte oder Spielregelkomponente null sind, wird die Exception geworfen.
      */
@@ -96,11 +96,11 @@ public interface ISpielsteuerung {
     /**
      * Für den Ausnahmefall, dass der Spieler keine Karte spielen kann und es sind keine Karten mehr zu ziehen übrig
      *
-     * @param spielrunde
-     * @param spieler
-     * @param gewaehlteSpielregel
-     * @return
-     * @throws MauMauException
+     * @param spielrunde   - die gespielte Spielrunde
+     * @param spieler      - der Spieler, der karten zieht
+     * @param gewaehlteSpielregel - die ausgewählte SpielregelKomponente
+     * @return true - wenn der Spieler ausgesetzt sein sollte. false wenn nicht.
+     * @throws MauMauException - Wenn der RegelKompTyp nicht erkannt wird oder keine Karten mehr im aufgelegten Stapel gibt.
      */
     boolean checkeObSpielerAusgesetztWird(Spielrunde spielrunde, Spieler spieler, RegelKompTyp gewaehlteSpielregel) throws MauMauException;
 }
