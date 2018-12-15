@@ -105,7 +105,7 @@ public class SpielsteuerungTest {
 
         Mockito.when(spielregelOhneSonderImpl.istKarteLegbar(letzteAufgelegteKarte, spieler1.getHand().get(0), letzteAufgelegteKarte.getBlatttyp(), false)).thenReturn(true);
 
-        assertTrue(spielsteuerung.sollMauMauAufrufen(spielrunde,spieler1, RegelKompTyp.OHNE_SONDER_REGEL));
+        assertTrue(spielsteuerung.sollMauMauAufrufen(spielrunde, spieler1, RegelKompTyp.OHNE_SONDER_REGEL));
     }
 
     /**
@@ -122,7 +122,44 @@ public class SpielsteuerungTest {
         //Checkt ob der Hand mehr als eine Karte hat
         assertTrue(spieler1.getHand().size() > 1);
 
-        assertFalse(spielsteuerung.sollMauMauAufrufen(spielrunde,spieler1, RegelKompTyp.OHNE_SONDER_REGEL));
+        assertFalse(spielsteuerung.sollMauMauAufrufen(spielrunde, spieler1, RegelKompTyp.OHNE_SONDER_REGEL));
+    }
+
+    /**
+     * Wenn ein Spieler mehr als eine Karte im Hand hat soll MauMau nicht aufgerufen werden
+     *
+     * @throws MauMauException
+     */
+    @Test (expected = MauMauException.class)
+    public void testSollMauMauAufrufenSpielerNull() throws MauMauException {
+
+        assertFalse(spielsteuerung.sollMauMauAufrufen(spielrunde, null, RegelKompTyp.OHNE_SONDER_REGEL));
+    }
+
+    /**
+     * Wenn ein Spieler mehr als eine Karte im Hand hat soll MauMau nicht aufgerufen werden
+     *
+     * @throws MauMauException
+     */
+    @Test (expected = MauMauException.class)
+    public void testSollMauMauAufrufenSpielershandNull() throws MauMauException {
+
+        spieler1.setHand(null);
+
+        assertFalse(spielsteuerung.sollMauMauAufrufen(spielrunde, spieler1, RegelKompTyp.OHNE_SONDER_REGEL));
+    }
+
+    /**
+     * Wenn ein Spieler mehr als eine Karte im Hand hat soll MauMau nicht aufgerufen werden
+     *
+     * @throws MauMauException
+     */
+    @Test (expected = MauMauException.class)
+    public void testSollMauMauAufrufenSpielershandLeer() throws MauMauException {
+
+        spieler1.setHand(new ArrayList<>(0));
+
+        assertFalse(spielsteuerung.sollMauMauAufrufen(spielrunde, spieler1, RegelKompTyp.OHNE_SONDER_REGEL));
     }
 
     /**
@@ -202,16 +239,74 @@ public class SpielsteuerungTest {
     }
 
     /**
-     * test ob die gespielte Karte anlegbar ist.
+     * test ob die gespielte Karte anlegbar ist, wenn spieler Null ist
      *
      * @throws MauMauException
      */
-    @Test (expected = MauMauException.class)
-    public void testSpieleKarteErlaubteKarteSpielerNULL() throws MauMauException {
+    @Test(expected = MauMauException.class)
+    public void testSpieleKarteSpielerNULL() throws MauMauException {
 
         Spielkarte aktuelleKarte = prepareSpieleKarte();
 
         assertTrue(spielsteuerung.spieleKarte(null, aktuelleKarte, spielrunde, RegelKompTyp.OHNE_SONDER_REGEL));
+
+    }
+
+    /**
+     * test ob die gespielte Karte anlegbar ist, wenn Spielershand Null ist
+     *
+     * @throws MauMauException
+     */
+    @Test(expected = MauMauException.class)
+    public void testSpieleKarteSpielershandNULL() throws MauMauException {
+
+        Spielkarte aktuelleKarte = prepareSpieleKarte();
+
+        spieler1.setHand(null);
+
+        spielsteuerung.spieleKarte(spieler1, aktuelleKarte, spielrunde, RegelKompTyp.OHNE_SONDER_REGEL);
+
+    }
+
+    /**
+     * test ob die gespielte Karte anlegbar ist, wenn aktuelle Spielkarte Null ist
+     *
+     * @throws MauMauException
+     */
+    @Test(expected = MauMauException.class)
+    public void testSpieleKarteAktuelleKarteNULL() throws MauMauException {
+
+        spielsteuerung.spieleKarte(spieler1, null, spielrunde, RegelKompTyp.OHNE_SONDER_REGEL);
+
+    }
+
+    /**
+     * test ob die gespielte Karte anlegbar ist, wenn Spielrunde Null ist
+     *
+     * @throws MauMauException
+     */
+    @Test(expected = MauMauException.class)
+    public void testSpieleKarteSpielrundeNULL() throws MauMauException {
+
+        Spielkarte aktuelleKarte = prepareSpieleKarte();
+
+
+        spielsteuerung.spieleKarte(spieler1, aktuelleKarte, null, RegelKompTyp.OHNE_SONDER_REGEL);
+
+    }
+
+    /**
+     * test ob die gespielte Karte anlegbar ist, wenn RegelKompTyp ist null
+     *
+     * @throws MauMauException
+     */
+    @Test(expected = Exception.class)
+    public void testSpieleKarteRegelKompTypNULL() throws MauMauException {
+
+        Spielkarte aktuelleKarte = prepareSpieleKarte();
+
+
+        spielsteuerung.spieleKarte(spieler1, aktuelleKarte, spielrunde, null);
 
     }
 
@@ -261,6 +356,32 @@ public class SpielsteuerungTest {
     }
 
     /**
+     * test die Methode BestimmeBlatttyp - wenn der übergebene Blatttyp null ist
+     *
+     * @throws MauMauException
+     */
+    @Test(expected = MauMauException.class)
+    public void testBestimmeBlatttypBlatttypNull() throws MauMauException {
+
+        Blatttyp gewuenschteBlatttyp = null;
+
+        spielsteuerung.bestimmeBlatttyp(gewuenschteBlatttyp, spielrunde);
+    }
+
+    /**
+     * test die Methode BestimmeBlatttyp - wenn die Spielrunde null ist
+     *
+     * @throws MauMauException
+     */
+    @Test(expected = MauMauException.class)
+    public void testBestimmeBlatttypSpielrundeNull() throws MauMauException {
+
+        Blatttyp gewuenschteBlatttyp = Blatttyp.Herz;
+
+        spielsteuerung.bestimmeBlatttyp(gewuenschteBlatttyp, null);
+    }
+
+    /**
      * test das Ziehen-Prozess vom verdeckten Stapel in den Hand
      *
      * @throws MauMauException
@@ -301,6 +422,41 @@ public class SpielsteuerungTest {
         assertEquals(1, spielrunde.getAufgelegtStapel().size());
 
         assertEquals(0, spielrunde.getVerdeckteStapel().size());
+    }
+
+    /**
+     * test das Ziehen-Prozess vom verdeckten Stapel in den Hand, wenn Spieler null ist
+     *
+     * @throws MauMauException
+     */
+    @Test(expected = MauMauException.class)
+    public void testZieheKartenVomStapelSpielerNULL() throws MauMauException {
+
+        spielsteuerung.zieheKartenVomStapel(null, 2, spielrunde);
+    }
+
+    /**
+     * test das Ziehen-Prozess vom verdeckten Stapel in den Hand, wenn Spieler null ist
+     *
+     * @throws MauMauException
+     */
+    @Test(expected = MauMauException.class)
+    public void testZieheKartenVomStapelSpielershandNULL() throws MauMauException {
+
+        spieler1.setHand(null);
+
+        spielsteuerung.zieheKartenVomStapel(spieler1, 2, spielrunde);
+    }
+
+    /**
+     * test das Ziehen-Prozess vom verdeckten Stapel in den Hand, wenn Spielrunde null ist
+     *
+     * @throws MauMauException
+     */
+    @Test(expected = MauMauException.class)
+    public void testZieheKartenVomStapelSpielrundeNULL() throws MauMauException {
+
+        spielsteuerung.zieheKartenVomStapel(spieler1, 2, null);
     }
 
     /**
@@ -355,7 +511,7 @@ public class SpielsteuerungTest {
     }
 
     /**
-     * test ob eine Karte ein Wuenscher ist
+     * test ob eine Karte ein Wuenscher ist, wenn RegelKompTyp null ist
      *
      * @throws MauMauException
      */
@@ -365,6 +521,17 @@ public class SpielsteuerungTest {
         Spielkarte spielkarte = new Spielkarte(Blattwert.Acht, Blatttyp.Karo);
 
         spielsteuerung.pruefeObWuenscher(spielkarte, null);
+    }
+
+    /**
+     * test ob eine Karte ein Wuenscher ist
+     *
+     * @throws MauMauException
+     */
+    @Test(expected = MauMauException.class)
+    public void testPruefeObWuenscherMitSpielkarteNULL() throws MauMauException {
+
+        spielsteuerung.pruefeObWuenscher(null, RegelKompTyp.OHNE_SONDER_REGEL);
     }
 
     /**
@@ -392,7 +559,6 @@ public class SpielsteuerungTest {
         assertTrue(spielsteuerung.checkeObSpielerAusgesetztWird(spielrunde, spieler1, RegelKompTyp.OHNE_SONDER_REGEL));
 
     }
-
 
 
 }
