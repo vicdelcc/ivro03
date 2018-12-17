@@ -40,6 +40,7 @@ public interface ISpielregel {
      *
      * @param spielkarte - die übergebene Spielkarte
      * @return boolean - Ob die Karte eine Bube ist bzw. die Funktion von Wünscher hat
+     * @throws MauMauException - Falls einer von den übergebenen Parameter null ist
      */
     boolean pruefeObWuenscher(Spielkarte spielkarte) throws MauMauException;
 }

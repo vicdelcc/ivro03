@@ -43,6 +43,9 @@ public class SpielsteuerungImpl implements ISpielsteuerung {
     private ISpielregel spielregelAlleSonder;
 
     public Spieler fragWerDranIst(List<Spieler> spielerListe) throws MauMauException {
+        if(spielerListe == null) {
+            throw new TechnischeException("Spielerliste ist nicht initialisiert");
+        }
         if (spielerListe.size() < 2) {
             throw new TechnischeException("Spielerliste muss mehr als einen Spieler enthalten");
         }
@@ -78,10 +81,6 @@ public class SpielsteuerungImpl implements ISpielsteuerung {
         if (spielrunde == null) {
             throw new MauMauException("Spielrunde ist null");
         }
-        // TODO wenn aber der 1. Zug ist, ist keine Farbe gesetzt, daher nur wenn es nicht der 1. zug ist, temporär gelöst wenn AuflegteStapel-size > 1
-//        if (spielrunde.getRundeFarbe() == null && spielrunde.getAufgelegtStapel().size() > 1) {
-//            throw new MauMauException("Spielrundesfarbe ist null");
-//        }
         if (spielrunde.getAufgelegtStapel() == null || spielrunde.getAufgelegtStapel().isEmpty()) {
             throw new MauMauException("Aufgelegter Stapel ist null oder leer");
         }
@@ -109,8 +108,6 @@ public class SpielsteuerungImpl implements ISpielsteuerung {
             setztKarteVomHandAufDemAufgelegteStapel(spieler, spielkarte, spielrunde);
             spielrunde.setSpielerListe(regelComponentUtil.getSpielerListe());
             spielrunde.setZuZiehnKartenAnzahl(regelComponentUtil.getAnzahlKartenZuZiehen());
-//            // TODO rundeFarbe setzen nötig für den normalen Fall
-//            spielrunde.setRundeFarbe(spielkarte.getBlatttyp());
             if (spielrunde.getRundeFarbe() != null) {
                 spielrunde.setRundeFarbe(null);
             }
