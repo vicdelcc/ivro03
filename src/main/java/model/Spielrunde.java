@@ -49,11 +49,10 @@ public class Spielrunde extends BaseEntity {
             mappedBy = "spielrunde", orphanRemoval = true)
     private List<Spieler> spielerListe;
 
-    @Column
-    @Enumerated(EnumType.STRING)
+    @Transient
     private Blatttyp rundeFarbe;
 
-    @Column
+    @Transient
     private Integer zuZiehnKartenAnzahl;
 
     public Spielrunde(Spiel spiel, List<Spieler> spielerliste) {

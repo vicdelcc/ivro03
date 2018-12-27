@@ -92,7 +92,7 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
         }
         // Dauer
         Duration duration = Duration.between(spielrunde.getStart().toInstant(), Instant.now());
-        spielrunde.setDauer(duration.toMinutes());
+        spielrunde.setDauer(duration.getSeconds());
 
         // Ergebnisse
         for(Spieler spieler : spielrunde.getSpielerListe()) {
@@ -124,7 +124,7 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
         }
         // Dauer
         Duration duration = Duration.between(spiel.getBeginn().toInstant(), Instant.now());
-        spiel.setDauer(duration.toMinutes());
+        spiel.setDauer(duration.getSeconds());
 
         Spiel spielSaved= this.spielRepository.save(spiel);
 
