@@ -4,7 +4,6 @@ import komponenten.karten.export.IKarten;
 import model.Spielkarte;
 import model.enums.Blatttyp;
 import model.enums.Blattwert;
-import model.exceptions.MauMauException;
 import model.exceptions.TechnischeException;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +19,7 @@ import java.util.Random;
 public class KartenImpl implements IKarten {
 
     @Override
-    public List<Spielkarte> baueStapel(List<Blatttyp> blatttypenNicht, List<Blattwert> blattwertenNicht) throws MauMauException {
+    public List<Spielkarte> baueStapel(List<Blatttyp> blatttypenNicht, List<Blattwert> blattwertenNicht) {
 
         if (blatttypenNicht == null) {
             throw new TechnischeException("Die Liste von übergebenen Blatttypen, die nicht verwendet werden soll, ist leer");

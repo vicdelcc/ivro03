@@ -4,7 +4,6 @@ import komponenten.karten.export.IKarten;
 import komponenten.spielverwaltung.export.ISpielverwaltung;
 import model.*;
 import model.enums.*;
-import model.exceptions.MauMauException;
 import model.exceptions.TechnischeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,7 +28,7 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
     private SpielRepository spielRepository;
 
 
-    public Spiel starteNeuesSpiel(SpielTyp spielTyp, RegelKompTyp regelKompTyp) throws MauMauException {
+    public Spiel starteNeuesSpiel(SpielTyp spielTyp, RegelKompTyp regelKompTyp) {
         if(spielTyp == null) {
             throw new TechnischeException("Spieltyp ist nicht initialisiert");
         } else if(regelKompTyp == null) {
@@ -39,7 +38,7 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
         return spiel;
     }
 
-    public Spielrunde starteSpielrunde(List<Spieler> spielerListe, Spiel spiel) throws MauMauException {
+    public Spielrunde starteSpielrunde(List<Spieler> spielerListe, Spiel spiel) {
         if(spielerListe.size() < 2) {
             throw new TechnischeException("Es müssen mindestens 2 Spieler registriert sein");
         } else if (spiel == null) {
@@ -86,7 +85,7 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
         return spielrunde;
     }
 
-    public Spielrunde beendeSpielrunde(Spielrunde spielrunde) throws MauMauException {
+    public Spielrunde beendeSpielrunde(Spielrunde spielrunde) {
         if(spielrunde == null) {
             throw new TechnischeException("Spielrunde ist nicht initialisiert");
         }
@@ -118,7 +117,7 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
     }
 
     @SuppressWarnings("squid:S2583")
-    public Spiel beendeSpiel(Spiel spiel) throws MauMauException {
+    public Spiel beendeSpiel(Spiel spiel) {
         if(spiel == null) {
             throw new TechnischeException("Spiel ist nicht initialisiert");
         }

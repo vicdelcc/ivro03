@@ -3,7 +3,7 @@ package komponenten.spielregel.export;
 import model.Spieler;
 import model.Spielkarte;
 import model.enums.Blatttyp;
-import model.exceptions.MauMauException;
+import model.exceptions.TechnischeException;
 import model.hilfsklassen.RegelComponentUtil;
 
 import java.util.List;
@@ -18,9 +18,9 @@ public interface ISpielregel {
      * @param blatttyp            - der Blatttyp, der bei einer Bube gewünscht wird
      * @param sindKartenZuZiehen  - ob Karten zu ziehen sind
      * @return boolean - Ob die Spielkarte legbar ist oder nicht
-     * @throws MauMauException - Falls einer von den übergebenen Parameter leer ist
+     * @throws TechnischeException - Falls einer von den übergebenen Parameter leer ist
      */
-    boolean istKarteLegbar(Spielkarte vorherigeSpielkarte, Spielkarte aktuelleSpielkarte, Blatttyp blatttyp, boolean sindKartenZuZiehen) throws MauMauException;
+    boolean istKarteLegbar(Spielkarte vorherigeSpielkarte, Spielkarte aktuelleSpielkarte, Blatttyp blatttyp, boolean sindKartenZuZiehen);
 
 
     /**
@@ -31,18 +31,18 @@ public interface ISpielregel {
      * @param spielerListe            - die Spielerliste
      * @param anzahlZuZiehendenKarten - die Anzahl von Karten die vom letzten Zug zu ziehen sind
      * @return RegelComponentUtil - Util-Object, um die Spielerliste und die Anzahl von zu ziehenden karten zurückzugeben
-     * @throws MauMauException - Falls einer von den übergebenen Parameter null ist
+     * @throws TechnischeException - Falls einer von den übergebenen Parameter null ist
      */
-    RegelComponentUtil holeAuswirkungVonKarte(Spielkarte aktuelleSpielkarte, List<Spieler> spielerListe, int anzahlZuZiehendenKarten) throws MauMauException;
+    RegelComponentUtil holeAuswirkungVonKarte(Spielkarte aktuelleSpielkarte, List<Spieler> spielerListe, int anzahlZuZiehendenKarten);
 
     /**
      * Prüft, ob die übergebene Spielkarte den Blattwert Bube hat
      *
      * @param spielkarte - die übergebene Spielkarte
      * @return boolean - Ob die Karte eine Bube ist bzw. die Funktion von Wünscher hat
-     * @throws MauMauException - Falls einer von den übergebenen Parameter null ist
+     * @throws TechnischeException - Falls einer von den übergebenen Parameter null ist
      */
-    boolean pruefeObWuenscher(Spielkarte spielkarte) throws MauMauException;
+    boolean pruefeObWuenscher(Spielkarte spielkarte);
 }
 
 

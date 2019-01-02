@@ -5,7 +5,7 @@ import model.Spieler;
 import model.Spielrunde;
 import model.enums.RegelKompTyp;
 import model.enums.SpielTyp;
-import model.exceptions.MauMauException;
+import model.exceptions.TechnischeException;
 
 import java.util.List;
 
@@ -17,9 +17,9 @@ public interface ISpielverwaltung {
      * @param spielTyp     - der gewählte Spieltyp
      * @param regelKompTyp - der gewählte Regelkomponententyp
      * @return Spiel - das erstellte Spiel
-     * @throws MauMauException - Falls einer von den übergebenen Parameter null ist
+     * @throws TechnischeException - Falls einer von den übergebenen Parameter null ist
      */
-    Spiel starteNeuesSpiel(SpielTyp spielTyp, RegelKompTyp regelKompTyp) throws MauMauException;
+    Spiel starteNeuesSpiel(SpielTyp spielTyp, RegelKompTyp regelKompTyp);
 
     /**
      * Erstellt eine Spielrunde, registriert die Spieler in der Spielrunde, wählt einen Spieler, der als Erstes daran
@@ -28,9 +28,9 @@ public interface ISpielverwaltung {
      * @param spielerListe - die Liste mit den Spieler, die in der Spielrunde registriert werden sollen
      * @param spiel        - das Spiel zu dem die Spielrunde gehört
      * @return Spielrunde - die erstellte Spielrunde
-     * @throws MauMauException - Falls einer von den übergebenen Parameter null ist
+     * @throws TechnischeException - Falls einer von den übergebenen Parameter null ist
      */
-    Spielrunde starteSpielrunde(List<Spieler> spielerListe, Spiel spiel) throws MauMauException;
+    Spielrunde starteSpielrunde(List<Spieler> spielerListe, Spiel spiel);
 
 
     /**
@@ -39,9 +39,9 @@ public interface ISpielverwaltung {
      *
      * @param spielrunde - die Spielrunde, die beendet werden soll
      * @return Spielrunde - die beendete Spielrunde
-     * @throws MauMauException - Falls die übergebene Spielrunde null ist
+     * @throws TechnischeException - Falls die übergebene Spielrunde null ist
      */
-    Spielrunde beendeSpielrunde(Spielrunde spielrunde) throws MauMauException;
+    Spielrunde beendeSpielrunde(Spielrunde spielrunde);
 
     /**
      * Beendet ein Spiel, berechnet die Dauer des Spiels und persistert es in der Datenbank (mit allen abhängenden
@@ -49,7 +49,7 @@ public interface ISpielverwaltung {
      *
      * @param spiel - das Spiel, das beendet werden soll
      * @return Spiel - das gespeicherte Spiel
-     * @throws MauMauException - Falls das übergebene Spiel null ist
+     * @throws TechnischeException - Falls das übergebene Spiel null ist
      */
-    Spiel beendeSpiel(Spiel spiel) throws MauMauException;
+    Spiel beendeSpiel(Spiel spiel);
 }

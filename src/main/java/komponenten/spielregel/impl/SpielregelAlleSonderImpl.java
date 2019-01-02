@@ -4,7 +4,6 @@ import model.Spieler;
 import model.Spielkarte;
 import model.enums.Blatttyp;
 import model.enums.Blattwert;
-import model.exceptions.MauMauException;
 import model.exceptions.TechnischeException;
 import model.hilfsklassen.RegelComponentUtil;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -21,7 +20,7 @@ import java.util.List;
 public class SpielregelAlleSonderImpl extends SpielregelBasicSonderImpl {
 
     @Override
-    public boolean istKarteLegbar(Spielkarte vorherigeSpielkarte, Spielkarte aktuelleSpielkarte, Blatttyp blatttyp, boolean sindKartenZuZiehen) throws MauMauException {
+    public boolean istKarteLegbar(Spielkarte vorherigeSpielkarte, Spielkarte aktuelleSpielkarte, Blatttyp blatttyp, boolean sindKartenZuZiehen) {
         if (vorherigeSpielkarte == null) {
             throw new TechnischeException("Vorherige Spielkarte ist nicht initialisiert");
         } else if (aktuelleSpielkarte == null) {
@@ -48,7 +47,7 @@ public class SpielregelAlleSonderImpl extends SpielregelBasicSonderImpl {
     }
 
     @Override
-    public RegelComponentUtil holeAuswirkungVonKarte(Spielkarte aktuelleSpielkarte, List<Spieler> spielerListe, int anzahlZuZiehendenKarten) throws MauMauException {
+    public RegelComponentUtil holeAuswirkungVonKarte(Spielkarte aktuelleSpielkarte, List<Spieler> spielerListe, int anzahlZuZiehendenKarten) {
         if (aktuelleSpielkarte == null) {
             throw new TechnischeException("Aktuelle Spielkarte ist nicht initialisiert");
         } else if (spielerListe == null) {

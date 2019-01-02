@@ -9,7 +9,6 @@ import model.Spielrunde;
 import model.enums.Blatttyp;
 import model.enums.Blattwert;
 import model.enums.RegelKompTyp;
-import model.exceptions.MauMauException;
 import model.exceptions.TechnischeException;
 import model.hilfsklassen.RegelComponentUtil;
 import org.apache.commons.collections4.CollectionUtils;
@@ -42,7 +41,7 @@ public class SpielsteuerungImpl implements ISpielsteuerung {
     @Qualifier("alleSonder")
     private ISpielregel spielregelAlleSonder;
 
-    public Spieler fragWerDranIst(List<Spieler> spielerListe) throws MauMauException {
+    public Spieler fragWerDranIst(List<Spieler> spielerListe) {
         if(spielerListe == null) {
             throw new TechnischeException("Spielerliste ist nicht initialisiert");
         }
@@ -58,9 +57,9 @@ public class SpielsteuerungImpl implements ISpielsteuerung {
         return spielerMitSpielend.get(0);
     }
 
-    public int checkZuZiehendenKarten(Spielrunde spielrunde) throws MauMauException {
+    public int checkZuZiehendenKarten(Spielrunde spielrunde) {
         if (spielrunde == null) {
-            throw new MauMauException("Spielrunde ist null");
+            throw new TechnischeException("Spielrunde ist null");
         }
         if (spielrunde.getZuZiehnKartenAnzahl() == null) {
             spielrunde.setZuZiehnKartenAnzahl(0);
@@ -68,21 +67,21 @@ public class SpielsteuerungImpl implements ISpielsteuerung {
         return spielrunde.getZuZiehnKartenAnzahl();
     }
 
-    public boolean spieleKarte(Spieler spieler, Spielkarte spielkarte, Spielrunde spielrunde, RegelKompTyp gewaehlteSpielregel) throws MauMauException {
+    public boolean spieleKarte(Spieler spieler, Spielkarte spielkarte, Spielrunde spielrunde, RegelKompTyp gewaehlteSpielregel) {
         if (spieler == null) {
-            throw new MauMauException("Spieler ist null");
+            throw new TechnischeException("Spieler ist null");
         }
         if (spieler.getHand() == null) {
-            throw new MauMauException("Spielershand ist null");
+            throw new TechnischeException("Spielershand ist null");
         }
         if (spielkarte == null) {
-            throw new MauMauException("Spielkarte ist null");
+            throw new TechnischeException("Spielkarte ist null");
         }
         if (spielrunde == null) {
-            throw new MauMauException("Spielrunde ist null");
+            throw new TechnischeException("Spielrunde ist null");
         }
         if (spielrunde.getAufgelegtStapel() == null || spielrunde.getAufgelegtStapel().isEmpty()) {
-            throw new MauMauException("Aufgelegter Stapel ist null oder leer");
+            throw new TechnischeException("Aufgelegter Stapel ist null oder leer");
         }
         if (spielrunde.getZuZiehnKartenAnzahl() == null) {
             spielrunde.setZuZiehnKartenAnzahl(0);
@@ -98,7 +97,7 @@ public class SpielsteuerungImpl implements ISpielsteuerung {
                 regelComponentUtil = gewaehlteSpielRegelK.holeAuswirkungVonKarte(spielkarte, spielrunde.getSpielerListe(), spielrunde.getZuZiehnKartenAnzahl());
             }
         } else {
-            throw new MauMauException("unbekannte SpielRegelKomponente wurde übergeben");
+            throw new TechnischeException("unbekannte SpielRegelKomponente wurde übergeben");
         }
 
         if (istKarteLegbar) {
@@ -118,15 +117,15 @@ public class SpielsteuerungImpl implements ISpielsteuerung {
     }
 
 
-    public boolean sollMauMauAufrufen(Spielrunde spielrunde,Spieler spieler, RegelKompTyp regelKompTyp) throws MauMauException {
+    public boolean sollMauMauAufrufen(Spielrunde spielrunde,Spieler spieler, RegelKompTyp regelKompTyp) {
         if (spieler == null) {
-            throw new MauMauException("Spieler ist null");
+            throw new TechnischeException("Spieler ist null");
         }
         if (spieler.getHand() == null) {
-            throw new MauMauException("Spielershand ist null");
+            throw new TechnischeException("Spielershand ist null");
         }
         if (spieler.getHand().isEmpty()) {
-            throw new MauMauException("Spielershand ist leer, Spiel sollte schon beendet werden");
+            throw new TechnischeException("Spielershand ist leer, Spiel sollte schon beendet werden");
         }
         boolean sollMauMau = false;
         if(spieler.getHand().size() == 1) {
@@ -136,43 +135,43 @@ public class SpielsteuerungImpl implements ISpielsteuerung {
         return sollMauMau;
     }
 
-    public boolean pruefeObWuenscher(Spielkarte spielkarte, RegelKompTyp gewaehlteSpielregel) throws MauMauException {
+    public boolean pruefeObWuenscher(Spielkarte spielkarte, RegelKompTyp gewaehlteSpielregel) {
         if (spielkarte == null) {
-            throw new MauMauException("Spielkarte ist null");
+            throw new TechnischeException("Spielkarte ist null");
         }
         if (gewaehlteSpielregel == null) {
-            throw new MauMauException("gewaehlte Spielegel ist null");
+            throw new TechnischeException("gewaehlte Spielegel ist null");
         }
 
         return getGewaehlteSpielRegelKomponente(gewaehlteSpielregel).pruefeObWuenscher(spielkarte);
 
     }
 
-    public void bestimmeBlatttyp(Blatttyp blatttyp, Spielrunde spielrunde) throws MauMauException {
+    public void bestimmeBlatttyp(Blatttyp blatttyp, Spielrunde spielrunde) {
         if (blatttyp == null) {
-            throw new MauMauException("Blatttyp ist null");
+            throw new TechnischeException("Blatttyp ist null");
         }
         if (spielrunde == null) {
-            throw new MauMauException("Spielrunde ist null");
+            throw new TechnischeException("Spielrunde ist null");
         }
         spielrunde.setRundeFarbe(blatttyp);
     }
 
-    public Spieler zieheKartenVomStapel(Spieler spieler, int anzahlKarten, Spielrunde spielrunde) throws MauMauException {
+    public Spieler zieheKartenVomStapel(Spieler spieler, int anzahlKarten, Spielrunde spielrunde) {
         if (spieler == null) {
-            throw new MauMauException("Spieler ist null");
+            throw new TechnischeException("Spieler ist null");
         }
         if (spieler.getHand() == null) {
-            throw new MauMauException("Spielershand ist null");
+            throw new TechnischeException("Spielershand ist null");
         }
         if (spielrunde == null) {
-            throw new MauMauException("Spielrunde ist null");
+            throw new TechnischeException("Spielrunde ist null");
         }
         if (spielrunde.getVerdeckteStapel() == null) {
-            throw new MauMauException("Verdeckter Stapel ist null");
+            throw new TechnischeException("Verdeckter Stapel ist null");
         }
         if (spielrunde.getAufgelegtStapel() == null || spielrunde.getAufgelegtStapel().isEmpty()) {
-            throw new MauMauException("Aufgelegter Stapel ist null oder leer");
+            throw new TechnischeException("Aufgelegter Stapel ist null oder leer");
         }
 
         List<Spielkarte> neueKarten = getNeueKartenVomVerdecktenStapelUndRemove(anzahlKarten, spielrunde);
@@ -186,7 +185,7 @@ public class SpielsteuerungImpl implements ISpielsteuerung {
     }
 
     @Override
-    public boolean checkeObSpielerAusgesetztWird(Spielrunde spielrunde, Spieler spieler, RegelKompTyp gewaehlteSpielregel) throws MauMauException {
+    public boolean checkeObSpielerAusgesetztWird(Spielrunde spielrunde, Spieler spieler, RegelKompTyp gewaehlteSpielregel) {
         boolean kartenSpielbar = false;
         for (Spielkarte spielkarte : spieler.getHand()) {
             kartenSpielbar = getGewaehlteSpielRegelKomponente(gewaehlteSpielregel).istKarteLegbar(getLetzteAufgelegteKarte(spielrunde.getAufgelegtStapel()), spielkarte, spielrunde.getRundeFarbe(), spielrunde.getZuZiehnKartenAnzahl() != 0);
@@ -203,7 +202,7 @@ public class SpielsteuerungImpl implements ISpielsteuerung {
         }
     }
 
-    private void setSpielendToNextPlayer(List<Spieler> spielerListe) throws MauMauException {
+    private void setSpielendToNextPlayer(List<Spieler> spielerListe) {
         Spieler spieler = fragWerDranIst(spielerListe);
         int indexSpielend = spielerListe.indexOf(spieler);
 
@@ -223,15 +222,15 @@ public class SpielsteuerungImpl implements ISpielsteuerung {
     }
 
     // Für aufgedeckten Stapel
-    private Spielkarte getLetzteAufgelegteKarte(List<Spielkarte> aufgelegterStapel) throws MauMauException {
+    private Spielkarte getLetzteAufgelegteKarte(List<Spielkarte> aufgelegterStapel) {
         if (CollectionUtils.isEmpty(aufgelegterStapel)) {
-            throw new MauMauException("AufgelegtStapel ist leer");
+            throw new TechnischeException("AufgelegtStapel ist leer");
         }
         return aufgelegterStapel.get(aufgelegterStapel.size() - 1);
     }
 
     // Für verdeckten Stapel
-    private List<Spielkarte> getNeueKartenVomVerdecktenStapelUndRemove(int anzahl, Spielrunde spielrunde) throws MauMauException {
+    private List<Spielkarte> getNeueKartenVomVerdecktenStapelUndRemove(int anzahl, Spielrunde spielrunde) {
         if (spielrunde.getVerdeckteStapel().size() < anzahl) {
             reloadVerdecktenStapel(spielrunde);
         }
@@ -272,7 +271,7 @@ public class SpielsteuerungImpl implements ISpielsteuerung {
         return listSpielkarten;
     }
 
-    private ISpielregel getGewaehlteSpielRegelKomponente(RegelKompTyp gewaehlteSpielregel) throws MauMauException {
+    private ISpielregel getGewaehlteSpielRegelKomponente(RegelKompTyp gewaehlteSpielregel) {
         switch (gewaehlteSpielregel) {
             case OHNE_SONDER_REGEL:
                 return spielregelohneSonder;
@@ -281,7 +280,7 @@ public class SpielsteuerungImpl implements ISpielsteuerung {
             case ALLE_SONDER_REGEL:
                 return spielregelAlleSonder;
             default:
-                throw new MauMauException("unbekannte SpielRegelKomponente wurde übergeben");
+                throw new TechnischeException("unbekannte SpielRegelKomponente wurde übergeben");
         }
     }
 }
