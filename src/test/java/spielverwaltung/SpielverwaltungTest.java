@@ -5,7 +5,7 @@ import komponenten.karten.export.IKarten;
 import komponenten.spielverwaltung.export.ISpielverwaltung;
 import model.*;
 import model.enums.*;
-import model.exceptions.MauMauException;
+import model.exceptions.TechnischeException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,11 +51,9 @@ public class SpielverwaltungTest {
 
     /**
      * Test für den erfolgreichen Start eines Spiels
-     *
-     * @throws MauMauException - Falls das Spiel nicht gebaut werden konnte
      */
     @Test
-    public void testStarteSpielSuccess() throws MauMauException {
+    public void testStarteSpielSuccess() {
 
         // Spieltyp und RegelKompTyp definieren
         SpielTyp spielTyp = SpielTyp.MauMau;
@@ -77,11 +75,9 @@ public class SpielverwaltungTest {
 
     /**
      * Test für den gescheiterten Start eines Spiels wegen Null-Spieltyp
-     *
-     * @throws MauMauException - Falls das Spiel nicht gebaut werden konnte
      */
-    @Test(expected = MauMauException.class)
-    public void testStarteSpielFailedSpielTypNull() throws MauMauException {
+    @Test(expected = TechnischeException.class)
+    public void testStarteSpielFailedSpielTypNull() {
         SpielTyp spielTyp = null;
         RegelKompTyp regelKompTyp = RegelKompTyp.OHNE_SONDER_REGEL;
 
@@ -90,11 +86,9 @@ public class SpielverwaltungTest {
 
     /**
      * Test für den gescheiterten Start eines Spiels wegen Null-RegelKompTyp
-     *
-     * @throws MauMauException - Falls das Spiel nicht gebaut werden konnte
      */
-    @Test(expected = MauMauException.class)
-    public void testStarteSpielFailedRegelKompTypNull() throws MauMauException {
+    @Test(expected = TechnischeException.class)
+    public void testStarteSpielFailedRegelKompTypNull() {
         SpielTyp spielTyp = SpielTyp.MauMau;
         RegelKompTyp regelKompTyp = null;
 
@@ -103,11 +97,9 @@ public class SpielverwaltungTest {
 
     /**
      * Test für die erfolgreiche Erstellung einer Spielrunde
-     *
-     * @throws MauMauException - Falls die Spielrunde nicht gebaut werden konnte
      */
     @Test
-    public void testStarteSpielRundeSuccess() throws MauMauException {
+    public void testStarteSpielRundeSuccess() {
 
         // Spiel anlegen
         SpielTyp spielTyp = SpielTyp.MauMau;
@@ -152,11 +144,9 @@ public class SpielverwaltungTest {
 
     /**
      * Test für die gescheiterte Erstellung einer Spielrunde wegen eines unbekannten Spiels
-     *
-     * @throws MauMauException - Falls die Spielrunde nicht gebaut werden konnte
      */
-    @Test(expected = MauMauException.class)
-    public void testStarteSpielRundeSpielerUnbekanntFailed() throws MauMauException {
+    @Test(expected = TechnischeException.class)
+    public void testStarteSpielRundeSpielerUnbekanntFailed() {
 
         // Spiel anlegen
         SpielTyp spielTyp = SpielTyp.MauMau;
@@ -177,11 +167,9 @@ public class SpielverwaltungTest {
 
     /**
      * Test für die gescheiterte Erstellung einer Spielrunde wegen unbekannten Spieler
-     *
-     * @throws MauMauException - Falls die Spielrunde nicht gebaut werden konnte
      */
-    @Test(expected = MauMauException.class)
-    public void testStarteSpielRundeSpielUnbekanntFailed() throws MauMauException {
+    @Test(expected = TechnischeException.class)
+    public void testStarteSpielRundeSpielUnbekanntFailed() {
         // Spiel unbekannt
         Spiel spiel = null;
 
@@ -202,11 +190,9 @@ public class SpielverwaltungTest {
 
     /**
      * Test für das erfolgreiche Beenden einer Spielrunde
-     *
-     * @throws MauMauException - Falls die Spielrunde nicht beendet werden konnte
      */
     @Test
-    public void testBeendeSpielrundeSuccess() throws MauMauException {
+    public void testBeendeSpielrundeSuccess() {
 
         // Spiel anlegen
         SpielTyp spielTyp = SpielTyp.MauMau;
@@ -263,11 +249,9 @@ public class SpielverwaltungTest {
 
     /**
      * Test für das gescheiterte Beenden einer Spielrunde, weil diese Null ist
-     *
-     * @throws MauMauException - Falls die Spielrunde nicht beendet werden konnte
      */
-    @Test(expected = MauMauException.class)
-    public void testBeendeSpielrundeFailed() throws MauMauException {
+    @Test(expected = TechnischeException.class)
+    public void testBeendeSpielrundeFailed() {
 
         // Spielrunde wird nicht erstellt
 
@@ -277,11 +261,9 @@ public class SpielverwaltungTest {
 
     /**
      * Test für das ergolgreiche Beenden eines Spiels
-     *
-     * @throws MauMauException - Falls die Spielrunde nicht beendet werden konnte
      */
     @Test
-    public void testBeendeSpielSuccess() throws MauMauException {
+    public void testBeendeSpielSuccess() {
         // Spiel anlegen
         SpielTyp spielTyp = SpielTyp.MauMau;
         RegelKompTyp regelKompTyp = RegelKompTyp.OHNE_SONDER_REGEL;
@@ -297,11 +279,9 @@ public class SpielverwaltungTest {
 
     /**
      * Test für das gescheiterte Beenden eines Spiels weil das übergebene Spiel null ist
-     *
-     * @throws MauMauException - Falls die Spielrunde nicht beendet werden konnte
      */
-    @Test(expected = MauMauException.class)
-    public void testBeendeSpielFailedSpielNull() throws MauMauException {
+    @Test(expected = TechnischeException.class)
+    public void testBeendeSpielFailedSpielNull() {
 
         // Spiel leer
         Spiel spiel = null;
@@ -313,11 +293,9 @@ public class SpielverwaltungTest {
 
     /**
      * Test für das gescheiterte Beenden eines Spiels weil das Spiel nicht erfolgreich gespeichert wird
-     *
-     *  @throws MauMauException - Falls das Spiel nicht beendet werden konnte
      */
-    @Test(expected = MauMauException.class)
-    public void testBeendeSpielFailedNichtGespeichert() throws MauMauException {
+    @Test(expected = TechnischeException.class)
+    public void testBeendeSpielFailedNichtGespeichert() {
         // Spiel anlegen
         SpielTyp spielTyp = SpielTyp.MauMau;
         RegelKompTyp regelKompTyp = RegelKompTyp.OHNE_SONDER_REGEL;

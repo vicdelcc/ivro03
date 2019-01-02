@@ -5,7 +5,7 @@ import komponenten.karten.export.IKarten;
 import model.Spielkarte;
 import model.enums.Blatttyp;
 import model.enums.Blattwert;
-import model.exceptions.MauMauException;
+import model.exceptions.TechnischeException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,11 +28,9 @@ public class KartenTest {
 
     /**
      * Test für den erfolgreichen Bau des Kartenstapels mit allen Blatttypen
-     *
-     * @throws MauMauException - Falls der Stapel nicht gebaut werden konnte
      */
     @Test
-    public void testBaueStapelSuccessMitAllenTypen() throws MauMauException {
+    public void testBaueStapelSuccessMitAllenTypen() {
 
         // Stapel bauen
         List<Blattwert> blattwertNicht = new ArrayList<>();
@@ -63,11 +61,9 @@ public class KartenTest {
 
     /**
      * Test für den erfolgreichen Bau des Kartenstapels mitnur 3 Blatttypen
-     *
-     * @throws MauMauException - Falls der Stapel nicht gebaut werden konnte
      */
     @Test
-    public void testBaueStapelSuccessMitDreiTypen() throws MauMauException {
+    public void testBaueStapelSuccessMitDreiTypen() {
 
         // Stapel bauen
         List<Blattwert> blattwertNicht = new ArrayList<>();
@@ -99,17 +95,15 @@ public class KartenTest {
 
     /**
      * Test für den gescheiterten Bau des Kartenstapels wegen Null-Blatttyp-Liste
-     *
-     * @throws MauMauException - Falls der Stapel nicht gebaut werden konnte
      */
-    @Test(expected = MauMauException.class)
-    public void testBaueStapelFailedBlatttypNull() throws MauMauException {
+    @Test(expected = TechnischeException.class)
+    public void testBaueStapelFailedBlatttypNull() {
 
         // Beide Listen null
         List<Blattwert> blattwertNicht = new ArrayList<>();
         List<Blatttyp> blatttypNicht = null;
 
-        // Sollte MauMauException werfen
+        // Sollte TechnischeException werfen
         kartenService.baueStapel(blatttypNicht, blattwertNicht);
 
     }
@@ -117,17 +111,15 @@ public class KartenTest {
 
     /**
      * Test für den gescheiterten Bau des Kartenstapels wegen Null-Blattwert-Liste
-     *
-     * @throws MauMauException - Falls der Baustapel nicht gebaut werden konnte
      */
-    @Test(expected = MauMauException.class)
-    public void testBaueStapelFailedBlattwertNull() throws MauMauException {
+    @Test(expected = TechnischeException.class)
+    public void testBaueStapelFailedBlattwertNull() {
 
         // Beide Listen null
         List<Blattwert> blattwertNicht = null;
         List<Blatttyp> blatttypNicht = new ArrayList<>();
 
-        // Sollte MauMauException werfen
+        // Sollte TechnischeException werfen
         kartenService.baueStapel(blatttypNicht, blattwertNicht);
 
     }

@@ -11,7 +11,6 @@ import model.Spielrunde;
 import model.enums.Blatttyp;
 import model.enums.RegelKompTyp;
 import model.enums.SpielTyp;
-import model.exceptions.MauMauException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +31,7 @@ public class ConsoleImpl implements IConsole {
     static ConsoleView consoleView = new ConsoleView();
 
     @Override
-    public void run() throws MauMauException {
+    public void run() {
 
         SpielTyp spielTyp = consoleView.spielTypWahl(sc);
 
@@ -90,7 +89,7 @@ public class ConsoleImpl implements IConsole {
                                Spieler spieler,
                                Spielrunde spielrunde,
                                boolean sollMauMauGerufen,
-                               RegelKompTyp gewaehlteSpielregel) throws MauMauException {
+                               RegelKompTyp gewaehlteSpielregel) {
 
         if (sollMauMauGerufen) {
             if (wahl.equalsIgnoreCase("m")) {
@@ -126,7 +125,7 @@ public class ConsoleImpl implements IConsole {
         }
     }
 
-    private void spieleWuenscher(Spielrunde spielrunde) throws MauMauException {
+    private void spieleWuenscher(Spielrunde spielrunde) {
         consoleView.printFarben();
         Blatttyp blatttyp = consoleView.farbeWawhlen(sc);
         spielsteuerung.bestimmeBlatttyp(blatttyp, spielrunde);
@@ -135,7 +134,7 @@ public class ConsoleImpl implements IConsole {
     private boolean spieleKarte(Spieler spieler,
                                 Spielrunde spielrunde,
                                 Spielkarte spielkarte,
-                                RegelKompTyp gewaehlteSpielregel) throws MauMauException {
+                                RegelKompTyp gewaehlteSpielregel) {
         return spielsteuerung.spieleKarte(spieler, spielkarte, spielrunde, gewaehlteSpielregel);
     }
 
@@ -143,7 +142,7 @@ public class ConsoleImpl implements IConsole {
         return spieler.getHand().get(Integer.parseInt(wahl));
     }
 
-    private void mauMauRufen(RegelKompTyp gewaehlteSpielregel, Spielrunde spielrunde, Spieler spieler) throws MauMauException {
+    private void mauMauRufen(RegelKompTyp gewaehlteSpielregel, Spielrunde spielrunde, Spieler spieler) {
         consoleView.mauMauRufenMsg();
         Spielkarte spielkarte = spieler.getHand().get(0);
         boolean karteValid = spielsteuerung.spieleKarte(spieler, spielkarte, spielrunde, gewaehlteSpielregel);
@@ -155,12 +154,12 @@ public class ConsoleImpl implements IConsole {
         }
     }
 
-    private void mauMauNichtGerufen(Spieler spieler, Spielrunde spielrunde) throws MauMauException {
+    private void mauMauNichtGerufen(Spieler spieler, Spielrunde spielrunde) {
         consoleView.mauMauNichtgerufenMsg();
         ziehKarte(spielrunde, spieler);
     }
 
-    private void ziehKarte(Spielrunde spielrunde, Spieler spieler) throws MauMauException {
+    private void ziehKarte(Spielrunde spielrunde, Spieler spieler) {
         int anzhalZiehen = spielsteuerung.checkZuZiehendenKarten(spielrunde);
         if (anzhalZiehen == 0) {
             consoleView.karteGezogenMsg(anzhalZiehen);

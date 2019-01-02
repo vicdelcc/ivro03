@@ -5,7 +5,7 @@ import model.Spieler;
 import model.Spielkarte;
 import model.enums.Blatttyp;
 import model.enums.Blattwert;
-import model.exceptions.MauMauException;
+import model.exceptions.TechnischeException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -87,9 +87,9 @@ public abstract class SpielregelTestBase {
      * @param danach               - die Spielkarte, die im aktuellen Zug gespielt werden soll
      * @param gewuenschterBlatttyp - falls vorhanden, der gewünschte Blatttyp
      * @return boolean - ob die Spielkarte legbar ist oder nicht
-     * @throws MauMauException - Falls einer von den übergabenen Parameter null ist
+     * @throws TechnischeException - Falls einer von den übergabenen Parameter null ist
      */
-    public static boolean istKarteLegbar(ISpielregel service, Spielkarte davor, Spielkarte danach, Blatttyp gewuenschterBlatttyp, boolean sindKartenZuZiehen) throws MauMauException {
+    public static boolean istKarteLegbar(ISpielregel service, Spielkarte davor, Spielkarte danach, Blatttyp gewuenschterBlatttyp, boolean sindKartenZuZiehen) {
         return service.istKarteLegbar(davor, danach, gewuenschterBlatttyp, sindKartenZuZiehen);
     }
 
@@ -99,9 +99,9 @@ public abstract class SpielregelTestBase {
      * @param service    - die entsprechende SpielRegel-Impl
      * @param spielkarte - die zu spielende Spielkarte
      * @return boolean - ob die Spielkarte ein Wünscher ist oder nicht
-     * @throws MauMauException - Falls einer von den übergabenen Parameter null ist
+     * @throws TechnischeException - Falls einer von den übergabenen Parameter null ist
      */
-    public static boolean istKarteWuenscher(ISpielregel service, Spielkarte spielkarte) throws MauMauException {
+    public static boolean istKarteWuenscher(ISpielregel service, Spielkarte spielkarte) {
         return service.pruefeObWuenscher(spielkarte);
     }
 
@@ -109,18 +109,18 @@ public abstract class SpielregelTestBase {
     /**
      * Super-Methode für den gescheiterten "holeAuswirkungen" für alle verschiedenen Spielregel-Impls wegen Spielkarte-Null
      *
-     * @throws MauMauException - Falls einer von den übergabenen Parameter null ist
+     * @throws TechnischeException - Falls einer von den übergabenen Parameter null ist
      */
-    public static void holeAuswirkungenFailedKarteNull(ISpielregel service) throws MauMauException {
+    public static void holeAuswirkungenFailedKarteNull(ISpielregel service) {
         service.holeAuswirkungVonKarte(null, new ArrayList<>(), 0);
     }
 
     /**
      * Super-Methode für den gescheiterten "holeAuswirkungen" für alle verschiedenen Spielregel-Impls wegen Spielerliste-Null
      *
-     * @throws MauMauException - Falls einer von den übergabenen Parameter null ist
+     * @throws TechnischeException - Falls einer von den übergabenen Parameter null ist
      */
-    public static void holeAuswirkungenFailedSpielerNull(ISpielregel service) throws MauMauException {
+    public static void holeAuswirkungenFailedSpielerNull(ISpielregel service) {
         service.holeAuswirkungVonKarte(new Spielkarte(Blattwert.Bube, Blatttyp.Herz), null, 0);
     }
 
