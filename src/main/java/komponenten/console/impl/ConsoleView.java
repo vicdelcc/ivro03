@@ -8,6 +8,7 @@ import model.Spielrunde;
 import model.enums.Blatttyp;
 import model.enums.RegelKompTyp;
 import model.enums.SpielTyp;
+import model.exceptions.FachlicheException;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -83,23 +84,37 @@ public class ConsoleView {
 
     public String eingabgeWaehlen(Scanner sc, Spieler spieler){
         String wahl;
+        boolean repeat = true;
         do{
             wahl = sc.nextLine();
-            if(!istEingabeRichtig(wahl, spieler.getHand().size())){
+            try {
+                istEingabeRichtig(wahl, spieler.getHand().size());
+                repeat = false;
+            } catch (FachlicheException e) {
                 System.out.println(">>> Die Eingabe war falsch! Bitte geben Sie 'm','z' oder eine Zahl <<<");
+                repeat = true;
             }
-        } while (!istEingabeRichtig(wahl, spieler.getHand().size()));
+
+        } while (repeat);
 
         return wahl;
     }
 
-    public boolean istEingabeRichtig(String eingabe, int size){
+    public boolean istEingabeRichtig(String eingabe, int size) throws FachlicheException {
         if(StringUtils.isNumeric(eingabe)){
             int intEingabe = Integer.parseInt(eingabe);
-            return intEingabe < size && intEingabe >= 0;
+            if(intEingabe < size && intEingabe >= 0){
+                return true;
+            } else {
+                throw new FachlicheException(new IllegalArgumentException());
+            }
+        } else {
+            if(eingabe.toLowerCase().equals("m") || eingabe.toLowerCase().equals("z")){
+                return true;
+            } else {
+                throw new FachlicheException(new IllegalArgumentException());
+            }
         }
-        return eingabe.toLowerCase().equals("m") || eingabe.toLowerCase().equals("z");
-
     }
 
     private <T> void printChoices(T[] values, String msg) {
