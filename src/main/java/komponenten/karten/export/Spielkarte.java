@@ -4,17 +4,22 @@ package komponenten.karten.export;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import util.BaseEntity;
 
-import javax.persistence.Embeddable;
+import javax.persistence.*;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Embeddable
-public class Spielkarte {
+@Entity
+public class Spielkarte extends BaseEntity {
 
+    @Column
+    @Enumerated(EnumType.STRING)
     private Blattwert blattwert;
 
+    @Column
+    @Enumerated(EnumType.STRING)
     private Blatttyp blatttyp;
 
     @Override

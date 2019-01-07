@@ -2,15 +2,12 @@ package komponenten.console.impl;
 
 
 import komponenten.console.export.IConsole;
-import komponenten.spielsteuerung.export.ISpielsteuerung;
-import komponenten.spielverwaltung.export.ISpielverwaltung;
-import komponenten.spielverwaltung.export.Spiel;
-import komponenten.spielverwaltung.export.Spieler;
-import komponenten.karten.export.Spielkarte;
-import komponenten.spielverwaltung.export.Spielrunde;
 import komponenten.karten.export.Blatttyp;
-import komponenten.spielverwaltung.export.RegelKompTyp;
-import komponenten.spielverwaltung.export.SpielTyp;
+import komponenten.karten.export.Spielkarte;
+import komponenten.spielsteuerung.export.ISpielsteuerung;
+import komponenten.spielverwaltung.export.*;
+import komponenten.spielverwaltung.repositories.SpielRepository;
+import komponenten.spielverwaltung.repositories.SpielrundeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,26 +22,61 @@ public class ConsoleImpl implements IConsole {
     @Autowired
     private ISpielsteuerung spielsteuerung;
 
+    @Autowired
+    private SpielrundeRepository spielrundeRepository;
+
+    @Autowired
+    private SpielRepository spielRepository;
+
     static ConsoleView consoleView = new ConsoleView();
 
     @Override
     public void run() {
 
-        SpielTyp spielTyp = consoleView.spielTypWahl();
+        boolean nochEineRunde = false;
 
-        RegelKompTyp gewaehlteSpielregel = consoleView.regelWahl();
+        Spiel spiel = null;
 
-        Spiel spiel = spielverwaltung.starteNeuesSpiel(spielTyp, gewaehlteSpielregel);
+        SpielTyp spielTyp = null;
 
-        ArrayList<Spieler> spielerListe = consoleView.spielerEingabe();
+        RegelKompTyp gewaehlteSpielregel = null;
+
+        ArrayList<Spieler> spielerListe = new ArrayList<>();
+
+        int spielID = consoleView.spielFortfuehren();
+
+        if (spielID == 0) {
+            spielTyp = consoleView.spielTypWahl();
+
+            gewaehlteSpielregel = consoleView.regelWahl();
+
+            spiel = spielverwaltung.starteNeuesSpiel(spielTyp, gewaehlteSpielregel);
+
+
+        } else {
+            spiel = this.spielRepository.findById(Long.valueOf(spielID)).get();
+        }
+
+        consoleView.zeigeSpielID(spiel);
 
         do {
+            Spielrunde spielrunde = null;
 
-            Spielrunde spielrunde = spielverwaltung.starteSpielrunde(spielerListe, spiel);
+            Spieler spieler = null;
 
-            Spieler spieler = spielsteuerung.fragWerDranIst(spielrunde.getSpielerListe());
+            // Neue Spielrunde wird angelegt, wenn es kein altes Spiel geladen wurde
+            if (spielID == 0 || nochEineRunde) {
 
-            boolean vollerHand;
+                spielerListe = consoleView.spielerEingabe();
+
+                spielrunde = spielverwaltung.starteSpielrunde(spielerListe, spiel);
+
+                spieler = spielsteuerung.fragWerDranIst(spielrunde.getSpielerListe());
+            } else {
+                // TODO
+            }
+
+            boolean vollerHand = false;
 
             do {
 
@@ -56,7 +88,7 @@ public class ConsoleImpl implements IConsole {
 
                 do {
                     if (!spielsteuerung.checkeObSpielerAusgesetztWird(spielrunde, spieler, gewaehlteSpielregel)) {
-                        String wahl = consoleView.eingabgeWaehlen(spieler);
+                        String wahl = consoleView.eingabeWaehlen(spieler, spielrunde);
                         zugErfolgreich = spieleWahl(wahl, spieler, spielrunde, sollMauAufgerufen, gewaehlteSpielregel);
                     } else {
                         consoleView.printMessage("### Sie können weder Karten spielen noch ziehen. Sie werden ausgesetzt ###");
@@ -64,9 +96,15 @@ public class ConsoleImpl implements IConsole {
                     }
                 } while (!zugErfolgreich);
 
-                vollerHand = !spieler.getHand().isEmpty();
+                for (Hand hand : spieler.getHands()) {
+                    if (hand.getSpielrunde().getIdentity() == spielrunde.getIdentity()) {
+                        vollerHand = !hand.getSpielkarten().isEmpty();
+                    }
+                }
 
                 spieler = spielsteuerung.fragWerDranIst(spielrunde.getSpielerListe());
+
+                this.spielrundeRepository.save(spielrunde);
 
             } while (vollerHand);
 
@@ -75,7 +113,8 @@ public class ConsoleImpl implements IConsole {
 
             consoleView.zeigeErgebnisse(spielrunde);
 
-        } while (consoleView.nochEineRunde());
+            nochEineRunde = consoleView.nochEineRunde();
+        } while (nochEineRunde);
 
         spielverwaltung.beendeSpiel(spiel);
 
@@ -104,7 +143,7 @@ public class ConsoleImpl implements IConsole {
                 consoleView.mauMauNichtAufrufenMsg();
                 return false;
             } else {
-                Spielkarte karte = getKarteVomHand(spieler, wahl);
+                Spielkarte karte = getKarteVomHand(spieler, wahl, spielrunde);
                 boolean valid = spieleKarte(spieler, spielrunde, karte, gewaehlteSpielregel);
                 boolean istWuenscher = spielsteuerung.pruefeObWuenscher(karte, gewaehlteSpielregel);
                 if (valid) {
@@ -124,7 +163,7 @@ public class ConsoleImpl implements IConsole {
 
     private void spieleWuenscher(Spielrunde spielrunde) {
         consoleView.printFarben();
-        Blatttyp blatttyp = consoleView.farbeWawhlen();
+        Blatttyp blatttyp = consoleView.farbeWaehlen();
         spielsteuerung.bestimmeBlatttyp(blatttyp, spielrunde);
     }
 
@@ -135,13 +174,24 @@ public class ConsoleImpl implements IConsole {
         return spielsteuerung.spieleKarte(spieler, spielkarte, spielrunde, gewaehlteSpielregel);
     }
 
-    private Spielkarte getKarteVomHand(Spieler spieler, String wahl) {
-        return spieler.getHand().get(Integer.parseInt(wahl));
+    private Spielkarte getKarteVomHand(Spieler spieler, String wahl, Spielrunde spielrunde) {
+        Spielkarte spielkarte = null;
+        for (Hand hand : spieler.getHands()) {
+            if (hand.getSpielrunde().getIdentity() == spielrunde.getIdentity()) {
+                spielkarte = hand.getSpielkarten().get(Integer.parseInt(wahl));
+            }
+        }
+        return spielkarte;
     }
 
     private void mauMauRufen(RegelKompTyp gewaehlteSpielregel, Spielrunde spielrunde, Spieler spieler) {
         consoleView.mauMauRufenMsg();
-        Spielkarte spielkarte = spieler.getHand().get(0);
+        Spielkarte spielkarte = null;
+        for (Hand hand : spieler.getHands()) {
+            if (hand.getSpielrunde().getIdentity() == spielrunde.getIdentity()) {
+                spielkarte = hand.getSpielkarten().get(0);
+            }
+        }
         boolean karteValid = spielsteuerung.spieleKarte(spieler, spielkarte, spielrunde, gewaehlteSpielregel);
         if (karteValid) {
             consoleView.spielBeendetMsg();

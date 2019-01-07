@@ -22,7 +22,6 @@ IKartenKomponent - kk
 
 ISpielVerwaltungKomponent  - svk
 
-
 Console -right-> ISpielVerwaltungKomponent
 
 Console -down-> ISpielSteuerungKomponent

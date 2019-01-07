@@ -35,12 +35,12 @@ public class Spielrunde extends BaseEntity {
     private long dauer;
 
     // Stapel mit verdeckten karten
-    @Embedded
-    private List<Spielkarte> verdeckteStapel;
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    private Stapel verdeckteStapel;
 
     // Stapel mit aufgelegten karten
-    @Embedded
-    private List<Spielkarte> aufgelegtStapel;
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    private Stapel aufgelegtStapel;
 
     @OneToMany(cascade = CascadeType.ALL,
             mappedBy = "spielrunde", orphanRemoval = true)
@@ -50,10 +50,11 @@ public class Spielrunde extends BaseEntity {
             mappedBy = "spielrunde", orphanRemoval = true)
     private List<Spieler> spielerListe;
 
-    @Transient
+    @Column
+    @Enumerated(EnumType.STRING)
     private Blatttyp rundeFarbe;
 
-    @Transient
+    @Column
     private Integer zuZiehnKartenAnzahl;
 
     public Spielrunde(Spiel spiel, List<Spieler> spielerliste) {

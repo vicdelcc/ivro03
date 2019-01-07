@@ -1,14 +1,10 @@
 package komponenten.spielverwaltung.export;
 
-import komponenten.karten.export.Spielkarte;
-import util.BaseEntity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import util.BaseEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,27 +13,28 @@ import java.util.List;
 @NoArgsConstructor
 public class Spieler extends BaseEntity {
 
-	@ManyToOne
-	private Spielrunde spielrunde;
+    @ManyToOne
+    private Spielrunde spielrunde;
 
-	@Embedded
-	private List<Spielkarte> hand;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Hand> hands;
 
-	@Column
-	private String name;
+    @Column
+    private String name;
 
-	@Column
-	private boolean spielend;
-	
-	public Spieler(List<Spielkarte> hand, String name, boolean spielend) {
-		this.hand = hand;
-		this.name = name;
-		this.spielend = spielend;
-	}
+    @Column
+    private boolean spielend;
 
-	public Spieler(String name) {
-		this.name = name;
-		this.hand = new ArrayList<>();
-	}
+    public Spieler(Hand hand, String name, boolean spielend) {
+        hands = new ArrayList<>();
+        hands.add(hand);
+        this.name = name;
+        this.spielend = spielend;
+    }
+
+    public Spieler(String name) {
+        this.name = name;
+        hands = new ArrayList<>();
+    }
 
 }
