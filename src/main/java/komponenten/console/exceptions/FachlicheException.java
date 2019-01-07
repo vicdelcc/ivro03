@@ -1,4 +1,6 @@
-package model.exceptions;
+package komponenten.console.exceptions;
+
+import util.exceptions.MauMauException;
 
 public class FachlicheException extends MauMauException {
 

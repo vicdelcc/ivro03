@@ -1,12 +1,12 @@
 package komponenten.spielregel.impl;
 
 import komponenten.spielregel.export.ISpielregel;
-import model.Spieler;
-import model.Spielkarte;
-import model.enums.Blatttyp;
-import model.enums.Blattwert;
-import model.exceptions.TechnischeException;
-import model.hilfsklassen.RegelComponentUtil;
+import komponenten.spielverwaltung.export.Spieler;
+import komponenten.karten.export.Spielkarte;
+import komponenten.karten.export.Blatttyp;
+import komponenten.karten.export.Blattwert;
+import util.exceptions.TechnischeException;
+import komponenten.spielregel.export.RegelComponentUtil;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 

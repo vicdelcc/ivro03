@@ -1,4 +1,4 @@
-package model.enums;
+package komponenten.karten.export;
 
 public enum Blattwert {
 

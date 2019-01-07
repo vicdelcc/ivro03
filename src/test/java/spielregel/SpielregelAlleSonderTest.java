@@ -2,12 +2,12 @@ package spielregel;
 
 import komponenten.spielregel.export.ISpielregel;
 import komponenten.spielregel.impl.SpielregelAlleSonderImpl;
-import model.Spieler;
-import model.Spielkarte;
-import model.enums.Blatttyp;
-import model.enums.Blattwert;
-import model.exceptions.TechnischeException;
-import model.hilfsklassen.RegelComponentUtil;
+import komponenten.spielverwaltung.export.Spieler;
+import komponenten.karten.export.Spielkarte;
+import komponenten.karten.export.Blatttyp;
+import komponenten.karten.export.Blattwert;
+import util.exceptions.TechnischeException;
+import komponenten.spielregel.export.RegelComponentUtil;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;

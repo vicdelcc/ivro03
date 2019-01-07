@@ -1,10 +1,10 @@
 package komponenten.karten.impl;
 
 import komponenten.karten.export.IKarten;
-import model.Spielkarte;
-import model.enums.Blatttyp;
-import model.enums.Blattwert;
-import model.exceptions.TechnischeException;
+import komponenten.karten.export.Spielkarte;
+import komponenten.karten.export.Blatttyp;
+import komponenten.karten.export.Blattwert;
+import util.exceptions.TechnischeException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

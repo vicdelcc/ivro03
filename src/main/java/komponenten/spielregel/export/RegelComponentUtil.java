@@ -1,9 +1,9 @@
-package model.hilfsklassen;
+package komponenten.spielregel.export;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import model.Spieler;
+import komponenten.spielverwaltung.export.Spieler;
 
 import java.util.List;
 

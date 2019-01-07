@@ -1,11 +1,8 @@
-package model;
+package komponenten.spielverwaltung.export;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import model.Spielrunde;
-import model.enums.RegelKompTyp;
-import model.enums.SpielTyp;
-import model.hilfsklassen.BaseEntity;
+import util.BaseEntity;
 
 import javax.persistence.*;
 import java.util.ArrayList;

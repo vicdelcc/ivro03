@@ -1,10 +1,9 @@
 package komponenten.spielregel.export;
 
-import model.Spieler;
-import model.Spielkarte;
-import model.enums.Blatttyp;
-import model.exceptions.TechnischeException;
-import model.hilfsklassen.RegelComponentUtil;
+import komponenten.spielverwaltung.export.Spieler;
+import komponenten.karten.export.Spielkarte;
+import komponenten.karten.export.Blatttyp;
+import util.exceptions.TechnischeException;
 
 import java.util.List;
 

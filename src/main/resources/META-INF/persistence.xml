@@ -7,10 +7,10 @@
 
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
-        <class>model.Spiel</class>
-        <class>model.Spieler</class>
-        <class>model.Spielrunde</class>
-        <class>model.Ergebnis</class>
+        <class>komponenten.spielverwaltung.export.Spiel</class>
+        <class>komponenten.spielverwaltung.export.Spieler</class>
+        <class>komponenten.spielverwaltung.export.Spielrunde</class>
+        <class>komponenten.spielverwaltung.export.Ergebnis</class>
 
         <shared-cache-mode>ALL</shared-cache-mode>
 

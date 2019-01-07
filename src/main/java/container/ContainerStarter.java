@@ -2,7 +2,7 @@ package container;
 
 import config.AppConfig;
 import komponenten.console.impl.ConsoleImpl;
-import model.exceptions.TechnischeException;
+import util.exceptions.TechnischeException;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 public class ContainerStarter {

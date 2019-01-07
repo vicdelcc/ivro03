@@ -1,4 +1,4 @@
-package model.hilfsklassen;
+package util;
 
 import lombok.AccessLevel;
 import lombok.Getter;

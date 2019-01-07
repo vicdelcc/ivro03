@@ -1,19 +1,18 @@
 package komponenten.console.impl;
 
 
-import model.Ergebnis;
-import model.Spieler;
-import model.Spielkarte;
-import model.Spielrunde;
-import model.enums.Blatttyp;
-import model.enums.RegelKompTyp;
-import model.enums.SpielTyp;
-import model.exceptions.FachlicheException;
+import komponenten.spielverwaltung.export.Ergebnis;
+import komponenten.spielverwaltung.export.Spieler;
+import komponenten.karten.export.Spielkarte;
+import komponenten.spielverwaltung.export.Spielrunde;
+import komponenten.karten.export.Blatttyp;
+import komponenten.spielverwaltung.export.RegelKompTyp;
+import komponenten.spielverwaltung.export.SpielTyp;
+import komponenten.console.exceptions.FachlicheException;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Scanner;
 
 public class ConsoleView {

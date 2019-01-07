@@ -1,11 +1,11 @@
 package komponenten.spielsteuerung.export;
 
-import model.Spieler;
-import model.Spielkarte;
-import model.Spielrunde;
-import model.enums.Blatttyp;
-import model.enums.RegelKompTyp;
-import model.exceptions.TechnischeException;
+import komponenten.spielverwaltung.export.Spieler;
+import komponenten.karten.export.Spielkarte;
+import komponenten.spielverwaltung.export.Spielrunde;
+import komponenten.karten.export.Blatttyp;
+import komponenten.spielverwaltung.export.RegelKompTyp;
+import util.exceptions.TechnischeException;
 
 import java.util.List;
 

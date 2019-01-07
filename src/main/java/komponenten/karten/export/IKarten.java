@@ -1,9 +1,6 @@
 package komponenten.karten.export;
 
-import model.Spielkarte;
-import model.enums.Blatttyp;
-import model.enums.Blattwert;
-import model.exceptions.TechnischeException;
+import util.exceptions.TechnischeException;
 
 import java.util.List;
 

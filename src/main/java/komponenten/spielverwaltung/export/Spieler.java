@@ -1,6 +1,7 @@
-package model;
+package komponenten.spielverwaltung.export;
 
-import model.hilfsklassen.BaseEntity;
+import komponenten.karten.export.Spielkarte;
+import util.BaseEntity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

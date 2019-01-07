@@ -1,6 +1,6 @@
 package komponenten.spielverwaltung.repositories;
 
-import model.Spiel;
+import komponenten.spielverwaltung.export.Spiel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

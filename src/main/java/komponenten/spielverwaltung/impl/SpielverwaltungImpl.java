@@ -1,11 +1,11 @@
 package komponenten.spielverwaltung.impl;
 
+import komponenten.karten.export.Blatttyp;
+import komponenten.karten.export.Blattwert;
 import komponenten.karten.export.IKarten;
-import model.Spiel;
-import komponenten.spielverwaltung.export.ISpielverwaltung;
-import model.*;
-import model.enums.*;
-import model.exceptions.TechnischeException;
+import komponenten.karten.export.Spielkarte;
+import komponenten.spielverwaltung.export.*;
+import util.exceptions.TechnischeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import komponenten.spielverwaltung.repositories.SpielRepository;

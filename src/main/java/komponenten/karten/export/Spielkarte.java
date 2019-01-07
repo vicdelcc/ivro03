@@ -1,11 +1,9 @@
 
-package model;
+package komponenten.karten.export;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import model.enums.Blatttyp;
-import model.enums.Blattwert;
 
 import javax.persistence.Embeddable;
 

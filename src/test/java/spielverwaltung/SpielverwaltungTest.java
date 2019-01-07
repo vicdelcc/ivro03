@@ -1,12 +1,12 @@
 package spielverwaltung;
 
 import config.AppConfig;
+import komponenten.karten.export.Blatttyp;
+import komponenten.karten.export.Blattwert;
 import komponenten.karten.export.IKarten;
-import model.Spiel;
-import komponenten.spielverwaltung.export.ISpielverwaltung;
-import model.*;
-import model.enums.*;
-import model.exceptions.TechnischeException;
+import komponenten.karten.export.Spielkarte;
+import komponenten.spielverwaltung.export.*;
+import util.exceptions.TechnischeException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

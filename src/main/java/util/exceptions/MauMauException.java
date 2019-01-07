@@ -1,4 +1,4 @@
-package model.exceptions;
+package util.exceptions;
 
 public class MauMauException extends Exception {
 
