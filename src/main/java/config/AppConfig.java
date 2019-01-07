@@ -11,8 +11,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @EnableTransactionManagement
-@EnableJpaRepositories(basePackages = "repositories", entityManagerFactoryRef="emf")
-@ComponentScans(value = { @ComponentScan("repositories"),
+@EnableJpaRepositories(basePackages = "komponenten.spielverwaltung.repositories", entityManagerFactoryRef="emf")
+@ComponentScans(value = { @ComponentScan("komponenten.spielverwaltung.repositories"),
         @ComponentScan("komponenten") })
 public class AppConfig {
 

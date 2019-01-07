@@ -2,6 +2,7 @@ package model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import model.Spielrunde;
 import model.enums.RegelKompTyp;
 import model.enums.SpielTyp;
 import model.hilfsklassen.BaseEntity;

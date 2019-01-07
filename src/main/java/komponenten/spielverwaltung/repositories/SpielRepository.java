@@ -1,4 +1,4 @@
-package repositories;
+package komponenten.spielverwaltung.repositories;
 
 import model.Spiel;
 import org.springframework.data.jpa.repository.JpaRepository;

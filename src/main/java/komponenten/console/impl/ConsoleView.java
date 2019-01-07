@@ -18,7 +18,9 @@ import java.util.Scanner;
 
 public class ConsoleView {
 
-    public ArrayList<Spieler> spielerEingabe(Scanner sc) {
+    static Scanner sc = new Scanner(System.in);
+
+    public ArrayList<Spieler> spielerEingabe() {
         ArrayList<Spieler> spielerList = new ArrayList<>(0);
         boolean nochSpieler = true;
         sc.nextLine();
@@ -42,7 +44,7 @@ public class ConsoleView {
         return spielerList;
     }
 
-    public RegelKompTyp regelWahl(Scanner sc) {
+    public RegelKompTyp regelWahl() {
         int wahl;
         boolean richtigeEingabe;
 
@@ -62,7 +64,7 @@ public class ConsoleView {
 
     }
 
-    public SpielTyp spielTypWahl(Scanner sc) {
+    public SpielTyp spielTypWahl() {
 
         int wahl;
         boolean richtigeEingabe;
@@ -82,7 +84,7 @@ public class ConsoleView {
         return SpielTyp.values()[wahl];
     }
 
-    public String eingabgeWaehlen(Scanner sc, Spieler spieler){
+    public String eingabgeWaehlen(Spieler spieler){
         String wahl;
         boolean repeat = true;
         do{
@@ -170,7 +172,7 @@ public class ConsoleView {
 
     }
 
-    public Blatttyp farbeWawhlen(Scanner sc) {
+    public Blatttyp farbeWawhlen() {
         int i = sc.nextInt();
         sc.nextLine();
         return Blatttyp.values()[i];
@@ -219,7 +221,7 @@ public class ConsoleView {
     }
 
 
-    public boolean nochEineRunde(Scanner sc) {
+    public boolean nochEineRunde() {
         System.out.println(">>> Wollen Sie noch eine Runde spielen? (j|n) <<<");
         String wahl;
         do{

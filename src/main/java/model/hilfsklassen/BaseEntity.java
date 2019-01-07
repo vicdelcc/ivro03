@@ -16,7 +16,7 @@ public abstract class BaseEntity {
 	@Setter(value = AccessLevel.NONE)
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private Long identity;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "created")
@@ -26,7 +26,7 @@ public abstract class BaseEntity {
 	@Column(name = "updated")
 	private Date lastModifiedOn;
 	public final boolean isNew() {
-        return this.id == null;
+        return this.identity == null;
     }
 
     @PrePersist

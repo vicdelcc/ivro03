@@ -2,6 +2,7 @@ package spielverwaltung;
 
 import config.AppConfig;
 import komponenten.karten.export.IKarten;
+import model.Spiel;
 import komponenten.spielverwaltung.export.ISpielverwaltung;
 import model.*;
 import model.enums.*;
@@ -14,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
-import repositories.SpielRepository;
+import komponenten.spielverwaltung.repositories.SpielRepository;
 
 import java.util.ArrayList;
 import java.util.List;

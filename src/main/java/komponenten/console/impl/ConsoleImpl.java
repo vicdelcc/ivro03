@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 
 @Service
 public class ConsoleImpl implements IConsole {
@@ -26,20 +25,18 @@ public class ConsoleImpl implements IConsole {
     @Autowired
     private ISpielsteuerung spielsteuerung;
 
-    static Scanner sc = new Scanner(System.in);
-
     static ConsoleView consoleView = new ConsoleView();
 
     @Override
     public void run() {
 
-        SpielTyp spielTyp = consoleView.spielTypWahl(sc);
+        SpielTyp spielTyp = consoleView.spielTypWahl();
 
-        RegelKompTyp gewaehlteSpielregel = consoleView.regelWahl(sc);
+        RegelKompTyp gewaehlteSpielregel = consoleView.regelWahl();
 
         Spiel spiel = spielverwaltung.starteNeuesSpiel(spielTyp, gewaehlteSpielregel);
 
-        ArrayList<Spieler> spielerListe = consoleView.spielerEingabe(sc);
+        ArrayList<Spieler> spielerListe = consoleView.spielerEingabe();
 
         do {
 
@@ -59,7 +56,7 @@ public class ConsoleImpl implements IConsole {
 
                 do {
                     if (!spielsteuerung.checkeObSpielerAusgesetztWird(spielrunde, spieler, gewaehlteSpielregel)) {
-                        String wahl = consoleView.eingabgeWaehlen(sc, spieler);
+                        String wahl = consoleView.eingabgeWaehlen(spieler);
                         zugErfolgreich = spieleWahl(wahl, spieler, spielrunde, sollMauAufgerufen, gewaehlteSpielregel);
                     } else {
                         consoleView.printMessage("### Sie können weder Karten spielen noch ziehen. Sie werden ausgesetzt ###");
@@ -78,7 +75,7 @@ public class ConsoleImpl implements IConsole {
 
             consoleView.zeigeErgebnisse(spielrunde);
 
-        } while (consoleView.nochEineRunde(sc));
+        } while (consoleView.nochEineRunde());
 
         spielverwaltung.beendeSpiel(spiel);
 
@@ -127,7 +124,7 @@ public class ConsoleImpl implements IConsole {
 
     private void spieleWuenscher(Spielrunde spielrunde) {
         consoleView.printFarben();
-        Blatttyp blatttyp = consoleView.farbeWawhlen(sc);
+        Blatttyp blatttyp = consoleView.farbeWawhlen();
         spielsteuerung.bestimmeBlatttyp(blatttyp, spielrunde);
     }
 

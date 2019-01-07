@@ -1,13 +1,14 @@
 package komponenten.spielverwaltung.impl;
 
 import komponenten.karten.export.IKarten;
+import model.Spiel;
 import komponenten.spielverwaltung.export.ISpielverwaltung;
 import model.*;
 import model.enums.*;
 import model.exceptions.TechnischeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import repositories.SpielRepository;
+import komponenten.spielverwaltung.repositories.SpielRepository;
 
 import java.time.Duration;
 import java.time.Instant;
