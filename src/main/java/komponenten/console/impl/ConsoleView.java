@@ -1,29 +1,27 @@
 package komponenten.console.impl;
 
 
+import com.github.javafaker.Faker;
 import komponenten.console.exceptions.FachlicheException;
 import komponenten.karten.export.Blatttyp;
 import komponenten.karten.export.Spielkarte;
 import komponenten.spielverwaltung.export.*;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Scanner;
+import java.util.*;
 
 public class ConsoleView {
 
     static Scanner sc = new Scanner(System.in);
 
-    public ArrayList<Spieler> spielerEingabe() {
-        ArrayList<Spieler> spielerList = new ArrayList<>(0);
+    public List<Spieler> spielerEingabe(List<Spieler> spielerList) {
         boolean nochSpieler = true;
 //        sc.nextLine();
         System.out.println("Bitte geben Sie die Namen der Spieler:");
         do {
             System.out.print((spielerList.size() + 1) + ". Spieler: ");
             String name = sc.next();
-            spielerList.add(new Spieler(name));
+            spielerList.add(new Spieler(name, false));
 
             System.out.println("Wollen Sie noch einen Spieler ins Spiel eintragen? (j|n)");
             String antwort = sc.next();
@@ -177,7 +175,6 @@ public class ConsoleView {
 
     public Blatttyp farbeWaehlen() {
         int i = sc.nextInt();
-        sc.next();
         return Blatttyp.values()[i];
     }
 
@@ -250,7 +247,7 @@ public class ConsoleView {
     }
 
     public int spielFortfuehren(boolean weiter) {
-        if(weiter) {
+        if (weiter) {
             System.out.println("### Spiel-ID nicht vorhanden ###");
         }
         if (frageJaOderNein(">>> Wollen Sie ein altes Spiel fortführen? (j|n) <<<")) {
@@ -265,4 +262,43 @@ public class ConsoleView {
         }
 
     }
+
+
+    public List<Spieler> virtuellerSpielerAuswahl() {
+        List<Spieler> spielerList = new ArrayList<>();
+        if (frageJaOderNein(">>> Wollen Sie mit virtuellen Spieler spielen? (j|n) <<<")) {
+            System.out.println("Bitte geben Sie die Anzahl von virtueller Spieler: ");
+            int anzahl = 0;
+            while (!sc.hasNextInt()) {
+                System.out.println(">>> Nur ganze Zahlen erlaubt! <<<");
+                sc.next();
+            }
+            anzahl = sc.nextInt();
+            for (int i = 1; i <= anzahl; i++) {
+                spielerList.add(createFakeSpieler());
+            }
+        }
+        return spielerList;
+    }
+
+    private Spieler createFakeSpieler() {
+        Faker faker = new Faker(new Locale("de"));
+        return new Spieler(faker.name().firstName(), true);
+    }
+
+    public void printAntwortVirtuellerSpieler(String antwort, Spieler spieler, Spielkarte spielkarte) {
+
+        if (StringUtils.isNumeric(antwort)) {
+            System.out.println("Virtueller Spieler " + spieler.getName() + " hat eine Karte gespielt: " + spielkarte.toString());
+
+        } else {
+            if (antwort.equals("m")) {
+                System.out.println("Virtueller Spieler " + spieler.getName() + " hat MauMau aufgerufen");
+            }
+            if (antwort.equals("z")) {
+                System.out.println("Virtueller Spieler " + spieler.getName() + " hat eine Karte gezogen");
+            }
+        }
+    }
+
 }

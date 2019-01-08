@@ -131,9 +131,9 @@ public abstract class SpielregelTestBase {
      */
     public static List<Spieler> getDefaultSpielerListe() {
         List<Spieler> spielerListe = new ArrayList<>();
-        spielerListe.add(new Spieler("Ido"));
-        spielerListe.add(new Spieler("Victor"));
-        spielerListe.add(new Spieler("Lucas"));
+        spielerListe.add(new Spieler("Ido", false));
+        spielerListe.add(new Spieler("Victor", false));
+        spielerListe.add(new Spieler("Lucas", false));
         return spielerListe;
     }
 

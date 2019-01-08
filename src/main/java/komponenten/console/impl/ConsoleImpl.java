@@ -8,10 +8,13 @@ import komponenten.spielsteuerung.export.ISpielsteuerung;
 import komponenten.spielverwaltung.export.*;
 import komponenten.spielverwaltung.repositories.SpielRepository;
 import komponenten.spielverwaltung.repositories.SpielrundeRepository;
+import komponenten.virtuellerSpieler.export.IVirtuellerSpieler;
+import komponenten.virtuellerSpieler.export.VirtuelleSpielerAntwort;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -29,6 +32,9 @@ public class ConsoleImpl implements IConsole {
     @Autowired
     private SpielRepository spielRepository;
 
+    @Autowired
+    private IVirtuellerSpieler virtuellerSpieler;
+
     static ConsoleView consoleView = new ConsoleView();
 
     @Override
@@ -38,11 +44,11 @@ public class ConsoleImpl implements IConsole {
 
         Spiel spiel = null;
 
-        SpielTyp spielTyp = null;
+        SpielTyp spielTyp;
 
         RegelKompTyp gewaehlteSpielregel = null;
 
-        ArrayList<Spieler> spielerListe = new ArrayList<>();
+        List<Spieler> spielerListe;
 
         boolean weiter = false;
         int spielID;
@@ -58,36 +64,38 @@ public class ConsoleImpl implements IConsole {
                     spiel = this.spielRepository.findById(Long.valueOf(spielID)).get();
                     weiter = false;
                     // Wenn alle Spielrunden schon beendet wurden, wird beim selben Spiel eine neue Spielrunde gestartet
-                    boolean atLeastOneUnfinished = spiel.getSpielrunden().stream().map(Spielrunde::getGewinnerName).anyMatch(gewinnerName -> gewinnerName ==null);
-                    if(!atLeastOneUnfinished) {
+                    boolean atLeastOneUnfinished = spiel.getSpielrunden().stream().map(Spielrunde::getGewinnerName).anyMatch(gewinnerName -> gewinnerName == null);
+                    if (!atLeastOneUnfinished) {
                         consoleView.printMessage("### Spiel mit ID: " + spielID + " hat keine offene Spielrunden. Es wird eine neue Runde gestartet ###");
                         spielID = 0;
                         gewaehlteSpielregel = spiel.getRegelKompTyp();
                     }
-                } catch(NoSuchElementException e) {
+                } catch (NoSuchElementException e) {
                     weiter = true;
                 }
             }
-        } while(weiter);
+        } while (weiter);
 
 
         do {
             Spielrunde spielrunde = null;
 
-            Spieler spieler = null;
+            Spieler spieler;
 
             // Neue Spielrunde wird angelegt, wenn es kein altes Spiel geladen wurde
             if (spielID == 0 || nochEineRunde) {
 
-                spielerListe = consoleView.spielerEingabe();
+                spielerListe = consoleView.virtuellerSpielerAuswahl();
+
+                spielerListe = consoleView.spielerEingabe(spielerListe);
 
                 spielrunde = spielverwaltung.starteSpielrunde(spielerListe, spiel);
 
 
             } else {
                 // Wenn ein altes Spiel geladen wurde,wird die Spielrunde gesucht, die nicht beendet wurde
-                for(Spielrunde spielrundeDB : spiel.getSpielrunden()) {
-                    if(spielrundeDB.getGewinnerName() == null) {
+                for (Spielrunde spielrundeDB : spiel.getSpielrunden()) {
+                    if (spielrundeDB.getGewinnerName() == null) {
                         spielrunde = spielrundeDB;
                         gewaehlteSpielregel = spiel.getRegelKompTyp();
                     }
@@ -100,15 +108,34 @@ public class ConsoleImpl implements IConsole {
 
             do {
 
-                consoleView.printZugDetails(spielrunde, spieler);
+                if (!spieler.isVirtuellerSpieler()) {
+
+                    consoleView.printZugDetails(spielrunde, spieler);
+                }
 
                 boolean sollMauAufgerufen = spielsteuerung.sollMauMauAufrufen(spielrunde, spieler, gewaehlteSpielregel);
 
-                boolean zugErfolgreich = false;
+                boolean zugErfolgreich;
 
+                String antwortPC = null;
+                Spielkarte spielkarteVonPC = null;
                 do {
                     if (!spielsteuerung.checkeObSpielerAusgesetztWird(spielrunde, spieler, gewaehlteSpielregel)) {
-                        String wahl = consoleView.eingabeWaehlen(spieler, spielrunde);
+                        String wahl = null;
+                        if (!spieler.isVirtuellerSpieler()) {
+                            wahl = consoleView.eingabeWaehlen(spieler, spielrunde);
+                        } else {
+                            for (Hand hand : spieler.getHands()) {
+                                if (hand.getSpielrunde().getIdentity() == spielrunde.getIdentity()) {
+                                    wahl = virtuellerSpieler.spieleKarte(spielrunde, hand, gewaehlteSpielregel);
+                                    antwortPC = wahl;
+                                    if(StringUtils.isNumeric(wahl)) {
+                                        spielkarteVonPC = hand.getSpielkarten().get(Integer.valueOf(wahl));
+                                    }
+                                    break;
+                                }
+                            }
+                        }
                         zugErfolgreich = spieleWahl(wahl, spieler, spielrunde, sollMauAufgerufen, gewaehlteSpielregel);
                     } else {
                         consoleView.printMessage("### Sie können weder Karten spielen noch ziehen. Sie werden ausgesetzt ###");
@@ -116,6 +143,9 @@ public class ConsoleImpl implements IConsole {
                     }
                 } while (!zugErfolgreich);
 
+                if(spieler.isVirtuellerSpieler()) {
+                    consoleView.printAntwortVirtuellerSpieler(antwortPC, spieler, spielkarteVonPC);
+                }
                 for (Hand hand : spieler.getHands()) {
                     if (hand.getSpielrunde().getIdentity() == spielrunde.getIdentity()) {
                         vollerHand = !hand.getSpielkarten().isEmpty();

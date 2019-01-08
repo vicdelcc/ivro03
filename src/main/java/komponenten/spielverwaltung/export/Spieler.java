@@ -30,6 +30,9 @@ public class Spieler extends BaseEntity {
     @Column
     private boolean spielend;
 
+    @Column
+    private boolean virtuellerSpieler;
+
     public Spieler(Hand hand, String name, boolean spielend) {
         hands = new ArrayList<>();
         hands.add(hand);
@@ -37,8 +40,9 @@ public class Spieler extends BaseEntity {
         this.spielend = spielend;
     }
 
-    public Spieler(String name) {
+    public Spieler(String name, boolean virtuellerSpieler) {
         this.name = name;
+        this.virtuellerSpieler = virtuellerSpieler;
         hands = new ArrayList<>();
     }
 
