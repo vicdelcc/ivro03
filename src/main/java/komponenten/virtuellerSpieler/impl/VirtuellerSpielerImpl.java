@@ -1,6 +1,5 @@
 package komponenten.virtuellerSpieler.impl;
 
-import komponenten.karten.export.Blattwert;
 import komponenten.karten.export.Spielkarte;
 import komponenten.spielregel.export.ISpielregel;
 import komponenten.spielregel.export.RegelComponentUtil;
@@ -8,7 +7,6 @@ import komponenten.spielverwaltung.export.Hand;
 import komponenten.spielverwaltung.export.RegelKompTyp;
 import komponenten.spielverwaltung.export.Spielrunde;
 import komponenten.virtuellerSpieler.export.IVirtuellerSpieler;
-import komponenten.virtuellerSpieler.export.VirtuelleSpielerAntwort;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -64,7 +62,7 @@ public class VirtuellerSpielerImpl implements IVirtuellerSpieler {
             }
         }
         return antwort;
-}
+    }
 
     private ISpielregel holeImpl(RegelKompTyp gewaehlteSpielregel) {
         switch (gewaehlteSpielregel) {

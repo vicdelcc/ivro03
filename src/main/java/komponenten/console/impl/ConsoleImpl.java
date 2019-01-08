@@ -9,7 +9,6 @@ import komponenten.spielverwaltung.export.*;
 import komponenten.spielverwaltung.repositories.SpielRepository;
 import komponenten.spielverwaltung.repositories.SpielrundeRepository;
 import komponenten.virtuellerSpieler.export.IVirtuellerSpieler;
-import komponenten.virtuellerSpieler.export.VirtuelleSpielerAntwort;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -129,7 +128,7 @@ public class ConsoleImpl implements IConsole {
                                 if (hand.getSpielrunde().getIdentity() == spielrunde.getIdentity()) {
                                     wahl = virtuellerSpieler.spieleKarte(spielrunde, hand, gewaehlteSpielregel);
                                     antwortPC = wahl;
-                                    if(StringUtils.isNumeric(wahl)) {
+                                    if (StringUtils.isNumeric(wahl)) {
                                         spielkarteVonPC = hand.getSpielkarten().get(Integer.valueOf(wahl));
                                     }
                                     break;
@@ -143,7 +142,7 @@ public class ConsoleImpl implements IConsole {
                     }
                 } while (!zugErfolgreich);
 
-                if(spieler.isVirtuellerSpieler()) {
+                if (spieler.isVirtuellerSpieler()) {
                     consoleView.printAntwortVirtuellerSpieler(antwortPC, spieler, spielkarteVonPC);
                 }
                 for (Hand hand : spieler.getHands()) {
