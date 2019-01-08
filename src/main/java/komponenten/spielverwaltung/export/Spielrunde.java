@@ -4,11 +4,14 @@
 
 package komponenten.spielverwaltung.export;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import komponenten.karten.export.Spielkarte;
 import komponenten.karten.export.Blatttyp;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import util.BaseEntity;
 
 import javax.persistence.*;
@@ -23,6 +26,7 @@ import java.util.List;
 public class Spielrunde extends BaseEntity {
 
     @ManyToOne
+    @JsonIgnore
     private Spiel spiel;
 
     @Column
@@ -35,7 +39,8 @@ public class Spielrunde extends BaseEntity {
     private long dauer;
 
     // Stapel mit verdeckten karten
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL,  orphanRemoval = true)
+
     private Stapel verdeckteStapel;
 
     // Stapel mit aufgelegten karten
@@ -44,10 +49,12 @@ public class Spielrunde extends BaseEntity {
 
     @OneToMany(cascade = CascadeType.ALL,
             mappedBy = "spielrunde", orphanRemoval = true)
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<Ergebnis> ergebnisListe;
 
     @OneToMany(cascade = CascadeType.ALL,
             mappedBy = "spielrunde", orphanRemoval = true)
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<Spieler> spielerListe;
 
     @Column

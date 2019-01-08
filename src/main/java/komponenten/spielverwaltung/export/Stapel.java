@@ -3,6 +3,8 @@ package komponenten.spielverwaltung.export;
 import komponenten.karten.export.Spielkarte;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import util.BaseEntity;
 
 import javax.persistence.Entity;
@@ -15,6 +17,7 @@ import java.util.List;
 public class Stapel extends BaseEntity {
 
     @ManyToMany
+    @LazyCollection(LazyCollectionOption.FALSE)
     List<Spielkarte> spielkarten;
 
     public Stapel(List<Spielkarte> spielkarten) {

@@ -2,6 +2,7 @@
 package komponenten.spielverwaltung.export;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,7 @@ public class Ergebnis extends BaseEntity {
     private int Punkte;
 
     @ManyToOne
+    @JsonIgnore
     private Spielrunde spielrunde;
 
     @OneToOne

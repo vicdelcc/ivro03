@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static java.util.stream.Collectors.toList;
+
 /**
  * Komponent, der ein Spiel bzw. Spielrunden verwaltet
  */
@@ -49,12 +51,20 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
             blattwertNicht.add(Blattwert.Joker);
         }
         List<Blatttyp> blatttypNicht = new ArrayList<>();
-        List<Spielkarte> spielkarten = kartenService.baueStapel(blatttypNicht, blattwertNicht);
-        for (Spielkarte spielkarte : spielkarten) {
-            if (this.kartenRepository.findByWertUndTyp(spielkarte.getBlatttyp(), spielkarte.getBlattwert()) == null) {
-                this.kartenRepository.save(spielkarte);
+        List<Spielkarte> spielkartenToSave = kartenService.baueStapel(blatttypNicht, blattwertNicht);
+        List<Spielkarte> spielkartenCloneToSave = spielkartenToSave.stream().collect(toList());
+
+        List<Spielkarte> spielkartenDB = kartenRepository.findAll();
+        for (Spielkarte spielkarte : spielkartenToSave) {
+            for(Spielkarte spielkarteDB : spielkartenDB) {
+                if(spielkarte.getBlatttyp() == spielkarteDB.getBlatttyp() && spielkarte.getBlattwert() == spielkarteDB.getBlattwert()) {
+                    spielkartenCloneToSave.remove(spielkarte);
+                }
             }
         }
+
+        this.kartenRepository.saveAll(spielkartenCloneToSave);
+
         Spiel spiel = new Spiel(spielTyp, regelKompTyp);
         spiel = this.spielRepository.save(spiel);
         return spiel;
@@ -83,11 +93,16 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
         }
         List<Blatttyp> blatttypNicht = new ArrayList<>();
         List<Spielkarte> spielkarteStapel = kartenService.baueStapel(blatttypNicht, blattwertNicht);
-        List<Spielkarte> spielkartenDB = new ArrayList<>();
+        List<Spielkarte> spielkartenDB = kartenRepository.findAll();
+        List<Spielkarte> spielkartenDBToPlay = new ArrayList<>();
         for (Spielkarte spielkarte : spielkarteStapel) {
-            spielkartenDB.add(this.kartenRepository.findByWertUndTyp(spielkarte.getBlatttyp(), spielkarte.getBlattwert()));
+            for(Spielkarte spielkarteDB : spielkartenDB) {
+                if(spielkarte.getBlatttyp() == spielkarteDB.getBlatttyp() && spielkarte.getBlattwert() == spielkarteDB.getBlattwert()) {
+                    spielkartenDBToPlay.add(spielkarteDB);
+                }
+            }
         }
-        spielrunde.setVerdeckteStapel(new Stapel(spielkartenDB));
+        spielrunde.setVerdeckteStapel(new Stapel(spielkartenDBToPlay));
 
         // Aufgelegter Stapel mit initialer Spielkarte wird generiert
         List<Spielkarte> aufgelegterStapel = new ArrayList<>();

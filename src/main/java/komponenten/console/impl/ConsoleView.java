@@ -83,7 +83,7 @@ public class ConsoleView {
         String wahl;
         boolean repeat = true;
         do {
-            wahl = sc.nextLine();
+            wahl = sc.next();
             try {
                 for (Hand hand : spieler.getHands()) {
                     if (hand.getSpielrunde().getIdentity() == spielrunde.getIdentity()) {
@@ -143,7 +143,7 @@ public class ConsoleView {
             }
         }
         if (spielrunde.getZuZiehnKartenAnzahl() != null && spielrunde.getZuZiehnKartenAnzahl() > 0) {
-            System.out.println("### " + spielrunde.getZuZiehnKartenAnzahl() + " Karten sollen gezogen werden ###");
+            System.out.println("### " + spielrunde.getZuZiehnKartenAnzahl() + " Karten sollen gezogen werden ###\n");
         }
         printHand(spieler, spielrunde);
         System.out.println("\nALTERNATIVEN:");
@@ -177,7 +177,7 @@ public class ConsoleView {
 
     public Blatttyp farbeWaehlen() {
         int i = sc.nextInt();
-        sc.nextLine();
+        sc.next();
         return Blatttyp.values()[i];
     }
 
@@ -237,7 +237,7 @@ public class ConsoleView {
         System.out.println(frage);
         String wahl;
         do {
-            wahl = sc.nextLine();
+            wahl = sc.next();
             if (!istEingabeRichtigJoderN(wahl)) {
                 System.out.println(">>> Die Eingabe war falsch! Bitte geben Sie 'm','z' oder eine Zahl <<<");
             }
@@ -249,11 +249,12 @@ public class ConsoleView {
         System.out.println("### Der Spiel-ID lautet: " + spiel.getIdentity() + " ###");
     }
 
-    public int spielFortfuehren() {
-
+    public int spielFortfuehren(boolean weiter) {
+        if(weiter) {
+            System.out.println("### Spiel-ID nicht vorhanden ###");
+        }
         if (frageJaOderNein(">>> Wollen Sie ein altes Spiel fortführen? (j|n) <<<")) {
             System.out.println("Bitte geben Sie den Spiel-ID ein: ");
-            sc.next();
             while (!sc.hasNextInt()) {
                 System.out.println(">>> Nur ganze Zahlen erlaubt! <<<");
                 sc.next();

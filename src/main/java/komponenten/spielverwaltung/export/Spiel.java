@@ -2,6 +2,10 @@ package komponenten.spielverwaltung.export;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import util.BaseEntity;
 
 import javax.persistence.*;
@@ -31,6 +35,7 @@ public class Spiel extends BaseEntity {
 
     @OneToMany(cascade = CascadeType.ALL,
             mappedBy = "spiel", orphanRemoval = true)
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<Spielrunde> spielrunden;
 
     public Spiel(SpielTyp spielTyp, RegelKompTyp regelKompTyp) {

@@ -1,7 +1,10 @@
 package komponenten.spielverwaltung.export;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import util.BaseEntity;
 
 import javax.persistence.*;
@@ -14,9 +17,11 @@ import java.util.List;
 public class Spieler extends BaseEntity {
 
     @ManyToOne
+    @JsonIgnore
     private Spielrunde spielrunde;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<Hand> hands;
 
     @Column

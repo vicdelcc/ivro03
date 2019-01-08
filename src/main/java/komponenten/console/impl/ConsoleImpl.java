@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 
 @Service
 public class ConsoleImpl implements IConsole {
@@ -43,21 +44,32 @@ public class ConsoleImpl implements IConsole {
 
         ArrayList<Spieler> spielerListe = new ArrayList<>();
 
-        int spielID = consoleView.spielFortfuehren();
+        boolean weiter = false;
+        int spielID;
+        do {
+            spielID = consoleView.spielFortfuehren(weiter);
+            if (spielID == 0) {
+                spielTyp = consoleView.spielTypWahl();
+                gewaehlteSpielregel = consoleView.regelWahl();
+                spiel = spielverwaltung.starteNeuesSpiel(spielTyp, gewaehlteSpielregel);
+                consoleView.zeigeSpielID(spiel);
+            } else {
+                try {
+                    spiel = this.spielRepository.findById(Long.valueOf(spielID)).get();
+                    weiter = false;
+                    // Wenn alle Spielrunden schon beendet wurden, wird beim selben Spiel eine neue Spielrunde gestartet
+                    boolean atLeastOneUnfinished = spiel.getSpielrunden().stream().map(Spielrunde::getGewinnerName).anyMatch(gewinnerName -> gewinnerName ==null);
+                    if(!atLeastOneUnfinished) {
+                        consoleView.printMessage("### Spiel mit ID: " + spielID + " hat keine offene Spielrunden. Es wird eine neue Runde gestartet ###");
+                        spielID = 0;
+                        gewaehlteSpielregel = spiel.getRegelKompTyp();
+                    }
+                } catch(NoSuchElementException e) {
+                    weiter = true;
+                }
+            }
+        } while(weiter);
 
-        if (spielID == 0) {
-            spielTyp = consoleView.spielTypWahl();
-
-            gewaehlteSpielregel = consoleView.regelWahl();
-
-            spiel = spielverwaltung.starteNeuesSpiel(spielTyp, gewaehlteSpielregel);
-
-
-        } else {
-            spiel = this.spielRepository.findById(Long.valueOf(spielID)).get();
-        }
-
-        consoleView.zeigeSpielID(spiel);
 
         do {
             Spielrunde spielrunde = null;
@@ -71,10 +83,18 @@ public class ConsoleImpl implements IConsole {
 
                 spielrunde = spielverwaltung.starteSpielrunde(spielerListe, spiel);
 
-                spieler = spielsteuerung.fragWerDranIst(spielrunde.getSpielerListe());
+
             } else {
-                // TODO
+                // Wenn ein altes Spiel geladen wurde,wird die Spielrunde gesucht, die nicht beendet wurde
+                for(Spielrunde spielrundeDB : spiel.getSpielrunden()) {
+                    if(spielrundeDB.getGewinnerName() == null) {
+                        spielrunde = spielrundeDB;
+                        gewaehlteSpielregel = spiel.getRegelKompTyp();
+                    }
+                }
             }
+
+            spieler = spielsteuerung.fragWerDranIst(spielrunde.getSpielerListe());
 
             boolean vollerHand = false;
 
