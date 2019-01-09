@@ -1,8 +1,9 @@
 package komponenten.spielregel.export;
 
-import komponenten.spielverwaltung.export.Spieler;
-import komponenten.karten.export.Spielkarte;
 import komponenten.karten.export.Blatttyp;
+import komponenten.karten.export.Spielkarte;
+import komponenten.spielverwaltung.export.Spieler;
+import komponenten.spielverwaltung.export.Spielrunde;
 import util.exceptions.TechnischeException;
 
 import java.util.List;
@@ -26,13 +27,13 @@ public interface ISpielregel {
      * Bestimmt die Auswirkungen von der gespielten Karte wie z.B. ob Karten im nächsten Zug zu ziehen sind sowie den
      * Spieler, der im nächsten Zug daran ist
      *
-     * @param aktuelleSpielkarte      - die Spielkarte, die im aktuellen Zug gespielt wird
-     * @param spielerListe            - die Spielerliste
-     * @param anzahlZuZiehendenKarten - die Anzahl von Karten die vom letzten Zug zu ziehen sind
+     * @param aktuelleSpielkarte - die Spielkarte, die im aktuellen Zug gespielt wird
+     * @param spielerListe       - die Spielerliste
+     * @param spielrunde         - die aktuelle Spielrunde
      * @return RegelComponentUtil - Util-Object, um die Spielerliste und die Anzahl von zu ziehenden karten zurückzugeben
      * @throws TechnischeException - Falls einer von den übergebenen Parameter null ist
      */
-    RegelComponentUtil holeAuswirkungVonKarte(Spielkarte aktuelleSpielkarte, List<Spieler> spielerListe, int anzahlZuZiehendenKarten);
+    RegelComponentUtil holeAuswirkungVonKarte(Spielkarte aktuelleSpielkarte, List<Spieler> spielerListe, Spielrunde spielrunde);
 
     /**
      * Prüft, ob die übergebene Spielkarte den Blattwert Bube hat

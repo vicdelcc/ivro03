@@ -4,6 +4,7 @@ import komponenten.spielverwaltung.export.Spieler;
 import komponenten.karten.export.Spielkarte;
 import komponenten.karten.export.Blatttyp;
 import komponenten.karten.export.Blattwert;
+import komponenten.spielverwaltung.export.Spielrunde;
 import util.exceptions.TechnischeException;
 import komponenten.spielregel.export.RegelComponentUtil;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -53,7 +54,7 @@ public class SpielregelBasicSonderImpl extends SpielregelOhneSonderImpl {
     }
 
     @Override
-    public RegelComponentUtil holeAuswirkungVonKarte(Spielkarte aktuelleSpielkarte, List<Spieler> spielerListe, int anzahlZuZiehendenKarten) {
+    public RegelComponentUtil holeAuswirkungVonKarte(Spielkarte aktuelleSpielkarte, List<Spieler> spielerListe, Spielrunde spielrunde) {
         if (aktuelleSpielkarte == null) {
             throw new TechnischeException("Aktuelle Spielkarte ist nicht initialisiert");
         } else if (spielerListe == null) {
@@ -63,22 +64,33 @@ public class SpielregelBasicSonderImpl extends SpielregelOhneSonderImpl {
         RegelComponentUtil util = null;
         switch (aktuelleSpielkarte.getBlattwert()) {
             case Sieben:
-                util = super.holeAuswirkungVonKarte(aktuelleSpielkarte, spielerListe,  anzahlZuZiehendenKarten);
-                util.setAnzahlKartenZuZiehen(2+anzahlZuZiehendenKarten);
+                util = super.holeAuswirkungVonKarte(aktuelleSpielkarte, spielerListe,  spielrunde);
+                util.setAnzahlKartenZuZiehen(2+spielrunde.getZuZiehnKartenAnzahl());
                 break;
             case Ass:
                 int indexSpielend = 0;
                 for (Spieler spieler : spielerListe) {
                     if (spieler.isSpielend()) {
                         indexSpielend = spielerListe.indexOf(spieler);
-                        if (indexSpielend == spielerListe.size() - 1) {
-                            spielerListe.get(1).setSpielend(true);
-                        } else if (indexSpielend == spielerListe.size() - 2) {
-                            spielerListe.get(0).setSpielend(true);
+                        if(spielrunde.isUhrzeiger()) {
+                            if (indexSpielend == spielerListe.size() - 1) {
+                                spielerListe.get(1).setSpielend(true);
+                            } else if (indexSpielend == spielerListe.size() - 2) {
+                                spielerListe.get(0).setSpielend(true);
+                            } else {
+                                spielerListe.get(indexSpielend + 2).setSpielend(true);
+                            }
+                            break;
                         } else {
-                            spielerListe.get(indexSpielend + 2).setSpielend(true);
+                            if (indexSpielend == 0) {
+                                spielerListe.get(spielerListe.size()-2).setSpielend(true);
+                            } else if (indexSpielend == 1) {
+                                spielerListe.get(spielerListe.size()-1).setSpielend(true);
+                            } else {
+                                spielerListe.get(indexSpielend - 2).setSpielend(true);
+                            }
+                            break;
                         }
-                        break;
                     }
                 }
                 if (spielerListe.size() != 2) {
@@ -87,7 +99,7 @@ public class SpielregelBasicSonderImpl extends SpielregelOhneSonderImpl {
                 util = new RegelComponentUtil(spielerListe, 0);
                 break;
             default:
-                util = super.holeAuswirkungVonKarte(aktuelleSpielkarte, spielerListe, anzahlZuZiehendenKarten);
+                util = super.holeAuswirkungVonKarte(aktuelleSpielkarte, spielerListe, spielrunde);
         }
         return util;
     }

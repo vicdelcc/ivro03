@@ -43,9 +43,6 @@ public class SpielsteuerungImpl implements ISpielsteuerung {
     @Qualifier("alleSonder")
     private ISpielregel spielregelAlleSonder;
 
-    @Autowired
-    private IVirtuellerSpieler virtuellerSpieler;
-
 
     public Spieler fragWerDranIst(List<Spieler> spielerListe) {
         if (spielerListe == null) {
@@ -96,12 +93,15 @@ public class SpielsteuerungImpl implements ISpielsteuerung {
 
         boolean istKarteLegbar;
         RegelComponentUtil regelComponentUtil = null;
-
         ISpielregel gewaehlteSpielRegelK = getGewaehlteSpielRegelKomponente(gewaehlteSpielregel);
         if (gewaehlteSpielRegelK != null) {
             istKarteLegbar = gewaehlteSpielRegelK.istKarteLegbar(getLetzteAufgelegteKarte(spielrunde.getAufgelegtStapel().getSpielkarten()), spielkarte, spielrunde.getRundeFarbe(), spielrunde.getZuZiehnKartenAnzahl() != 0);
             if (istKarteLegbar) {
-                regelComponentUtil = gewaehlteSpielRegelK.holeAuswirkungVonKarte(spielkarte, spielrunde.getSpielerListe(), spielrunde.getZuZiehnKartenAnzahl());
+                regelComponentUtil = gewaehlteSpielRegelK.holeAuswirkungVonKarte(spielkarte, spielrunde.getSpielerListe(), spielrunde);
+                if(spielkarte.getBlattwert() == Blattwert.Neun) {
+                    boolean uhrzeigerVorher = spielrunde.isUhrzeiger();
+                    spielrunde.setUhrzeiger(!uhrzeigerVorher);
+                }
             }
         } else {
             throw new TechnischeException("unbekannte SpielRegelKomponente wurde übergeben");
@@ -189,7 +189,7 @@ public class SpielsteuerungImpl implements ISpielsteuerung {
 
         spieler.getHand().addAll(neueKarten);
 
-        setSpielendToNextPlayer(spielrunde.getSpielerListe());
+        setSpielendToNextPlayer(spielrunde.getSpielerListe(), spielrunde);
 
         spielrunde.setZuZiehnKartenAnzahl(0);
 
@@ -208,23 +208,31 @@ public class SpielsteuerungImpl implements ISpielsteuerung {
             }
         }
         if (spielrunde.getVerdeckteStapel().getSpielkarten().size() == 0 && spielrunde.getAufgelegtStapel().getSpielkarten().size() < 2 && !kartenSpielbar) {
-            this.setSpielendToNextPlayer(spielrunde.getSpielerListe());
+            this.setSpielendToNextPlayer(spielrunde.getSpielerListe(), spielrunde);
             return true;
         } else {
             return false;
         }
     }
 
-    private void setSpielendToNextPlayer(List<Spieler> spielerListe) {
+    private void setSpielendToNextPlayer(List<Spieler> spielerListe, Spielrunde spielrunde) {
         Spieler spieler = fragWerDranIst(spielerListe);
         int indexSpielend = spielerListe.indexOf(spieler);
-
-        if (indexSpielend == spielerListe.size() - 1) {
-            spielerListe.get(0).setSpielend(true);
-        } else {
-            spielerListe.get(indexSpielend + 1).setSpielend(true);
-        }
         spielerListe.get(indexSpielend).setSpielend(false);
+
+        if(spielrunde.isUhrzeiger()) {
+            if (indexSpielend == spielerListe.size() - 1) {
+                spielerListe.get(0).setSpielend(true);
+            } else {
+                spielerListe.get(indexSpielend + 1).setSpielend(true);
+            }
+        } else {
+            if (indexSpielend == 0) {
+                spielerListe.get(spielerListe.size()-1).setSpielend(true);
+            } else {
+                spielerListe.get(indexSpielend - 1).setSpielend(true);
+            }
+        }
     }
 
     private void setztKarteVomHandAufDemAufgelegteStapel(Spieler spieler, Spielkarte spielkarte, Spielrunde spielrunde) {

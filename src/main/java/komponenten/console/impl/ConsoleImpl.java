@@ -123,7 +123,7 @@ public class ConsoleImpl implements IConsole {
                 do {
                     kartenZuZiehen = spielrunde.getZuZiehnKartenAnzahl();
                     if (!spielsteuerung.checkeObSpielerAusgesetztWird(spielrunde, spieler, gewaehlteSpielregel)) {
-                        String wahl = null;
+                        String wahl;
                         if (!spieler.isVirtuellerSpieler()) {
                             wahl = consoleView.eingabeWaehlen(spieler);
                         } else {

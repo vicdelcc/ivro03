@@ -5,6 +5,7 @@ import komponenten.spielverwaltung.export.Spieler;
 import komponenten.karten.export.Spielkarte;
 import komponenten.karten.export.Blatttyp;
 import komponenten.karten.export.Blattwert;
+import komponenten.spielverwaltung.export.Spielrunde;
 import util.exceptions.TechnischeException;
 import komponenten.spielregel.export.RegelComponentUtil;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -36,7 +37,7 @@ public class SpielregelOhneSonderImpl implements ISpielregel {
     }
 
 
-    public RegelComponentUtil holeAuswirkungVonKarte(Spielkarte aktuelleSpielkarte, List<Spieler> spielerListe, int anzahlZuZiehendenKarten) {
+    public RegelComponentUtil holeAuswirkungVonKarte(Spielkarte aktuelleSpielkarte, List<Spieler> spielerListe, Spielrunde spielrunde) {
         if (aktuelleSpielkarte == null) {
             throw new TechnischeException("Aktuelle Spielkarte ist nicht initialisiert");
         } else if (spielerListe == null) {
@@ -45,13 +46,24 @@ public class SpielregelOhneSonderImpl implements ISpielregel {
         for (Spieler spieler : spielerListe) {
             if (spieler.isSpielend()) {
                 int indexSpielend = spielerListe.indexOf(spieler);
-                if (indexSpielend == spielerListe.size() - 1) {
-                    spielerListe.get(0).setSpielend(true);
+                if(spielrunde.isUhrzeiger()) {
+                    if (indexSpielend == spielerListe.size() - 1) {
+                        spielerListe.get(0).setSpielend(true);
+                    } else {
+                        spielerListe.get(indexSpielend + 1).setSpielend(true);
+                    }
+                    spielerListe.get(indexSpielend).setSpielend(false);
+                    break;
                 } else {
-                    spielerListe.get(indexSpielend + 1).setSpielend(true);
+                    if (indexSpielend == 0) {
+                        spielerListe.get(spielerListe.size()-1).setSpielend(true);
+                    } else {
+                        spielerListe.get(indexSpielend - 1).setSpielend(true);
+                    }
+                    spielerListe.get(indexSpielend).setSpielend(false);
+                    break;
                 }
-                spielerListe.get(indexSpielend).setSpielend(false);
-                break;
+
             }
         }
         return new RegelComponentUtil(spielerListe, 0);
