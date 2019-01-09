@@ -202,12 +202,14 @@ public class ConsoleView {
         System.out.println("### Sie müssen MauMau nicht aufrufen ###");
     }
 
-    public void karteGezogenMsg(int anzhalZiehen) {
-        if (anzhalZiehen == 0) {
-            System.out.println("### Eine Karte wurde gezogen ###");
-        } else {
-            System.out.println("### " + anzhalZiehen + " Karten wurden gezogen ###");
+    public void karteGezogenMsg(int anzhalZiehen, Spieler spieler) {
+        if(!spieler.isVirtuellerSpieler()) {
+            if (anzhalZiehen == 0) {
+                System.out.println("### Eine Karte wurde gezogen ###");
+            } else {
+                System.out.println("### " + anzhalZiehen + " Karten wurden gezogen ###");
 
+            }
         }
     }
 
@@ -286,19 +288,24 @@ public class ConsoleView {
         return new Spieler(faker.name().firstName(), true);
     }
 
-    public void printAntwortVirtuellerSpieler(String antwort, Spieler spieler, Spielkarte spielkarte) {
-
+    public void printAntwortVirtuellerSpieler(String antwort, Spieler spieler, Spielkarte spielkarte, int anzahlKarten) {
+        System.out.println("-------------------------------------------------------------------------");
         if (StringUtils.isNumeric(antwort)) {
             System.out.println("Virtueller Spieler " + spieler.getName() + " hat eine Karte gespielt: " + spielkarte.toString());
-
         } else {
             if (antwort.equals("m")) {
                 System.out.println("Virtueller Spieler " + spieler.getName() + " hat MauMau aufgerufen");
             }
             if (antwort.equals("z")) {
-                System.out.println("Virtueller Spieler " + spieler.getName() + " hat eine Karte gezogen");
+                if(anzahlKarten == 0) {
+                    System.out.println("Virtueller Spieler " + spieler.getName() + " hat eine Karte gezogen");
+                }else {
+                    System.out.println("Virtueller Spieler " + spieler.getName() + " hat "+ anzahlKarten +" Karten gezogen");
+                }
+
             }
         }
+        System.out.println("-------------------------------------------------------------------------");
     }
 
 }

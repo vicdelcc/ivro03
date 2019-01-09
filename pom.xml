@@ -37,6 +37,8 @@
             **/RegelComponentUtil.java,
             **/RegelKompTyp.java,
             **/SpielTyp.java
+            **/Hand.java
+            **/Stapel.java
         </sonar.exclusions>
     </properties>
 

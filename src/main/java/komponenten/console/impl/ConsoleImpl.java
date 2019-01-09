@@ -143,7 +143,7 @@ public class ConsoleImpl implements IConsole {
                 } while (!zugErfolgreich);
 
                 if (spieler.isVirtuellerSpieler()) {
-                    consoleView.printAntwortVirtuellerSpieler(antwortPC, spieler, spielkarteVonPC);
+                    consoleView.printAntwortVirtuellerSpieler(antwortPC, spieler, spielkarteVonPC, spielrunde.getZuZiehnKartenAnzahl());
                 }
                 for (Hand hand : spieler.getHands()) {
                     if (hand.getSpielrunde().getIdentity() == spielrunde.getIdentity()) {
@@ -258,7 +258,7 @@ public class ConsoleImpl implements IConsole {
     private void ziehKarte(Spielrunde spielrunde, Spieler spieler) {
         int anzhalZiehen = spielsteuerung.checkZuZiehendenKarten(spielrunde);
         if (anzhalZiehen == 0) {
-            consoleView.karteGezogenMsg(anzhalZiehen);
+            consoleView.karteGezogenMsg(anzhalZiehen, spieler);
             spielsteuerung.zieheKartenVomStapel(spieler, 1, spielrunde);
         } else {
             spielsteuerung.zieheKartenVomStapel(spieler, anzhalZiehen, spielrunde);

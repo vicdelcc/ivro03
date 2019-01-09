@@ -40,7 +40,6 @@ public class Spielrunde extends BaseEntity {
 
     // Stapel mit verdeckten karten
     @OneToOne(cascade = CascadeType.ALL,  orphanRemoval = true)
-
     private Stapel verdeckteStapel;
 
     // Stapel mit aufgelegten karten

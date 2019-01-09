@@ -12,7 +12,7 @@ public class ContainerStarter {
         try {
            context = new AnnotationConfigApplicationContext(AppConfig.class);
         } catch (Exception e) {
-            throw new TechnischeException("Container konnte nicht hochgefahren werden: " + e.getMessage());
+            throw new TechnischeException("Container konnte nicht hochgefahren werden");
         }
 
         ConsoleImpl consoleImpl = context.getBean(ConsoleImpl.class);
