@@ -6,6 +6,7 @@ import komponenten.karten.export.IKarten;
 import komponenten.karten.export.Spielkarte;
 import komponenten.karten.repositories.KartenRepository;
 import komponenten.spielverwaltung.export.*;
+import komponenten.spielverwaltung.repositories.ErgebnisRepository;
 import komponenten.spielverwaltung.repositories.SpielRepository;
 import komponenten.spielverwaltung.repositories.SpielrundeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,9 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
     @Autowired
     private SpielrundeRepository spielrundeRepository;
 
+    @Autowired
+    private ErgebnisRepository ergebnisRepository;
+
 
     public Spiel starteNeuesSpiel(SpielTyp spielTyp, RegelKompTyp regelKompTyp) {
         if (spielTyp == null) {
@@ -56,8 +60,8 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
 
         List<Spielkarte> spielkartenDB = kartenRepository.findAll();
         for (Spielkarte spielkarte : spielkartenToSave) {
-            for(Spielkarte spielkarteDB : spielkartenDB) {
-                if(spielkarte.getBlatttyp() == spielkarteDB.getBlatttyp() && spielkarte.getBlattwert() == spielkarteDB.getBlattwert()) {
+            for (Spielkarte spielkarteDB : spielkartenDB) {
+                if (spielkarte.getBlatttyp() == spielkarteDB.getBlatttyp() && spielkarte.getBlattwert() == spielkarteDB.getBlattwert()) {
                     spielkartenCloneToSave.remove(spielkarte);
                 }
             }
@@ -96,8 +100,8 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
         List<Spielkarte> spielkartenDB = kartenRepository.findAll();
         List<Spielkarte> spielkartenDBToPlay = new ArrayList<>();
         for (Spielkarte spielkarte : spielkarteStapel) {
-            for(Spielkarte spielkarteDB : spielkartenDB) {
-                if(spielkarte.getBlatttyp() == spielkarteDB.getBlatttyp() && spielkarte.getBlattwert() == spielkarteDB.getBlattwert()) {
+            for (Spielkarte spielkarteDB : spielkartenDB) {
+                if (spielkarte.getBlatttyp() == spielkarteDB.getBlatttyp() && spielkarte.getBlattwert() == spielkarteDB.getBlattwert()) {
                     spielkartenDBToPlay.add(spielkarteDB);
                 }
             }
@@ -117,10 +121,9 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
             List<Spielkarte> liste = new ArrayList<>();
             for (int i = 0; i < 6; i++) {
                 int result = (int) (Math.random() * (spielrunde.getVerdeckteStapel().getSpielkarten().size() - 1));
-                liste.add(spielrunde.getVerdeckteStapel().getSpielkarten().get(result));
+                spieler.getHand().add(spielrunde.getVerdeckteStapel().getSpielkarten().get(result));
                 spielrunde.getVerdeckteStapel().getSpielkarten().remove(result);
             }
-            spieler.getHands().add(new Hand(liste, spielrunde));
         }
         spiel.getSpielrunden().add(spielrunde);
         // ZuZiehendenKarte default auf 0
@@ -141,28 +144,24 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
         for (Spieler spieler : spielrunde.getSpielerListe()) {
 
             // Gewinner
-            for (Hand hand : spieler.getHands()) {
-                if (hand.getSpielrunde().getIdentity() == spielrunde.getIdentity()) {
-                    if (hand.getSpielkarten().size() == 0) {
-                        spielrunde.setGewinnerName(spieler.getName());
-                    }
-                }
+
+            if (spieler.getHand().size() == 0) {
+                spielrunde.setGewinnerName(spieler.getName());
             }
 
             // Punkte Rest
             int punkte = 0;
-            for (Hand hand : spieler.getHands()) {
-                if (hand.getSpielrunde().getIdentity() == spielrunde.getIdentity()) {
-                    for (Spielkarte spielkarte : hand.getSpielkarten()) {
-                        switch (spielrunde.getSpiel().getSpielTyp()) {
-                            case MauMau:
-                                punkte += PunkteMauMau.valueOf(spielkarte.getBlattwert().name()).getPunkte();
-                                break;
-                        }
-                    }
+
+            for (Spielkarte spielkarte : spieler.getHand()) {
+                switch (spielrunde.getSpiel().getSpielTyp()) {
+                    case MauMau:
+                        punkte += PunkteMauMau.valueOf(spielkarte.getBlattwert().name()).getPunkte();
+                        break;
                 }
             }
             Ergebnis ergebnis = new Ergebnis(punkte, spielrunde, spieler);
+
+            this.ergebnisRepository.save(ergebnis);
             spielrunde.getErgebnisListe().add(ergebnis);
         }
 

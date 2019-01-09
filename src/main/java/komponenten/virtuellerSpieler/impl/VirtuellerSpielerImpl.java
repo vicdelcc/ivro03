@@ -1,16 +1,21 @@
 package komponenten.virtuellerSpieler.impl;
 
+import komponenten.karten.export.Blatttyp;
 import komponenten.karten.export.Spielkarte;
 import komponenten.spielregel.export.ISpielregel;
 import komponenten.spielregel.export.RegelComponentUtil;
-import komponenten.spielverwaltung.export.Hand;
 import komponenten.spielverwaltung.export.RegelKompTyp;
+import komponenten.spielverwaltung.export.Spieler;
 import komponenten.spielverwaltung.export.Spielrunde;
 import komponenten.virtuellerSpieler.export.IVirtuellerSpieler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import util.exceptions.TechnischeException;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Komponent, der ein virtueller Spieler realisiert
@@ -31,7 +36,7 @@ public class VirtuellerSpielerImpl implements IVirtuellerSpieler {
     private ISpielregel spielregelAlleSonder;
 
     @Override
-    public String spieleKarte(Spielrunde spielrunde, Hand hand, RegelKompTyp gewaehlteSpielregel) {
+    public String spieleKarte(Spielrunde spielrunde, Spieler spieler, RegelKompTyp gewaehlteSpielregel) {
 
         String antwort = null;
 
@@ -44,10 +49,10 @@ public class VirtuellerSpielerImpl implements IVirtuellerSpieler {
         ISpielregel gewaehlteSpielRegelK = holeImpl(gewaehlteSpielregel);
 
         // Nimmt die 1. spielbare Karte
-        for (Spielkarte spielkarte : hand.getSpielkarten()) {
+        for (Spielkarte spielkarte : spieler.getHand()) {
             if (gewaehlteSpielRegelK.istKarteLegbar(spielrunde.getAufgelegtStapel().getSpielkarten().get(spielrunde.getAufgelegtStapel().getSpielkarten().size() - 1), spielkarte, spielrunde.getRundeFarbe(), spielrunde.getZuZiehnKartenAnzahl() != 0)) {
                 gespielteKarte = spielkarte;
-                gespielteKarteIndex = hand.getSpielkarten().indexOf(spielkarte);
+                gespielteKarteIndex = spieler.getHand().indexOf(spielkarte);
                 break;
             }
         }
@@ -57,12 +62,26 @@ public class VirtuellerSpielerImpl implements IVirtuellerSpieler {
         } else {
             antwort = String.valueOf(gespielteKarteIndex);
             // Falls der virtuelle Spieler nur eine Spielkarte hat, dann soll maumauAufrufen
-            if (hand.getSpielkarten().size() == 1) {
+            if (spieler.getHand().size() == 1) {
                 antwort = "m";
             }
         }
         return antwort;
     }
+
+    @Override
+    public Blatttyp sucheBlatttypAus(Spieler spieler, Spielrunde spielrunde) {
+        // Alle Blatttypen vom Spieler speichern
+        List<Blatttyp> blattypenInHand = new ArrayList<>();
+        for (Spielkarte spielkarte : spieler.getHand()) {
+            if (!blattypenInHand.contains(spielkarte.getBlatttyp())) {
+                blattypenInHand.add(spielkarte.getBlatttyp());
+            }
+        }
+        int indexBlatttyp = new Random().nextInt(blattypenInHand.size());
+        return blattypenInHand.get(indexBlatttyp);
+    }
+
 
     private ISpielregel holeImpl(RegelKompTyp gewaehlteSpielregel) {
         switch (gewaehlteSpielregel) {

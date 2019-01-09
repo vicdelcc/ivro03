@@ -1,6 +1,7 @@
 package komponenten.spielverwaltung.export;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import komponenten.karten.export.Spielkarte;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.LazyCollection;
@@ -20,9 +21,9 @@ public class Spieler extends BaseEntity {
     @JsonIgnore
     private Spielrunde spielrunde;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToMany
     @LazyCollection(LazyCollectionOption.FALSE)
-    private List<Hand> hands;
+    private List<Spielkarte> hand;
 
     @Column
     private String name;
@@ -33,17 +34,16 @@ public class Spieler extends BaseEntity {
     @Column
     private boolean virtuellerSpieler;
 
-    public Spieler(Hand hand, String name, boolean spielend) {
-        hands = new ArrayList<>();
-        hands.add(hand);
+    public Spieler(List<Spielkarte> hand, String name, boolean spielend) {
+        this.hand = hand;
         this.name = name;
         this.spielend = spielend;
     }
 
     public Spieler(String name, boolean virtuellerSpieler) {
         this.name = name;
+        this.hand = new ArrayList<>();
         this.virtuellerSpieler = virtuellerSpieler;
-        hands = new ArrayList<>();
     }
 
 }

@@ -46,7 +46,7 @@ public class Spielrunde extends BaseEntity {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private Stapel aufgelegtStapel;
 
-    @OneToMany(cascade = CascadeType.ALL,
+    @OneToMany(
             mappedBy = "spielrunde", orphanRemoval = true)
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Ergebnis> ergebnisListe;

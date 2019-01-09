@@ -6,7 +6,11 @@ import komponenten.karten.export.Spielkarte;
 import komponenten.spielregel.export.ISpielregel;
 import komponenten.spielregel.export.RegelComponentUtil;
 import komponenten.spielsteuerung.export.ISpielsteuerung;
-import komponenten.spielverwaltung.export.*;
+import komponenten.spielverwaltung.export.RegelKompTyp;
+import komponenten.spielverwaltung.export.Spieler;
+import komponenten.spielverwaltung.export.Spielrunde;
+import komponenten.spielverwaltung.export.Stapel;
+import komponenten.virtuellerSpieler.export.IVirtuellerSpieler;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +43,9 @@ public class SpielsteuerungImpl implements ISpielsteuerung {
     @Qualifier("alleSonder")
     private ISpielregel spielregelAlleSonder;
 
+    @Autowired
+    private IVirtuellerSpieler virtuellerSpieler;
+
 
     public Spieler fragWerDranIst(List<Spieler> spielerListe) {
         if (spielerListe == null) {
@@ -70,12 +77,8 @@ public class SpielsteuerungImpl implements ISpielsteuerung {
         if (spieler == null) {
             throw new TechnischeException("Spieler ist null");
         }
-        for (Hand hand : spieler.getHands()) {
-            if (hand.getSpielrunde().getIdentity() == spielrunde.getIdentity()) {
-                if (hand.getSpielkarten() == null) {
-                    throw new TechnischeException("Spielershand ist null");
-                }
-            }
+        if (spieler.getHand() == null) {
+            throw new TechnischeException("Spielershand ist null");
         }
 
         if (spielkarte == null) {
@@ -126,19 +129,17 @@ public class SpielsteuerungImpl implements ISpielsteuerung {
             throw new TechnischeException("Spieler ist null");
         }
         boolean sollMauMau = false;
-        for (Hand hand : spieler.getHands()) {
-            if (hand.getSpielrunde().getIdentity() == spielrunde.getIdentity()) {
-                if (hand.getSpielkarten() == null) {
-                    throw new TechnischeException("Spielershand ist null");
-                }
-                if (hand.getSpielkarten().isEmpty()) {
-                    throw new TechnischeException("Spielershand ist leer, Spiel sollte schon beendet werden");
-                }
-                if (hand.getSpielkarten().size() == 1) {
-                    sollMauMau = getGewaehlteSpielRegelKomponente(regelKompTyp).istKarteLegbar(getLetzteAufgelegteKarte(spielrunde.getAufgelegtStapel().getSpielkarten()), hand.getSpielkarten().get(0), spielrunde.getRundeFarbe(), spielrunde.getZuZiehnKartenAnzahl() != 0);
-                }
-            }
+
+        if (spieler.getHand() == null) {
+            throw new TechnischeException("Spielershand ist null");
         }
+        if (spieler.getHand().isEmpty()) {
+            throw new TechnischeException("Spielershand ist leer, Spiel sollte schon beendet werden");
+        }
+        if (spieler.getHand().size() == 1) {
+            sollMauMau = getGewaehlteSpielRegelKomponente(regelKompTyp).istKarteLegbar(getLetzteAufgelegteKarte(spielrunde.getAufgelegtStapel().getSpielkarten()), spieler.getHand().get(0), spielrunde.getRundeFarbe(), spielrunde.getZuZiehnKartenAnzahl() != 0);
+        }
+
 
         return sollMauMau;
     }
@@ -169,13 +170,11 @@ public class SpielsteuerungImpl implements ISpielsteuerung {
         if (spieler == null) {
             throw new TechnischeException("Spieler ist null");
         }
-        for (Hand hand : spieler.getHands()) {
-            if (hand.getSpielrunde().getIdentity() == spielrunde.getIdentity()) {
-                if (hand.getSpielkarten() == null) {
-                    throw new TechnischeException("Spielershand ist null");
-                }
-            }
+
+        if (spieler.getHand() == null) {
+            throw new TechnischeException("Spielershand ist null");
         }
+
         if (spielrunde == null) {
             throw new TechnischeException("Spielrunde ist null");
         }
@@ -187,11 +186,8 @@ public class SpielsteuerungImpl implements ISpielsteuerung {
         }
 
         List<Spielkarte> neueKarten = getNeueKartenVomVerdecktenStapelUndRemove(anzahlKarten, spielrunde);
-        for (Hand hand : spieler.getHands()) {
-            if (hand.getSpielrunde().getIdentity() == spielrunde.getIdentity()) {
-                hand.getSpielkarten().addAll(neueKarten);
-            }
-        }
+
+        spieler.getHand().addAll(neueKarten);
 
         setSpielendToNextPlayer(spielrunde.getSpielerListe());
 
@@ -204,15 +200,11 @@ public class SpielsteuerungImpl implements ISpielsteuerung {
     public boolean checkeObSpielerAusgesetztWird(Spielrunde spielrunde, Spieler spieler, RegelKompTyp gewaehlteSpielregel) {
         boolean kartenSpielbar = false;
 
-        for (Hand hand : spieler.getHands()) {
-            if (hand.getSpielrunde().getIdentity() == spielrunde.getIdentity()) {
-                for (Spielkarte spielkarte : hand.getSpielkarten()) {
-                    kartenSpielbar = getGewaehlteSpielRegelKomponente(gewaehlteSpielregel).istKarteLegbar(getLetzteAufgelegteKarte(spielrunde.getAufgelegtStapel().getSpielkarten()), spielkarte, spielrunde.getRundeFarbe(), spielrunde.getZuZiehnKartenAnzahl() != 0);
+        for (Spielkarte spielkarte : spieler.getHand()) {
+            kartenSpielbar = getGewaehlteSpielRegelKomponente(gewaehlteSpielregel).istKarteLegbar(getLetzteAufgelegteKarte(spielrunde.getAufgelegtStapel().getSpielkarten()), spielkarte, spielrunde.getRundeFarbe(), spielrunde.getZuZiehnKartenAnzahl() != 0);
 
-                    if (kartenSpielbar) {
-                        break;
-                    }
-                }
+            if (kartenSpielbar) {
+                break;
             }
         }
         if (spielrunde.getVerdeckteStapel().getSpielkarten().size() == 0 && spielrunde.getAufgelegtStapel().getSpielkarten().size() < 2 && !kartenSpielbar) {
@@ -236,14 +228,11 @@ public class SpielsteuerungImpl implements ISpielsteuerung {
     }
 
     private void setztKarteVomHandAufDemAufgelegteStapel(Spieler spieler, Spielkarte spielkarte, Spielrunde spielrunde) {
-       // int i = spielrunde.getSpielerListe().indexOf(spieler);
+        // int i = spielrunde.getSpielerListe().indexOf(spieler);
 
-        for (Hand hand : spieler.getHands()) {
-            if (hand.getSpielrunde().getIdentity() == spielrunde.getIdentity()) {
-                hand.getSpielkarten().remove(spielkarte);
-           //     spielrunde.getSpielerListe().get(i).setHand(spieler.getHand());
-            }
-        }
+        spieler.getHand().remove(spielkarte);
+        //     spielrunde.getSpielerListe().get(i).setHand(spieler.getHand());
+
         spielrunde.getAufgelegtStapel().getSpielkarten().add(spielkarte);
     }
 

@@ -77,17 +77,15 @@ public class ConsoleView {
         return SpielTyp.values()[wahl];
     }
 
-    public String eingabeWaehlen(Spieler spieler, Spielrunde spielrunde) {
+    public String eingabeWaehlen(Spieler spieler) {
         String wahl;
         boolean repeat = true;
         do {
             wahl = sc.next();
             try {
-                for (Hand hand : spieler.getHands()) {
-                    if (hand.getSpielrunde().getIdentity() == spielrunde.getIdentity()) {
-                        istEingabeRichtig(wahl, hand.getSpielkarten().size());
-                    }
-                }
+
+                istEingabeRichtig(wahl, spieler.getHand().size());
+
                 repeat = false;
             } catch (FachlicheException e) {
                 System.out.println(">>> Die Eingabe war falsch! Bitte geben Sie 'm','z' oder eine Zahl <<<");
@@ -143,24 +141,21 @@ public class ConsoleView {
         if (spielrunde.getZuZiehnKartenAnzahl() != null && spielrunde.getZuZiehnKartenAnzahl() > 0) {
             System.out.println("### " + spielrunde.getZuZiehnKartenAnzahl() + " Karten sollen gezogen werden ###\n");
         }
-        printHand(spieler, spielrunde);
+
+    }
+
+    public void printHand(Spieler spieler) {
+        System.out.println(spieler.getName() + " hat folgenden karten in der Hand:");
+        int counter = 0;
+        for (Spielkarte spielkarte : spieler.getHand()) {
+            System.out.println("[" + counter + "] " + spielkarte.toString());
+            counter++;
+        }
+
         System.out.println("\nALTERNATIVEN:");
         System.out.println("[m] Maumau aufrufen");
         System.out.println("[z] Karten ziehen");
         System.out.print("\nAuswahl: ");
-    }
-
-    private void printHand(Spieler spieler, Spielrunde spielrunde) {
-        System.out.println(spieler.getName() + " hat folgenden karten in der Hand:");
-        int counter = 0;
-        for (Hand hand : spieler.getHands()) {
-            if (hand.getSpielrunde().getIdentity() == spielrunde.getIdentity()) {
-                for (Spielkarte spielkarte : hand.getSpielkarten()) {
-                    System.out.println("[" + counter + "] " + spielkarte.toString());
-                    counter++;
-                }
-            }
-        }
     }
 
     public void printFarben() {
@@ -191,7 +186,7 @@ public class ConsoleView {
     }
 
     public void spielBeendetMsg() {
-        System.out.println("### Spiel beendet! ###");
+        System.out.println("### Spielrunde beendet! ###");
     }
 
     public void nichtLegbareKarteMsg() {
@@ -203,7 +198,7 @@ public class ConsoleView {
     }
 
     public void karteGezogenMsg(int anzhalZiehen, Spieler spieler) {
-        if(!spieler.isVirtuellerSpieler()) {
+        if (!spieler.isVirtuellerSpieler()) {
             if (anzhalZiehen == 0) {
                 System.out.println("### Eine Karte wurde gezogen ###");
             } else {
@@ -297,10 +292,10 @@ public class ConsoleView {
                 System.out.println("Virtueller Spieler " + spieler.getName() + " hat MauMau aufgerufen");
             }
             if (antwort.equals("z")) {
-                if(anzahlKarten == 0) {
+                if (anzahlKarten == 0) {
                     System.out.println("Virtueller Spieler " + spieler.getName() + " hat eine Karte gezogen");
-                }else {
-                    System.out.println("Virtueller Spieler " + spieler.getName() + " hat "+ anzahlKarten +" Karten gezogen");
+                } else {
+                    System.out.println("Virtueller Spieler " + spieler.getName() + " hat " + anzahlKarten + " Karten gezogen");
                 }
 
             }

@@ -3,6 +3,7 @@ package komponenten.console.impl;
 
 import komponenten.console.export.IConsole;
 import komponenten.karten.export.Blatttyp;
+import komponenten.karten.export.Blattwert;
 import komponenten.karten.export.Spielkarte;
 import komponenten.spielsteuerung.export.ISpielsteuerung;
 import komponenten.spielverwaltung.export.*;
@@ -107,9 +108,9 @@ public class ConsoleImpl implements IConsole {
 
             do {
 
+                consoleView.printZugDetails(spielrunde, spieler);
                 if (!spieler.isVirtuellerSpieler()) {
-
-                    consoleView.printZugDetails(spielrunde, spieler);
+                    consoleView.printHand(spieler);
                 }
 
                 boolean sollMauAufgerufen = spielsteuerung.sollMauMauAufrufen(spielrunde, spieler, gewaehlteSpielregel);
@@ -118,22 +119,21 @@ public class ConsoleImpl implements IConsole {
 
                 String antwortPC = null;
                 Spielkarte spielkarteVonPC = null;
+                int kartenZuZiehen = 0;
                 do {
+                    kartenZuZiehen = spielrunde.getZuZiehnKartenAnzahl();
                     if (!spielsteuerung.checkeObSpielerAusgesetztWird(spielrunde, spieler, gewaehlteSpielregel)) {
                         String wahl = null;
                         if (!spieler.isVirtuellerSpieler()) {
-                            wahl = consoleView.eingabeWaehlen(spieler, spielrunde);
+                            wahl = consoleView.eingabeWaehlen(spieler);
                         } else {
-                            for (Hand hand : spieler.getHands()) {
-                                if (hand.getSpielrunde().getIdentity() == spielrunde.getIdentity()) {
-                                    wahl = virtuellerSpieler.spieleKarte(spielrunde, hand, gewaehlteSpielregel);
-                                    antwortPC = wahl;
-                                    if (StringUtils.isNumeric(wahl)) {
-                                        spielkarteVonPC = hand.getSpielkarten().get(Integer.valueOf(wahl));
-                                    }
-                                    break;
-                                }
+
+                            wahl = virtuellerSpieler.spieleKarte(spielrunde, spieler, gewaehlteSpielregel);
+                            antwortPC = wahl;
+                            if (StringUtils.isNumeric(wahl)) {
+                                spielkarteVonPC = spieler.getHand().get(Integer.valueOf(wahl));
                             }
+
                         }
                         zugErfolgreich = spieleWahl(wahl, spieler, spielrunde, sollMauAufgerufen, gewaehlteSpielregel);
                     } else {
@@ -143,13 +143,17 @@ public class ConsoleImpl implements IConsole {
                 } while (!zugErfolgreich);
 
                 if (spieler.isVirtuellerSpieler()) {
-                    consoleView.printAntwortVirtuellerSpieler(antwortPC, spieler, spielkarteVonPC, spielrunde.getZuZiehnKartenAnzahl());
-                }
-                for (Hand hand : spieler.getHands()) {
-                    if (hand.getSpielrunde().getIdentity() == spielrunde.getIdentity()) {
-                        vollerHand = !hand.getSpielkarten().isEmpty();
+                    if (spielkarteVonPC != null) {
+                        if (spielkarteVonPC.getBlattwert() == Blattwert.Bube) {
+                            Blatttyp blatttyp = virtuellerSpieler.sucheBlatttypAus(spieler, spielrunde);
+                            spielsteuerung.bestimmeBlatttyp(blatttyp, spielrunde);
+                        }
                     }
+                    consoleView.printAntwortVirtuellerSpieler(antwortPC, spieler, spielkarteVonPC, kartenZuZiehen);
                 }
+
+                vollerHand = !spieler.getHand().isEmpty();
+
 
                 spieler = spielsteuerung.fragWerDranIst(spielrunde.getSpielerListe());
 
@@ -192,11 +196,11 @@ public class ConsoleImpl implements IConsole {
                 consoleView.mauMauNichtAufrufenMsg();
                 return false;
             } else {
-                Spielkarte karte = getKarteVomHand(spieler, wahl, spielrunde);
+                Spielkarte karte = getKarteVomHand(spieler, wahl);
                 boolean valid = spieleKarte(spieler, spielrunde, karte, gewaehlteSpielregel);
                 boolean istWuenscher = spielsteuerung.pruefeObWuenscher(karte, gewaehlteSpielregel);
                 if (valid) {
-                    if (istWuenscher) {
+                    if (istWuenscher && !spieler.isVirtuellerSpieler()) {
                         spieleWuenscher(spielrunde);
                         return true;
                     } else {
@@ -223,24 +227,20 @@ public class ConsoleImpl implements IConsole {
         return spielsteuerung.spieleKarte(spieler, spielkarte, spielrunde, gewaehlteSpielregel);
     }
 
-    private Spielkarte getKarteVomHand(Spieler spieler, String wahl, Spielrunde spielrunde) {
+    private Spielkarte getKarteVomHand(Spieler spieler, String wahl) {
         Spielkarte spielkarte = null;
-        for (Hand hand : spieler.getHands()) {
-            if (hand.getSpielrunde().getIdentity() == spielrunde.getIdentity()) {
-                spielkarte = hand.getSpielkarten().get(Integer.parseInt(wahl));
-            }
-        }
+
+        spielkarte = spieler.getHand().get(Integer.parseInt(wahl));
+
         return spielkarte;
     }
 
     private void mauMauRufen(RegelKompTyp gewaehlteSpielregel, Spielrunde spielrunde, Spieler spieler) {
         consoleView.mauMauRufenMsg();
         Spielkarte spielkarte = null;
-        for (Hand hand : spieler.getHands()) {
-            if (hand.getSpielrunde().getIdentity() == spielrunde.getIdentity()) {
-                spielkarte = hand.getSpielkarten().get(0);
-            }
-        }
+
+        spielkarte = spieler.getHand().get(0);
+
         boolean karteValid = spielsteuerung.spieleKarte(spieler, spielkarte, spielrunde, gewaehlteSpielregel);
         if (karteValid) {
             consoleView.spielBeendetMsg();
