@@ -27,16 +27,18 @@ public class SpielregelBasicSonderImpl extends SpielregelOhneSonderImpl {
         } else if (aktuelleSpielkarte == null) {
             throw new TechnischeException("Aktuelle Spielkarte ist nicht initialisiert");
         }
-        // Basic-Prüfung ohne SonderRegel
-        boolean istLegbar = super.istKarteLegbar(vorherigeSpielkarte, aktuelleSpielkarte, blatttyp, sindKartenZuZiehen);
-        // Wenn Blatttyp im Zug davor gewählt, dann kann man nur Blattyp spielen aber nicht noch eine Bube
+        boolean istLegbar = false;
         if (blatttyp != null) {
+        // Wenn Blatttyp im Zug davor gewählt, dann kann man nur Blattyp spielen aber nicht noch eine Bube
+
             if (aktuelleSpielkarte.getBlattwert() == Blattwert.Bube) {
                 istLegbar = false;
             } else if (aktuelleSpielkarte.getBlatttyp() == blatttyp) {
                 istLegbar = true;
             }
         } else {
+            // Basic-Prüfung ohne SonderRegel
+                istLegbar = super.istKarteLegbar(vorherigeSpielkarte, aktuelleSpielkarte, blatttyp, sindKartenZuZiehen);
             // Bube darf man auf jede Farbe spielen (also wenn keine Bube der sieben davor gespielt wurde)
             if (aktuelleSpielkarte.getBlattwert() == Blattwert.Bube) {
                 istLegbar = true;

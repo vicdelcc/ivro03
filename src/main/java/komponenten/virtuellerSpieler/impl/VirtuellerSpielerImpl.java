@@ -38,20 +38,15 @@ public class VirtuellerSpielerImpl implements IVirtuellerSpieler {
     @Override
     public String spieleKarte(Spielrunde spielrunde, Spieler spieler, RegelKompTyp gewaehlteSpielregel) {
 
-        String antwort = null;
-
-        RegelComponentUtil regelComponentUtil;
+        String antwort;
 
         int gespielteKarteIndex = -1;
-
-        Spielkarte gespielteKarte = null;
 
         ISpielregel gewaehlteSpielRegelK = holeImpl(gewaehlteSpielregel);
 
         // Nimmt die 1. spielbare Karte
         for (Spielkarte spielkarte : spieler.getHand()) {
             if (gewaehlteSpielRegelK.istKarteLegbar(spielrunde.getAufgelegtStapel().getSpielkarten().get(spielrunde.getAufgelegtStapel().getSpielkarten().size() - 1), spielkarte, spielrunde.getRundeFarbe(), spielrunde.getZuZiehnKartenAnzahl() != 0)) {
-                gespielteKarte = spielkarte;
                 gespielteKarteIndex = spieler.getHand().indexOf(spielkarte);
                 break;
             }

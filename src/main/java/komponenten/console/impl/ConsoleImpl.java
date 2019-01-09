@@ -127,7 +127,6 @@ public class ConsoleImpl implements IConsole {
                         if (!spieler.isVirtuellerSpieler()) {
                             wahl = consoleView.eingabeWaehlen(spieler);
                         } else {
-
                             wahl = virtuellerSpieler.spieleKarte(spielrunde, spieler, gewaehlteSpielregel);
                             antwortPC = wahl;
                             if (StringUtils.isNumeric(wahl)) {
@@ -143,17 +142,10 @@ public class ConsoleImpl implements IConsole {
                 } while (!zugErfolgreich);
 
                 if (spieler.isVirtuellerSpieler()) {
-                    if (spielkarteVonPC != null) {
-                        if (spielkarteVonPC.getBlattwert() == Blattwert.Bube) {
-                            Blatttyp blatttyp = virtuellerSpieler.sucheBlatttypAus(spieler, spielrunde);
-                            spielsteuerung.bestimmeBlatttyp(blatttyp, spielrunde);
-                        }
-                    }
                     consoleView.printAntwortVirtuellerSpieler(antwortPC, spieler, spielkarteVonPC, kartenZuZiehen);
                 }
 
                 vollerHand = !spieler.getHand().isEmpty();
-
 
                 spieler = spielsteuerung.fragWerDranIst(spielrunde.getSpielerListe());
 
@@ -203,6 +195,10 @@ public class ConsoleImpl implements IConsole {
                     if (istWuenscher && !spieler.isVirtuellerSpieler()) {
                         spieleWuenscher(spielrunde);
                         return true;
+                    } else if(istWuenscher && spieler.isVirtuellerSpieler()) {
+                       Blatttyp blatttypVonPC= virtuellerSpieler.sucheBlatttypAus(spieler, spielrunde);
+                       spielsteuerung.bestimmeBlatttyp(blatttypVonPC, spielrunde);
+                       return true;
                     } else {
                         return true;
                     }
@@ -261,6 +257,7 @@ public class ConsoleImpl implements IConsole {
             consoleView.karteGezogenMsg(anzhalZiehen, spieler);
             spielsteuerung.zieheKartenVomStapel(spieler, 1, spielrunde);
         } else {
+            consoleView.karteGezogenMsg(anzhalZiehen, spieler);
             spielsteuerung.zieheKartenVomStapel(spieler, anzhalZiehen, spielrunde);
         }
     }
