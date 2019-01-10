@@ -3,7 +3,6 @@ package komponenten.console.impl;
 
 import komponenten.console.export.IConsole;
 import komponenten.karten.export.Blatttyp;
-import komponenten.karten.export.Blattwert;
 import komponenten.karten.export.Spielkarte;
 import komponenten.spielsteuerung.export.ISpielsteuerung;
 import komponenten.spielverwaltung.export.*;
@@ -13,6 +12,8 @@ import komponenten.virtuellerSpieler.export.IVirtuellerSpieler;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import komponenten.spielverwaltung.export.Protokoll;
+import komponenten.spielverwaltung.repositories.ProtokollRepository;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -34,6 +35,9 @@ public class ConsoleImpl implements IConsole {
 
     @Autowired
     private IVirtuellerSpieler virtuellerSpieler;
+
+    @Autowired
+    private ProtokollRepository protokollRepository;
 
     static ConsoleView consoleView = new ConsoleView();
 
@@ -107,6 +111,16 @@ public class ConsoleImpl implements IConsole {
             boolean vollerHand = false;
 
             do {
+                // Create Protokoll
+                Protokoll protokoll = new Protokoll();
+                protokoll.setSpielID(spiel.getIdentity());
+                protokoll.setSpielrundeID(spielrunde.getIdentity());
+                protokoll.setSpielerName(spieler.getName());
+                protokoll.setSpielkarteDavor(spielrunde.getAufgelegtStapel().getSpielkarten().get(spielrunde.getAufgelegtStapel().getSpielkarten().size()-1).toString());
+                protokoll.setRundefarbeDavor(spielrunde.getRundeFarbe());
+                protokoll.setZieheKarteDavor(spielrunde.getZuZiehnKartenAnzahl());
+                protokoll.setUhrzeigerDavor(spielrunde.isUhrzeiger());
+                protokoll.setAnzahlKartenInHandDavor(spieler.getHand().size());
 
                 consoleView.printZugDetails(spielrunde, spieler);
                 if (!spieler.isVirtuellerSpieler()) {
@@ -119,11 +133,12 @@ public class ConsoleImpl implements IConsole {
 
                 String antwortPC = null;
                 Spielkarte spielkarteVonPC = null;
-                int kartenZuZiehen = 0;
+                int kartenZuZiehen;
+                String wahl = null;
                 do {
                     kartenZuZiehen = spielrunde.getZuZiehnKartenAnzahl();
                     if (!spielsteuerung.checkeObSpielerAusgesetztWird(spielrunde, spieler, gewaehlteSpielregel)) {
-                        String wahl;
+
                         if (!spieler.isVirtuellerSpieler()) {
                             wahl = consoleView.eingabeWaehlen(spieler);
                         } else {
@@ -141,16 +156,29 @@ public class ConsoleImpl implements IConsole {
                     }
                 } while (!zugErfolgreich);
 
+                // Protokoll nach erfolgreichen Auswahl
+                protokoll.setRundefarbeDanach(spielrunde.getRundeFarbe());
+                protokoll.setZieheKarteDanach(spielrunde.getZuZiehnKartenAnzahl());
+                protokoll.setUhrzeigerDanach(spielrunde.isUhrzeiger());
+                protokoll.setAnzahlKartenInHandDanach(spieler.getHand().size());
+                if(StringUtils.isNumeric(wahl)) {
+                    protokoll.setAuswahlSpieler(spielrunde.getAufgelegtStapel().getSpielkarten().get(spielrunde.getAufgelegtStapel().getSpielkarten().size()-1).toString());
+                } else {
+                    protokoll.setAuswahlSpieler(wahl);
+                }
+
                 if (spieler.isVirtuellerSpieler()) {
                     consoleView.printAntwortVirtuellerSpieler(antwortPC, spieler, spielkarteVonPC, kartenZuZiehen);
                 }
 
                 vollerHand = !spieler.getHand().isEmpty();
 
+
                 spieler = spielsteuerung.fragWerDranIst(spielrunde.getSpielerListe());
 
                 this.spielrundeRepository.save(spielrunde);
 
+                this.protokollRepository.save(protokoll);
             } while (vollerHand);
 
 
