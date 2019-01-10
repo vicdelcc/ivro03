@@ -21,10 +21,9 @@ public interface IVirtuellerSpieler {
      * Virtueller Spieler sucht einen Blatttyp aus
      *
      * @param spieler    - der virtuelle Spieler, der daran ist
-     * @param spielrunde - die aktuelle Spielrunde
      * @return Blatttyp - der vom virtuellen Spieler ausgesuchten Blatttyp
      */
-    Blatttyp sucheBlatttypAus(Spieler spieler, Spielrunde spielrunde);
+    Blatttyp sucheBlatttypAus(Spieler spieler);
 }
 
 

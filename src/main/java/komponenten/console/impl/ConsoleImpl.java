@@ -224,7 +224,7 @@ public class ConsoleImpl implements IConsole {
                         spieleWuenscher(spielrunde);
                         return true;
                     } else if(istWuenscher && spieler.isVirtuellerSpieler()) {
-                       Blatttyp blatttypVonPC= virtuellerSpieler.sucheBlatttypAus(spieler, spielrunde);
+                       Blatttyp blatttypVonPC= virtuellerSpieler.sucheBlatttypAus(spieler);
                        spielsteuerung.bestimmeBlatttyp(blatttypVonPC, spielrunde);
                        return true;
                     } else {

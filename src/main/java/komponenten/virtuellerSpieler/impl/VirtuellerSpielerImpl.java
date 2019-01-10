@@ -38,6 +38,14 @@ public class VirtuellerSpielerImpl implements IVirtuellerSpieler {
     @Override
     public String spieleKarte(Spielrunde spielrunde, Spieler spieler, RegelKompTyp gewaehlteSpielregel) {
 
+        if(spielrunde == null) {
+            throw new TechnischeException("Spielrunde ist nicht initialisiert");
+        } else if(spieler == null) {
+            throw new TechnischeException("Spieler nicht initialisiert");
+        } else if(gewaehlteSpielregel == null) {
+            throw new TechnischeException("Spieltyp nicht initialisiert");
+        }
+
         String antwort;
 
         int gespielteKarteIndex = -1;
@@ -65,7 +73,10 @@ public class VirtuellerSpielerImpl implements IVirtuellerSpieler {
     }
 
     @Override
-    public Blatttyp sucheBlatttypAus(Spieler spieler, Spielrunde spielrunde) {
+    public Blatttyp sucheBlatttypAus(Spieler spieler) {
+        if(spieler == null) {
+            throw new TechnischeException("Spieler ist nicht initialisiert");
+        }
         // Alle Blatttypen vom Spieler speichern
         List<Blatttyp> blattypenInHand = new ArrayList<>();
         for (Spielkarte spielkarte : spieler.getHand()) {
