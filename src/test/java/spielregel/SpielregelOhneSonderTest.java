@@ -105,12 +105,12 @@ public class SpielregelOhneSonderTest extends SpielregelTestBase {
         }
 
         /**
-         * Test für die normale holeAuswirkungen, der nächste Spieler sollte daran sein. Erster Spieler war auf true gesetzt
+         * Test für die normale holeAuswirkungen, Uhrzeiger-Richtung. Der nächste Spieler sollte daran sein. Erster Spieler war auf true gesetzt
          *
          * @- Falls einer von den übergebenen Parameter null war
          */
         @Test
-        public void testHoleAuswirkungenErsterSpielerTrue() {
+        public void testHoleAuswirkungenErsterSpielerTrueUhrzeiger() {
             List<Spieler> spielerListe = getDefaultSpielerListe();
             spielerListe.get(0).setSpielend(true);
             Spielkarte spielkarte = new Spielkarte(Blattwert.Sechs, Blatttyp.Herz);
@@ -123,12 +123,12 @@ public class SpielregelOhneSonderTest extends SpielregelTestBase {
         }
 
         /**
-         * Test für die normale holeAuswirkungen, der nächste Spieler sollte daran sein. Letzter Spieler war auf true gesetzt
+         * Test für die normale holeAuswirkungen, Uhrzeiger-Richtung. Der nächste Spieler sollte daran sein. Letzter Spieler war auf true gesetzt
          *
          * @- Falls einer von den übergebenen Parameter null war
          */
         @Test
-        public void testHoleAuswirkungenLetzterSpielerTrue() {
+        public void testHoleAuswirkungenLetzterSpielerTrueUhrzeiger() {
             List<Spieler> spielerListe = getDefaultSpielerListe();
             spielerListe.get(spielerListe.size()-1).setSpielend(true);
             Spielkarte spielkarte = new Spielkarte(Blattwert.Sechs, Blatttyp.Herz);
@@ -138,6 +138,43 @@ public class SpielregelOhneSonderTest extends SpielregelTestBase {
             assertNotNull(util);
             assertEquals(0, util.getAnzahlKartenZuZiehen());
             assertTrue(util.getSpielerListe().get(0).isSpielend());
+        }
+
+
+        /**
+         * Test für die normale holeAuswirkungen, keine Uhrzeiger-Richtung. Der letzter Spieler sollte daran sein. Erster Spieler war auf true gesetzt
+         *
+         * @- Falls einer von den übergebenen Parameter null war
+         */
+        @Test
+        public void testHoleAuswirkungenErsterSpielerTrueNichtUhrzeiger() {
+            List<Spieler> spielerListe = getDefaultSpielerListe();
+            spielerListe.get(0).setSpielend(true);
+            Spielkarte spielkarte = new Spielkarte(Blattwert.Sechs, Blatttyp.Herz);
+            Spielrunde spielrunde = new Spielrunde(null, spielerListe);
+            spielrunde.setUhrzeiger(false);
+            RegelComponentUtil util = spielRegelService.holeAuswirkungVonKarte(spielkarte, spielerListe, spielrunde);
+            assertNotNull(util);
+            assertEquals(0, util.getAnzahlKartenZuZiehen());
+            assertTrue(util.getSpielerListe().get(util.getSpielerListe().size()-1).isSpielend());
+        }
+
+        /**
+         * Test für die normale holeAuswirkungen, keine Uhrzeiger-Richtung. Der Spieler davor (index) sollte daran sein. Letzter Spieler war auf true gesetzt
+         *
+         * @- Falls einer von den übergebenen Parameter null war
+         */
+        @Test
+        public void testHoleAuswirkungenLetzterSpielerTrueNichtUhrzeiger() {
+            List<Spieler> spielerListe = getDefaultSpielerListe();
+            spielerListe.get(spielerListe.size()-1).setSpielend(true);
+            Spielkarte spielkarte = new Spielkarte(Blattwert.Sechs, Blatttyp.Herz);
+            Spielrunde spielrunde = new Spielrunde(null, spielerListe);
+            spielrunde.setUhrzeiger(false);
+            RegelComponentUtil util = spielRegelService.holeAuswirkungVonKarte(spielkarte, spielerListe, spielrunde);
+            assertNotNull(util);
+            assertEquals(0, util.getAnzahlKartenZuZiehen());
+            assertTrue(util.getSpielerListe().get(1).isSpielend());
         }
     }
 }
