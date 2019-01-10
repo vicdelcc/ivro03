@@ -70,7 +70,7 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
         this.kartenRepository.saveAll(spielkartenCloneToSave);
 
         Spiel spiel = new Spiel(spielTyp, regelKompTyp);
-        spiel = this.spielRepository.save(spiel);
+        this.spielRepository.save(spiel);
         return spiel;
     }
 
@@ -128,7 +128,7 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
         spiel.getSpielrunden().add(spielrunde);
         // ZuZiehendenKarte default auf 0
         spielrunde.setZuZiehnKartenAnzahl(0);
-        spielrunde = this.spielrundeRepository.save(spielrunde);
+        this.spielrundeRepository.save(spielrunde);
         return spielrunde;
     }
 

@@ -36,9 +36,11 @@
             **/PunkteMauMau.java,
             **/RegelComponentUtil.java,
             **/RegelKompTyp.java,
-            **/SpielTyp.java
-            **/Hand.java
-            **/Stapel.java
+            **/SpielTyp.java,
+            **/Hand.java,
+            **/Stapel.java,
+            **/Protokoll.java,
+            **/Spieltyp.java
         </sonar.exclusions>
     </properties>
 
