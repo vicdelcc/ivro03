@@ -24,6 +24,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
+
 /**
  * Komponent, der eine Spielrunde steuert
  */
@@ -267,25 +269,23 @@ public class SpielsteuerungImpl implements ISpielsteuerung {
     }
 
     private void reloadVerdecktenStapel(Spielrunde spielrunde) {
-        List<Spielkarte> originalAufgeleteStapel = spielrunde.getAufgelegtStapel().getSpielkarten();
-        // nimmt die letzte aufgelegte Karte, erzeug davon ein neuer Stapel und setzt er als der neue aufgelegte Stapel in der Spielrunde
-        Spielkarte letzteAufgelegteSpielKarte = originalAufgeleteStapel.get(originalAufgeleteStapel.size() - 1);
-        List<Spielkarte> neuAufgelegteStapel = new ArrayList<>();
-        neuAufgelegteStapel.addAll(Arrays.asList(letzteAufgelegteSpielKarte));
-        spielrunde.setAufgelegtStapel(new Stapel(neuAufgelegteStapel));
+        // Original soll weitergenutzt werden
+        List<Spielkarte> originalAufgelegterStapel = spielrunde.getAufgelegtStapel().getSpielkarten();
+        // Clone vom Original um alle außer die letzte zu mischen
+        List<Spielkarte> originalAufgelegterStapelClone = originalAufgelegterStapel.stream().collect(toList());
 
-        //Entfernung von der letzte aufgelegte Karte und durchmischen
-        originalAufgeleteStapel.remove(originalAufgeleteStapel.size() - 1);
-        List<Spielkarte> gemischteNeuerAufgedeckterStapel = mischeKarten(originalAufgeleteStapel);
+        // nimmt die letzte aufgelegte Karte, erzeug davon ein neuer Stapel und setzt er als der neue aufgelegte Stapel in der Spielrunde
+        Spielkarte letzteAufgelegteSpielKarte = originalAufgelegterStapel.get(originalAufgelegterStapel.size() - 1);
+
+        //Entfernung von der letzte aufgelegte Karte und durchmischen der vorher aufgelegten Karten
+        originalAufgelegterStapel.clear();
+        originalAufgelegterStapel.add(letzteAufgelegteSpielKarte);
+        originalAufgelegterStapelClone.remove(letzteAufgelegteSpielKarte);
+        originalAufgelegterStapelClone = mischeKarten(originalAufgelegterStapelClone);
 
         //hinzufügen von den vorherigen karten vom verdeckten Stapel
         List<Spielkarte> originalVerdeckteStapel = spielrunde.getVerdeckteStapel().getSpielkarten();
-        gemischteNeuerAufgedeckterStapel.addAll(originalVerdeckteStapel);
-
-        //Aktualisierung vom verdeckten Stapel in der Spielrunde
-        List<Spielkarte> neuVerdeckterStapel = new ArrayList<>();
-        neuVerdeckterStapel.addAll(gemischteNeuerAufgedeckterStapel);
-        spielrunde.setVerdeckteStapel(new Stapel(neuVerdeckterStapel));
+        originalVerdeckteStapel.addAll(originalAufgelegterStapelClone);
     }
 
 
