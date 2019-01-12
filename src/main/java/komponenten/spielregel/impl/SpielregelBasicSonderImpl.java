@@ -105,4 +105,11 @@ public class SpielregelBasicSonderImpl extends SpielregelOhneSonderImpl {
         }
         return util;
     }
+
+    public boolean pruefeObWuenscher(Spielkarte spielkarte) {
+        if (spielkarte == null) {
+            throw new TechnischeException("Spielkarte ist nicht initialisiert");
+        }
+        return spielkarte.getBlattwert() == Blattwert.Bube;
+    }
 }

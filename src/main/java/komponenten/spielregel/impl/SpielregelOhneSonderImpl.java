@@ -74,6 +74,7 @@ public class SpielregelOhneSonderImpl implements ISpielregel {
         if (spielkarte == null) {
             throw new TechnischeException("Spielkarte ist nicht initialisiert");
         }
-        return spielkarte.getBlattwert() == Blattwert.Bube;
+        // Bei Ohne-Regel ist nie ein Wünscher
+        return false;
     }
 }

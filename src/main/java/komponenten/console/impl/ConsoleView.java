@@ -129,14 +129,12 @@ public class ConsoleView {
         Spielkarte letzteKarte = spielrunde.getAufgelegtStapel().getSpielkarten().get(spielrunde.getAufgelegtStapel().getSpielkarten().size() - 1);
         System.out.println("-----------------------------------");
         System.out.println("    Spieler daran:  " + spieler.getName());
-        if (letzteKarte.getBlatttyp().equals(spielrunde.getRundeFarbe()) || spielrunde.getRundeFarbe() == null) {
-            System.out.println(" Aufgelegte Karte:  " + letzteKarte.toString());
+        if(spielrunde.getRundeFarbe()!= null) {
+            System.out.println("  Spielrundefarbe:  " + spielrunde.getRundeFarbe());
             System.out.println("-----------------------------------");
         } else {
-            if (spielrunde.getRundeFarbe() != null) {
-                System.out.println("  Spielrundefarbe:  " + spielrunde.getRundeFarbe());
-                System.out.println("-----------------------------------");
-            }
+            System.out.println(" Aufgelegte Karte:  " + letzteKarte.toString());
+            System.out.println("-----------------------------------");
         }
         if (spielrunde.getZuZiehnKartenAnzahl() != null && spielrunde.getZuZiehnKartenAnzahl() > 0) {
             System.out.println("### " + spielrunde.getZuZiehnKartenAnzahl() + " Karten sollen gezogen werden ###\n");

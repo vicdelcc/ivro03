@@ -30,7 +30,7 @@ public class SpielregelAlleSonderImpl extends SpielregelBasicSonderImpl {
         // Prüfung von BasicSonderRegel
         boolean istLegbar = super.istKarteLegbar(vorherigeSpielkarte, aktuelleSpielkarte, blatttyp, sindKartenZuZiehen);
         // Stopper
-        if (vorherigeSpielkarte.getBlattwert() == Blattwert.Sieben && aktuelleSpielkarte.getBlattwert() == Blattwert.Acht) {
+        if (sindKartenZuZiehen && vorherigeSpielkarte.getBlattwert() == Blattwert.Sieben && aktuelleSpielkarte.getBlattwert() == Blattwert.Acht) {
             istLegbar = true;
         }
         // Allesleger (10) darf nur auf nicht Funktionskarte gelegt werden
