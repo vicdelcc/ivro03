@@ -1,6 +1,7 @@
 package container;
 
 import config.AppConfig;
+import komponenten.console.export.IConsole;
 import komponenten.console.impl.ConsoleImpl;
 import util.exceptions.TechnischeException;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -15,7 +16,7 @@ public class ContainerStarter {
             throw new TechnischeException("Container konnte nicht hochgefahren werden");
         }
 
-        ConsoleImpl consoleImpl = context.getBean(ConsoleImpl.class);
+        IConsole consoleImpl = context.getBean(IConsole.class);
 
         consoleImpl.run();
 

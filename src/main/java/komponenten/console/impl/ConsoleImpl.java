@@ -6,18 +6,22 @@ import komponenten.karten.export.Blatttyp;
 import komponenten.karten.export.Spielkarte;
 import komponenten.spielsteuerung.export.ISpielsteuerung;
 import komponenten.spielverwaltung.export.*;
+import komponenten.spielverwaltung.repositories.ProtokollRepository;
 import komponenten.spielverwaltung.repositories.SpielRepository;
 import komponenten.spielverwaltung.repositories.SpielrundeRepository;
 import komponenten.virtuellerSpieler.export.IVirtuellerSpieler;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import komponenten.spielverwaltung.export.Protokoll;
-import komponenten.spielverwaltung.repositories.ProtokollRepository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 
+/**
+ * Komponent, die Konsole realisiert bzw. den Spielablauf
+ */
 @Service
 public class ConsoleImpl implements IConsole {
 
@@ -45,15 +49,10 @@ public class ConsoleImpl implements IConsole {
     public void run() {
 
         boolean nochEineRunde = false;
-
         Spiel spiel = null;
-
         SpielTyp spielTyp;
-
         RegelKompTyp gewaehlteSpielregel = null;
-
         List<Spieler> spielerListe;
-
         boolean weiter = false;
         int spielID;
         do {
@@ -80,22 +79,15 @@ public class ConsoleImpl implements IConsole {
             }
         } while (weiter);
 
-
+        // Spielrunde-Schleife
         do {
             Spielrunde spielrunde = null;
-
             Spieler spieler;
-
             // Neue Spielrunde wird angelegt, wenn es kein altes Spiel geladen wurde
             if (spielID == 0 || nochEineRunde) {
-
                 spielerListe = consoleView.virtuellerSpielerAuswahl();
-
                 spielerListe = consoleView.spielerEingabe(spielerListe);
-
                 spielrunde = spielverwaltung.starteSpielrunde(spielerListe, spiel);
-
-
             } else {
                 // Wenn ein altes Spiel geladen wurde,wird die Spielrunde gesucht, die nicht beendet wurde
                 for (Spielrunde spielrundeDB : spiel.getSpielrunden()) {
@@ -106,90 +98,91 @@ public class ConsoleImpl implements IConsole {
                 }
             }
 
-            spieler = spielsteuerung.fragWerDranIst(spielrunde.getSpielerListe());
-
-            boolean vollerHand = false;
-
+            // Zug-Schleife
+            boolean vollerHand;
             do {
-                // Create Protokoll
-                Protokoll protokoll = new Protokoll();
-                protokoll.setSpielID(spiel.getIdentity());
-                protokoll.setSpielrundeID(spielrunde.getIdentity());
-                protokoll.setSpielerName(spieler.getName());
-                protokoll.setSpielkarteDavor(spielrunde.getAufgelegtStapel().getSpielkarten().get(spielrunde.getAufgelegtStapel().getSpielkarten().size()-1).toString());
-                protokoll.setRundefarbeDavor(spielrunde.getRundeFarbe());
-                protokoll.setZieheKarteDavor(spielrunde.getZuZiehnKartenAnzahl());
-                protokoll.setUhrzeigerDavor(spielrunde.isUhrzeiger());
-                protokoll.setAnzahlKartenInHandDavor(spieler.getHand().size());
-
-                consoleView.printZugDetails(spielrunde, spieler);
-                if (!spieler.isVirtuellerSpieler()) {
-                    consoleView.printHand(spieler);
-                }
-
-                boolean sollMauAufgerufen = spielsteuerung.sollMauMauAufrufen(spielrunde, spieler, gewaehlteSpielregel);
-
-                boolean zugErfolgreich;
-
-                String antwortPC = null;
-                Spielkarte spielkarteVonPC = null;
-                int kartenZuZiehen;
-                String wahl = null;
-                do {
-                    kartenZuZiehen = spielrunde.getZuZiehnKartenAnzahl();
-                    if (!spielsteuerung.checkeObSpielerAusgesetztWird(spielrunde, spieler, gewaehlteSpielregel)) {
-
-                        if (!spieler.isVirtuellerSpieler()) {
-                            wahl = consoleView.eingabeWaehlen(spieler);
-                        } else {
-                            wahl = virtuellerSpieler.spieleKarte(spielrunde, spieler, gewaehlteSpielregel);
-                            antwortPC = wahl;
-                            if (StringUtils.isNumeric(wahl)) {
-                                spielkarteVonPC = spieler.getHand().get(Integer.valueOf(wahl));
-                            }
-
-                        }
-                        zugErfolgreich = spieleWahl(wahl, spieler, spielrunde, sollMauAufgerufen, gewaehlteSpielregel);
-                    } else {
-                        consoleView.printMessage("### Sie können weder Karten spielen noch ziehen. Sie werden ausgesetzt ###");
-                        zugErfolgreich = false;
-                    }
-                } while (!zugErfolgreich);
-
-                // Protokoll nach erfolgreichen Auswahl
-                protokoll.setRundefarbeDanach(spielrunde.getRundeFarbe());
-                protokoll.setZieheKarteDanach(spielrunde.getZuZiehnKartenAnzahl());
-                protokoll.setUhrzeigerDanach(spielrunde.isUhrzeiger());
-                protokoll.setAnzahlKartenInHandDanach(spieler.getHand().size());
-                if(StringUtils.isNumeric(wahl)) {
-                    protokoll.setAuswahlSpieler(spielrunde.getAufgelegtStapel().getSpielkarten().get(spielrunde.getAufgelegtStapel().getSpielkarten().size()-1).toString());
-                } else {
-                    protokoll.setAuswahlSpieler(wahl);
-                }
-
-                if (spieler.isVirtuellerSpieler()) {
-                    consoleView.printAntwortVirtuellerSpieler(antwortPC, spieler, spielkarteVonPC, kartenZuZiehen);
-                }
-
-                vollerHand = !spieler.getHand().isEmpty();
-
-
                 spieler = spielsteuerung.fragWerDranIst(spielrunde.getSpielerListe());
-
-                this.spielrundeRepository.save(spielrunde);
-
-                this.protokollRepository.save(protokoll);
+                vollerHand = spieleZugrunde(spiel, spielrunde, spieler, gewaehlteSpielregel);
             } while (vollerHand);
 
 
             spielrunde = spielverwaltung.beendeSpielrunde(spielrunde);
-
             consoleView.zeigeErgebnisse(spielrunde);
-
             nochEineRunde = consoleView.nochEineRunde();
-        } while (nochEineRunde);
 
+        } while (nochEineRunde);
         spielverwaltung.beendeSpiel(spiel);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    boolean spieleZugrunde(Spiel spiel, Spielrunde spielrunde, Spieler spieler, RegelKompTyp gewaehlteSpielregel) {
+        // Create Protokoll
+        Protokoll protokoll = new Protokoll();
+        protokoll.setSpielID(spiel.getIdentity());
+        protokoll.setSpielrundeID(spielrunde.getIdentity());
+        protokoll.setSpielerName(spieler.getName());
+        protokoll.setSpielkarteDavor(spielrunde.getAufgelegtStapel().getSpielkarten().get(spielrunde.getAufgelegtStapel().getSpielkarten().size() - 1).toString());
+        protokoll.setRundefarbeDavor(spielrunde.getRundeFarbe());
+        protokoll.setZieheKarteDavor(spielrunde.getZuZiehnKartenAnzahl());
+        protokoll.setUhrzeigerDavor(spielrunde.isUhrzeiger());
+        protokoll.setAnzahlKartenInHandDavor(spieler.getHand().size());
+
+        consoleView.printZugDetails(spielrunde, spieler);
+        if (!spieler.isVirtuellerSpieler()) {
+            consoleView.printHand(spieler);
+        }
+
+        boolean sollMauAufgerufen = spielsteuerung.sollMauMauAufrufen(spielrunde, spieler, gewaehlteSpielregel);
+
+        boolean zugErfolgreich;
+
+        String antwortPC = null;
+        Spielkarte spielkarteVonPC = null;
+        int kartenZuZiehen;
+        String wahl = null;
+        do {
+            kartenZuZiehen = spielrunde.getZuZiehnKartenAnzahl();
+            if (!spielsteuerung.checkeObSpielerAusgesetztWird(spielrunde, spieler, gewaehlteSpielregel)) {
+
+                if (!spieler.isVirtuellerSpieler()) {
+                    wahl = consoleView.eingabeWaehlen(spieler);
+                } else {
+                    wahl = virtuellerSpieler.spieleKarte(spielrunde, spieler, gewaehlteSpielregel);
+                    antwortPC = wahl;
+                    if (StringUtils.isNumeric(wahl)) {
+                        spielkarteVonPC = spieler.getHand().get(Integer.valueOf(wahl));
+                    }
+
+                }
+                zugErfolgreich = spieleWahl(wahl, spieler, spielrunde, sollMauAufgerufen, gewaehlteSpielregel);
+            } else {
+                consoleView.printMessage("### Sie können weder Karten spielen noch ziehen. Sie werden ausgesetzt ###");
+                zugErfolgreich = false;
+            }
+        } while (!zugErfolgreich);
+
+        // Protokoll nach erfolgreichen Auswahl
+        protokoll.setRundefarbeDanach(spielrunde.getRundeFarbe());
+        protokoll.setZieheKarteDanach(spielrunde.getZuZiehnKartenAnzahl());
+        protokoll.setUhrzeigerDanach(spielrunde.isUhrzeiger());
+        protokoll.setAnzahlKartenInHandDanach(spieler.getHand().size());
+        if (StringUtils.isNumeric(wahl)) {
+            protokoll.setAuswahlSpieler(spielrunde.getAufgelegtStapel().getSpielkarten().get(spielrunde.getAufgelegtStapel().getSpielkarten().size() - 1).toString());
+        } else {
+            protokoll.setAuswahlSpieler(wahl);
+        }
+
+        if (spieler.isVirtuellerSpieler()) {
+            consoleView.printAntwortVirtuellerSpieler(antwortPC, spieler, spielkarteVonPC, kartenZuZiehen);
+        }
+
+        boolean vollerHand = !spieler.getHand().isEmpty();
+
+        this.spielrundeRepository.save(spielrunde);
+
+        this.protokollRepository.save(protokoll);
+
+        return vollerHand;
 
     }
 
@@ -223,10 +216,10 @@ public class ConsoleImpl implements IConsole {
                     if (istWuenscher && !spieler.isVirtuellerSpieler()) {
                         spieleWuenscher(spielrunde);
                         return true;
-                    } else if(istWuenscher && spieler.isVirtuellerSpieler()) {
-                       Blatttyp blatttypVonPC= virtuellerSpieler.sucheBlatttypAus(spieler);
-                       spielsteuerung.bestimmeBlatttyp(blatttypVonPC, spielrunde);
-                       return true;
+                    } else if (istWuenscher && spieler.isVirtuellerSpieler()) {
+                        Blatttyp blatttypVonPC = virtuellerSpieler.sucheBlatttypAus(spieler);
+                        spielsteuerung.bestimmeBlatttyp(blatttypVonPC, spielrunde);
+                        return true;
                     } else {
                         return true;
                     }

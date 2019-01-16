@@ -11,6 +11,7 @@ import komponenten.spielverwaltung.repositories.SpielRepository;
 import komponenten.spielverwaltung.repositories.SpielrundeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import util.exceptions.TechnischeException;
 
 import java.time.Duration;
@@ -25,6 +26,7 @@ import static java.util.stream.Collectors.toList;
  * Komponent, der ein Spiel bzw. Spielrunden verwaltet
  */
 @Service
+@Transactional
 public class SpielverwaltungImpl implements ISpielverwaltung {
 
     @Autowired
