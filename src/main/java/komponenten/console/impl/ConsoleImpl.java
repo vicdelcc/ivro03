@@ -114,7 +114,7 @@ public class ConsoleImpl implements IConsole {
         spielverwaltung.beendeSpiel(spiel);
     }
 
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional
     boolean spieleZugrunde(Spiel spiel, Spielrunde spielrunde, Spieler spieler, RegelKompTyp gewaehlteSpielregel) {
         // Create Protokoll
         Protokoll protokoll = new Protokoll();
