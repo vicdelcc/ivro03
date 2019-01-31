@@ -1,14 +1,14 @@
 package virtuellerSpieler;
 
 import config.AppConfig;
-import komponenten.karten.export.Blatttyp;
-import komponenten.karten.export.Blattwert;
-import komponenten.karten.export.Spielkarte;
+import komponenten.karten.entities.Blatttyp;
+import komponenten.karten.entities.Blattwert;
+import komponenten.karten.entities.Spielkarte;
 import komponenten.spielregel.export.ISpielregel;
-import komponenten.spielverwaltung.export.RegelKompTyp;
-import komponenten.spielverwaltung.export.Spieler;
-import komponenten.spielverwaltung.export.Spielrunde;
-import komponenten.spielverwaltung.export.Stapel;
+import komponenten.spielverwaltung.entities.RegelKompTyp;
+import komponenten.spielverwaltung.entities.Spieler;
+import komponenten.spielverwaltung.entities.Spielrunde;
+import komponenten.spielverwaltung.entities.Stapel;
 import komponenten.virtuellerSpieler.export.IVirtuellerSpieler;
 import org.junit.Test;
 import org.junit.runner.RunWith;

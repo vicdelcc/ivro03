@@ -3,9 +3,9 @@ package komponenten.console.impl;
 
 import com.github.javafaker.Faker;
 import komponenten.console.exceptions.FachlicheException;
-import komponenten.karten.export.Blatttyp;
-import komponenten.karten.export.Spielkarte;
-import komponenten.spielverwaltung.export.*;
+import komponenten.karten.entities.Blatttyp;
+import komponenten.karten.entities.Spielkarte;
+import komponenten.spielverwaltung.entities.*;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;

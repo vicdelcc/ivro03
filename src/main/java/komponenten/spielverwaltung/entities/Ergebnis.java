@@ -1,5 +1,5 @@
 
-package komponenten.spielverwaltung.export;
+package komponenten.spielverwaltung.entities;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;

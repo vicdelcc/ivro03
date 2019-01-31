@@ -1,6 +1,6 @@
-package komponenten.spielverwaltung.export;
+package komponenten.spielverwaltung.entities;
 
-import komponenten.karten.export.Blatttyp;
+import komponenten.karten.entities.Blatttyp;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import util.BaseEntity;

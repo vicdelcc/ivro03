@@ -1,9 +1,9 @@
 package komponenten.karten.impl;
 
 import komponenten.karten.export.IKarten;
-import komponenten.karten.export.Spielkarte;
-import komponenten.karten.export.Blatttyp;
-import komponenten.karten.export.Blattwert;
+import komponenten.karten.entities.Spielkarte;
+import komponenten.karten.entities.Blatttyp;
+import komponenten.karten.entities.Blattwert;
 import util.exceptions.TechnischeException;
 import org.springframework.stereotype.Service;
 

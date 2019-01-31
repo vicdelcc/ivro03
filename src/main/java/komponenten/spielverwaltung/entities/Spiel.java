@@ -1,9 +1,7 @@
-package komponenten.spielverwaltung.export;
+package komponenten.spielverwaltung.entities;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import util.BaseEntity;

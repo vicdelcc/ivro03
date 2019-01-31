@@ -1,7 +1,7 @@
-package komponenten.spielverwaltung.export;
+package komponenten.spielverwaltung.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import komponenten.karten.export.Spielkarte;
+import komponenten.karten.entities.Spielkarte;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.LazyCollection;

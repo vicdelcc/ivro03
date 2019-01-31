@@ -1,12 +1,11 @@
 package komponenten.virtuellerSpieler.impl;
 
-import komponenten.karten.export.Blatttyp;
-import komponenten.karten.export.Spielkarte;
+import komponenten.karten.entities.Blatttyp;
+import komponenten.karten.entities.Spielkarte;
 import komponenten.spielregel.export.ISpielregel;
-import komponenten.spielregel.export.RegelComponentUtil;
-import komponenten.spielverwaltung.export.RegelKompTyp;
-import komponenten.spielverwaltung.export.Spieler;
-import komponenten.spielverwaltung.export.Spielrunde;
+import komponenten.spielverwaltung.entities.RegelKompTyp;
+import komponenten.spielverwaltung.entities.Spieler;
+import komponenten.spielverwaltung.entities.Spielrunde;
 import komponenten.virtuellerSpieler.export.IVirtuellerSpieler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

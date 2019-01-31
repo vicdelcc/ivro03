@@ -1,16 +1,14 @@
 package komponenten.spielsteuerung.impl;
 
-import komponenten.karten.export.Blatttyp;
-import komponenten.karten.export.Blattwert;
-import komponenten.karten.export.Spielkarte;
+import komponenten.karten.entities.Blatttyp;
+import komponenten.karten.entities.Blattwert;
+import komponenten.karten.entities.Spielkarte;
 import komponenten.spielregel.export.ISpielregel;
-import komponenten.spielregel.export.RegelComponentUtil;
+import komponenten.spielregel.entities.RegelComponentUtil;
 import komponenten.spielsteuerung.export.ISpielsteuerung;
-import komponenten.spielverwaltung.export.RegelKompTyp;
-import komponenten.spielverwaltung.export.Spieler;
-import komponenten.spielverwaltung.export.Spielrunde;
-import komponenten.spielverwaltung.export.Stapel;
-import komponenten.virtuellerSpieler.export.IVirtuellerSpieler;
+import komponenten.spielverwaltung.entities.RegelKompTyp;
+import komponenten.spielverwaltung.entities.Spieler;
+import komponenten.spielverwaltung.entities.Spielrunde;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +17,6 @@ import org.springframework.stereotype.Service;
 import util.exceptions.TechnischeException;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;

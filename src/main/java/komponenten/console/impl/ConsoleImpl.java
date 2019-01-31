@@ -2,9 +2,10 @@ package komponenten.console.impl;
 
 
 import komponenten.console.export.IConsole;
-import komponenten.karten.export.Blatttyp;
-import komponenten.karten.export.Spielkarte;
+import komponenten.karten.entities.Blatttyp;
+import komponenten.karten.entities.Spielkarte;
 import komponenten.spielsteuerung.export.ISpielsteuerung;
+import komponenten.spielverwaltung.entities.*;
 import komponenten.spielverwaltung.export.*;
 import komponenten.spielverwaltung.repositories.ProtokollRepository;
 import komponenten.spielverwaltung.repositories.SpielRepository;
@@ -13,7 +14,6 @@ import komponenten.virtuellerSpieler.export.IVirtuellerSpieler;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;

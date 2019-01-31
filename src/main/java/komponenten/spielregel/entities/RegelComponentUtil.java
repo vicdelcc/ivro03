@@ -1,9 +1,9 @@
-package komponenten.spielregel.export;
+package komponenten.spielregel.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import komponenten.spielverwaltung.export.Spieler;
+import komponenten.spielverwaltung.entities.Spieler;
 
 import java.util.List;
 

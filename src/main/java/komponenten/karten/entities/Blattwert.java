@@ -1,4 +1,4 @@
-package komponenten.karten.export;
+package komponenten.karten.entities;
 
 public enum Blattwert {
 

@@ -1,5 +1,5 @@
 
-package komponenten.karten.export;
+package komponenten.karten.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

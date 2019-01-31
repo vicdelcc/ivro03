@@ -1,9 +1,10 @@
 package komponenten.spielregel.export;
 
-import komponenten.karten.export.Blatttyp;
-import komponenten.karten.export.Spielkarte;
-import komponenten.spielverwaltung.export.Spieler;
-import komponenten.spielverwaltung.export.Spielrunde;
+import komponenten.karten.entities.Blatttyp;
+import komponenten.karten.entities.Spielkarte;
+import komponenten.spielregel.entities.RegelComponentUtil;
+import komponenten.spielverwaltung.entities.Spieler;
+import komponenten.spielverwaltung.entities.Spielrunde;
 import util.exceptions.TechnischeException;
 
 import java.util.List;

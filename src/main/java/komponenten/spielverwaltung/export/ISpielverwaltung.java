@@ -1,5 +1,6 @@
 package komponenten.spielverwaltung.export;
 
+import komponenten.spielverwaltung.entities.*;
 import util.exceptions.TechnischeException;
 
 import java.util.List;

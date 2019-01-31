@@ -10,6 +10,8 @@
 
 [SpielverwaltungKomponent] as svk
 
+[VirtuellerSpielerKomponent] as vsk
+
 database "maumauDB" {
 
 }
@@ -22,9 +24,13 @@ IKartenKomponent - kk
 
 ISpielVerwaltungKomponent  - svk
 
+IVirtuellerSpielerKomponent - vsk
+
 Console -right-> ISpielVerwaltungKomponent
 
 Console -down-> ISpielSteuerungKomponent
+
+Console -down-> IVirtuellerSpielerKomponent
 
 ssk --> ISpielregelKomponent
 

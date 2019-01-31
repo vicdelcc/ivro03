@@ -1,11 +1,10 @@
 package spielregel;
 
 import komponenten.spielregel.export.ISpielregel;
-import komponenten.spielverwaltung.export.Spieler;
-import komponenten.karten.export.Spielkarte;
-import komponenten.karten.export.Blatttyp;
-import komponenten.karten.export.Blattwert;
-import komponenten.spielverwaltung.export.Spielrunde;
+import komponenten.spielverwaltung.entities.Spieler;
+import komponenten.karten.entities.Spielkarte;
+import komponenten.karten.entities.Blatttyp;
+import komponenten.karten.entities.Blattwert;
 import util.exceptions.TechnischeException;
 
 import java.util.ArrayList;

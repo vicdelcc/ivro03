@@ -1,5 +1,8 @@
 package komponenten.karten.export;
 
+import komponenten.karten.entities.Blatttyp;
+import komponenten.karten.entities.Blattwert;
+import komponenten.karten.entities.Spielkarte;
 import util.exceptions.TechnischeException;
 
 import java.util.List;

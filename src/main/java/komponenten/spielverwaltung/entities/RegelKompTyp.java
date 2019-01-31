@@ -1,4 +1,4 @@
-package komponenten.spielverwaltung.export;
+package komponenten.spielverwaltung.entities;
 
 public enum RegelKompTyp {
 

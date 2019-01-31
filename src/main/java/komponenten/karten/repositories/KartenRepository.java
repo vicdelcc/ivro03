@@ -1,8 +1,8 @@
 package komponenten.karten.repositories;
 
-import komponenten.karten.export.Blatttyp;
-import komponenten.karten.export.Blattwert;
-import komponenten.karten.export.Spielkarte;
+import komponenten.karten.entities.Blatttyp;
+import komponenten.karten.entities.Blattwert;
+import komponenten.karten.entities.Spielkarte;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
