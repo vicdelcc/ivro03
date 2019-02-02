@@ -27,7 +27,6 @@ import static java.util.stream.Collectors.toList;
  * Komponent, der eine Spielrunde steuert
  */
 @Service
-@NoArgsConstructor
 public class SpielsteuerungImpl implements ISpielsteuerung {
 
     @Autowired

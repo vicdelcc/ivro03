@@ -3,6 +3,7 @@ package komponenten.spielverwaltung.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import komponenten.karten.entities.Spielkarte;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
@@ -12,6 +13,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
 @NoArgsConstructor

@@ -1,6 +1,6 @@
 package karten;
 
-import config.AppConfig;
+import komponenten.container.impl.AppConfig;
 import komponenten.karten.export.IKarten;
 import komponenten.karten.entities.Spielkarte;
 import komponenten.karten.entities.Blatttyp;

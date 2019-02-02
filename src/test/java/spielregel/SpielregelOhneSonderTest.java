@@ -80,7 +80,7 @@ public class SpielregelOhneSonderTest extends SpielregelTestBase {
         @Test
         public void testPruefeObWuenscherTrue() {
             boolean istWuenscher = istKarteWuenscher(spielRegelService, new Spielkarte(Blattwert.Bube, Blatttyp.Herz));
-            assertTrue(istWuenscher);
+            assertFalse(istWuenscher);
         }
 
         @Test

@@ -1,6 +1,6 @@
 package virtuellerSpieler;
 
-import config.AppConfig;
+import komponenten.container.impl.AppConfig;
 import komponenten.karten.entities.Blatttyp;
 import komponenten.karten.entities.Blattwert;
 import komponenten.karten.entities.Spielkarte;

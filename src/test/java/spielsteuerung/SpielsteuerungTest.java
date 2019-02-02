@@ -1,6 +1,6 @@
 package spielsteuerung;
 
-import config.AppConfig;
+import komponenten.container.impl.AppConfig;
 import komponenten.spielregel.export.ISpielregel;
 import komponenten.spielregel.impl.SpielregelOhneSonderImpl;
 import komponenten.spielsteuerung.export.ISpielsteuerung;

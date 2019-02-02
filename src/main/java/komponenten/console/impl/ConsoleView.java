@@ -245,7 +245,7 @@ public class ConsoleView {
         if (weiter) {
             System.out.println("### Spiel-ID nicht vorhanden ###");
         }
-        if (frageJaOderNein(">>> Wollen Sie ein altes Spiel fortführen? (j|n) <<<")) {
+        if (frageJaOderNein("\n>>> Wollen Sie ein altes Spiel fortführen? (j|n) <<<")) {
             System.out.println("Bitte geben Sie den Spiel-ID ein: ");
             while (!sc.hasNextInt()) {
                 System.out.println(">>> Nur ganze Zahlen erlaubt! <<<");

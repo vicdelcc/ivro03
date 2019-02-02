@@ -2,6 +2,7 @@ package komponenten.spielverwaltung.entities;
 
 import komponenten.karten.entities.Blatttyp;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import util.BaseEntity;
 
@@ -10,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
 @NoArgsConstructor

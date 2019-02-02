@@ -1,6 +1,5 @@
-package container;
+package komponenten.container.impl;
 
-import config.AppConfig;
 import komponenten.console.export.IConsole;
 import util.exceptions.TechnischeException;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;

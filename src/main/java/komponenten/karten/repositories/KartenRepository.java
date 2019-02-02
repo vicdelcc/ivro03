@@ -10,7 +10,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface KartenRepository extends JpaRepository<Spielkarte, Long> {
 
-    @Query("SELECT s FROM Spielkarte s WHERE s.blatttyp = ?1 AND s.blattwert = ?2")
-    Spielkarte findByWertUndTyp(Blatttyp blatttyp, Blattwert blattwert);
 
 }
