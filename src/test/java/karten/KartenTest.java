@@ -17,7 +17,6 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = AppConfig.class)
@@ -44,17 +43,10 @@ public class KartenTest {
         // Der Stapel sollte 56 Spielkarten haben (also inklusive 4 Joker)
         assertEquals(52, kartenStapel.size());
 
-        // Alle Spielkarten prüfen
-        List<Spielkarte> richtigerStapel = new ArrayList<>();
-        for (Blatttyp blatttyp : Blatttyp.values()) {
-            for (Blattwert blattwert : Blattwert.values()) {
-                if (blattwert != Blattwert.Joker) {
-                    richtigerStapel.add(new Spielkarte(blattwert, blatttyp));
-                }
-            }
-        }
+        long anzahlJokersInKartenStapel = kartenStapel.stream()
+                .filter(spielkarte -> spielkarte.getBlattwert().equals(Blattwert.Joker)).count();
 
-        assertTrue(kartenStapel.containsAll(richtigerStapel));
+        assertEquals(0, anzahlJokersInKartenStapel);
 
     }
 
@@ -78,18 +70,12 @@ public class KartenTest {
         // Der Stapel sollte 39 Spielkarten haben
         assertEquals(39, kartenStapel.size());
 
-        // Alle Spielkarten prüfen
-        List<Spielkarte> richtigerStapel = new ArrayList<>();
-        for (Blatttyp blatttyp : Blatttyp.values()) {
-            if(blatttyp != Blatttyp.Herz) {
-                for (Blattwert blattwert : Blattwert.values()) {
-                    if (blattwert != Blattwert.Joker) {
-                        richtigerStapel.add(new Spielkarte(blattwert, blatttyp));
-                    }
-                }
-            }
-        }
-        assertTrue(kartenStapel.containsAll(richtigerStapel));
+
+        long anzahlJokersOderHerzInKartenStapel = kartenStapel.stream()
+                .filter(spielkarte -> spielkarte.getBlattwert().equals(Blattwert.Joker) ||
+                        spielkarte.getBlatttyp().equals(Blatttyp.Herz)).count();
+
+        assertEquals(0, anzahlJokersOderHerzInKartenStapel);
 
     }
 
