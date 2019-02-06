@@ -65,14 +65,20 @@ public class ConsoleImpl implements IConsole {
             } else {
                 try {
                     spiel = this.spielRepository.findById(Long.valueOf(spielID)).get();
-                    weiter = false;
-                    // Wenn alle Spielrunden schon beendet wurden, wird beim selben Spiel eine neue Spielrunde gestartet
-                    boolean atLeastOneUnfinished = spiel.getSpielrunden().stream().map(Spielrunde::getGewinnerName).anyMatch(gewinnerName -> gewinnerName == null);
-                    if (!atLeastOneUnfinished) {
-                        consoleView.printMessage("### Spiel mit ID: " + spielID + " hat keine offene Spielrunden. Es wird eine neue Runde gestartet ###");
-                        spielID = 0;
-                        gewaehlteSpielregel = spiel.getRegelKompTyp();
+                    if(spiel == null) {
+                        consoleView.printMessage("### Spiel nicht gefunden ###");
+                        weiter = true;
+                    } else {
+                        weiter = false;
+                        // Wenn alle Spielrunden schon beendet wurden, wird beim selben Spiel eine neue Spielrunde gestartet
+                        boolean atLeastOneUnfinished = spiel.getSpielrunden().stream().map(Spielrunde::getGewinnerName).anyMatch(gewinnerName -> gewinnerName == null);
+                        if (!atLeastOneUnfinished) {
+                            consoleView.printMessage("### Spiel mit ID: " + spielID + " hat keine offene Spielrunden. Es wird eine neue Runde gestartet ###");
+                            spielID = 0;
+                            gewaehlteSpielregel = spiel.getRegelKompTyp();
+                        }
                     }
+
                 } catch (NoSuchElementException e) {
                     weiter = true;
                 }
